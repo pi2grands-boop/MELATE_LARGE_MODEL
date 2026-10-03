@@ -16,7 +16,8 @@ Un commit, `5e79986` — *docs: cierra la fase de arranque y emite a las áreas 
 - Los **diez documentos emitidos** a las áreas base: `Mapa`, `Estructura_Carpetas`,
   `Estructura_Datos`, `Almacenamiento`, `Conexiones`, `Reproducibilidad`,
   `Protocolo_Estadistico`, `Seguridad`, `Rendimiento` y `Despliegue`.
-- El `99_CIERRE.md` de la fase y el `00_ALCANCE.md` marcado como cerrado.
+- El `Fases/2026-10-02_arranque/99_CIERRE.md` de la fase, y su
+  `Fases/2026-10-02_arranque/00_ALCANCE.md` marcado como cerrado.
 - El `_MAPA.md` reescrito con las rutas de lectura reales.
 - El bloque de cierre del `Bugs/` del refactor.
 - `scripts/verificar-bitacora.ps1`, nuevo.
