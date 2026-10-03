@@ -107,3 +107,35 @@ Entorno: Python 3.13.9 · numpy 2.5.3 · pandas 2.3.3 · scipy 1.18.1 · scikit-
 - Pruebas pytest para cada regla de datos y para reproducir la línea base.
 - Reportes y textos de la app en español.
 - No avanzar de fase sin que el usuario lo apruebe.
+
+### Documentación: usa la skill `bitacora`, siempre
+
+Todo cambio se documenta en `Documentos_Contexto/` con la skill `bitacora`. Las reglas completas —la
+rejilla de áreas, el pipeline, los nombres, las plantillas— están en `REGLAS-DOCUMENTACION.md`, y las
+rutas de lectura en `Documentos_Contexto/_MAPA.md`. Empieza por ahí antes de tocar nada.
+
+Lo que no se negocia:
+
+- **El `.md` es el ÚLTIMO paso**, después de implementar y de las dos reviews. Documentar antes de
+  verificar produce documentación que miente.
+- **Esta bitácora se publica**, al contrario de lo habitual (`REGLAS-DOCUMENTACION.md` §0). Rutas
+  siempre relativas, nunca rutas absolutas de la máquina ni correos.
+- **Un bug no se deja sin preguntar.** La decisión es del usuario.
+
+### Lo que protege el proyecto de sí mismo
+
+- **`baseline_auditoria.py` es el oráculo y NO se modifica nunca.** `tests/test_paridad.py` compara
+  el paquete contra él con tolerancia cero, y es bloqueante. Es lo que hace demostrable cualquier
+  refactor; si se toca, el proyecto pierde su única referencia y no se recupera.
+- **Dos scripts bloqueantes**, y los dos traen su propia comprobación porque una herramienta de
+  verificación que nadie ha verificado no es una garantía, es una opinión:
+  - `scripts/colador.ps1 -Autoprueba` → antes de cada push. Si imprime algo, no se sube.
+  - `scripts/verificar-bitacora.ps1` → antes de cerrar una fase. Tiene que dar 0 hallazgos.
+- **Al cerrar una fase no basta con que los tests pasen.** Hay que volver a medir cada número que se
+  publique y dar dos valores distintos a cada parámetro del que se diga que gobierna algo. La
+  auditoría de las fases 1 y 2 encontró siete defectos con las 92 pruebas en verde, todos en el hueco
+  de lo que nadie pensó comprobar. Procedimiento en
+  `Documentos_Contexto/Protocolo_Estadistico/Bugs/2026-10-03_01-59_auditoria-retrospectiva-fases-1-y-2.md`.
+- **Y la pregunta del cierre no es "¿qué áreas toqué?" sino "¿qué documento del índice permanente
+  acabo de dejar desactualizado?"**. Son conjuntos distintos. Un documento del índice que miente es
+  peor que uno que falta: el que falta se busca en otro sitio, el que miente se cree.
