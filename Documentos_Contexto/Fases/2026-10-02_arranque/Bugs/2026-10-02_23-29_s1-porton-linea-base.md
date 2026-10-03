@@ -9,8 +9,8 @@
 ## Qué se hizo
 
 Correr `baseline_auditoria.py` contra el snapshot congelado y comparar **cifra por cifra** contra la
-sección "Línea base verificada" del `CLAUDE.md`. Es el portón del `00_ALCANCE.md`: si la línea base
-no reproduce, la fase se detiene.
+sección "Línea base verificada" del `CLAUDE.md`. Es el portón del
+`Fases/2026-10-02_arranque/00_ALCANCE.md`: si la línea base no reproduce, la fase se detiene.
 
 ```
 .venv\Scripts\python.exe .\baseline_auditoria.py --datos .\data\raw\2026-10-02 --salida .\reportes\2026-10-02_oraculo.json
@@ -221,13 +221,13 @@ procedencia. Chi-cuadrada de Revancha pasa de 42.03 a **42.29 (p = 0.22)**; regr
 Revancha, de 0.6861 (p = 0.011, q = 0.24) a **0.6839 (p = 0.017, q = 0.35)**. La sección gana un
 apartado con los tres SHA-256, las tres semillas y las versiones de librería, más una cita en bloque
 que deja constancia de los valores anteriores y de por qué estaban mal. Detalle en
-`Cambios/2026-10-02_23-52_s1-correccion-cifras-revancha-claude-md.md`.
+`Fases/2026-10-02_arranque/Cambios/2026-10-02_23-52_s1-correccion-cifras-revancha-claude-md.md`.
 
 **2 · El papel del espejo: solo validación cruzada, nunca carga.** Decisión del usuario.
 `melate.ingest.cargar()` lee solo del oficial y, si falla, levanta `SystemExit` explicando por qué no
 hay respaldo automático; `cargar_espejo()` existe aparte y su único consumidor es el test de la
 regla 7. Implementación y porqué largo en
-`Cambios/2026-10-03_00-03_s1-paquete-src-melate.md`.
+`Fases/2026-10-02_arranque/Cambios/2026-10-03_00-03_s1-paquete-src-melate.md`.
 
 **3 · La regla 7, implementada como test.**
 `tests/test_reglas_datos.py::test_regla7_oficial_contra_espejo`, marcado `red`, compara los tres
@@ -272,4 +272,4 @@ pandas 2.3.3, scipy 1.18.1 y scikit-learn 1.9.1 reproducen la línea base. No ha
 en el script, y no se tocó.
 
 **Bugs abiertos al cerrar: ninguno.** El ciclo del refactor que vino después tiene su propia review
-en `Bugs/2026-10-03_00-03_s1-review-refactor-y-tests.md`.
+en `Fases/2026-10-02_arranque/Bugs/2026-10-03_00-03_s1-review-refactor-y-tests.md`.

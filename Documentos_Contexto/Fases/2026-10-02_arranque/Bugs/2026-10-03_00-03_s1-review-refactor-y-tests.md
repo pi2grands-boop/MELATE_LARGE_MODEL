@@ -166,3 +166,44 @@ porque nunca dependió de nada de esto.
 Relacionado: `Fases/2026-10-02_arranque/Bugs/2026-10-02_23-29_s1-porton-linea-base.md`,
 `Fases/2026-10-02_arranque/Cambios/2026-10-03_00-03_s1-paquete-src-melate.md`,
 `Fases/2026-10-02_arranque/Cambios/2026-10-03_00-03_s1-tests.md`
+
+---
+
+## Resultado — CERRADO el 2026-10-03 a las 00:25
+
+Los cuatro bugs del ciclo quedaron corregidos **dentro del mismo ciclo**, y tres tienen test propio:
+
+| Bug | Test que lo vigila |
+|---|---|
+| El hash podía no ser el de los datos analizados | `test_paridad.py::test_el_hash_registrado_es_el_de_los_datos_analizados` |
+| `informe` moría en un clon nuevo | `test_paridad.py::test_la_salida_se_crea_aunque_no_exista_la_carpeta` |
+| Un test comparaba contra un número redondeado a mano | Los tests de línea base comprueban el redondeo, no una tolerancia |
+| El colador se encontraba a sí mismo | `colador.ps1 -Autoprueba` |
+
+Suite completa en verde: **52 pruebas, 105 s**. Colador: 41 ficheros, 0 coincidencias, exit 0,
+autoprueba 3/3.
+
+### Un quinto hallazgo, encontrado al verificar la propia bitácora
+
+`scripts/verificar-bitacora.ps1` se escribió para comprobar que la bitácora es consistente, y su
+primera ejecución encontró dos cosas:
+
+- **Este documento estaba abierto.** Decía "Bugs abiertos: ninguno" pero no tenía bloque de cierre,
+  así que para cualquier comprobación automática seguía vivo. Es el bloque que estás leyendo.
+- **El verificador tenía un falso positivo masivo**: resolvía las referencias `.md` solo contra la
+  raíz de la bitácora, así que marcaba como roto todo enlace a `CLAUDE.md`, `README.md` o
+  `REGLAS-DOCUMENTACION.md` —que viven en la raíz del repositorio— y los enlaces relativos dentro del
+  dossier. 37 de los 39 hallazgos iniciales eran suyos. Corregido: ahora intenta resolver contra la
+  raíz de la bitácora, la raíz del repositorio y la carpeta del propio documento, y omite los
+  marcadores de plantilla del tipo `AAAA-MM-DD_HH-MM_slug.md`, que son ejemplos de formato y no
+  enlaces.
+
+La lección es la misma que con el colador, y por eso se registra: **una herramienta de verificación
+que nadie ha verificado no es una garantía, es una opinión.** Las dos traen ahora su propia
+comprobación.
+
+### De los tres pendientes declarados arriba
+
+Siguen pendientes los tres, y pasan al `Fases/2026-10-02_arranque/99_CIERRE.md` de la fase: nada probado fuera de Windows, el
+informe sin `--datos` no se ha corrido desde el cambio de `_leer_bytes`, y el `SystemExit` de ese
+camino no se ha visto disparar. Ninguno bloquea el cierre y los tres están anotados para la Fase 2.

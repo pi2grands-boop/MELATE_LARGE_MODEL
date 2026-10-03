@@ -1,7 +1,7 @@
 # Fase: arranque
 
 - **Abierta:** 2026-10-02
-- **Estado:** abierta
+- **Estado:** **cerrada el 2026-10-03** — ver `99_CIERRE.md`
 - **Decidida por:** usuario
 
 El proyecto arranca con dos ficheros y nada más: `CLAUDE.md`, que es el contrato, y
