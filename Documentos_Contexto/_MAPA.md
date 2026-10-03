@@ -11,11 +11,13 @@ en `REGLAS-DOCUMENTACION.md` §0 y en `Seguridad/Decisiones/`.
 1. `README.md` (en la raíz) — qué es el proyecto y qué no. Empieza por "esto no predice números".
 2. `Mapa/Añadir/2026-10-03_00-13_s1-mapa-del-sistema.md` — qué módulo responde a qué pregunta, y la
    pieza de la que depende todo: hay dos programas y dan lo mismo.
-3. `Fases/2026-10-02_arranque/99_CIERRE.md` — dónde está el proyecto hoy y qué queda pendiente.
+3. `Mapa/Modificar/2026-10-03_01-30_s2-entra-el-laboratorio.md` — la frontera entre **explorar** y
+   **juzgar**. Las cifras del informe no bastan para afirmar nada; solo el laboratorio puede.
+4. `Fases/2026-10-03_protocolo/99_CIERRE.md` — dónde está el proyecto hoy y qué queda pendiente.
 
-## Si tienes 10 minutos y quieres entender por qué este proyecto es desconfiado
+## Si tienes 15 minutos y quieres entender por qué este proyecto es desconfiado
 
-Lee estos tres, en orden. Cuentan la historia completa de la primera fase:
+Lee estos cuatro, en orden. Cuentan la historia completa:
 
 1. `Fases/2026-10-02_arranque/Bugs/2026-10-02_23-29_s1-porton-linea-base.md` — dos de las doce
    cifras del contrato no reproducían. No era el código: era un número mal transcrito en una fuente
@@ -23,8 +25,12 @@ Lee estos tres, en orden. Cuentan la historia completa de la primera fase:
 2. `Protocolo_Estadistico/Decisiones/2026-10-03_00-13_s1-familias-benjamini-hochberg.md` — por qué
    un p = 0.017 se convierte en q = 0.35 cuando se cuentan las 36 pruebas, y por qué el número que
    manda se decide **antes** de ver los resultados.
-3. `Reproducibilidad/Añadir/2026-10-03_00-13_s1-linea-base-reproducida.md` — por qué una cifra sin
-   su hash y sin sus versiones de librería no es un resultado.
+3. `Protocolo_Estadistico/Añadir/2026-10-03_01-30_s2-preregistro-y-las-cinco-condiciones.md` — qué
+   hace falta para poder afirmar algo, qué error mata cada una de las cinco condiciones, y cuántos
+   años de datos haría falta: unos once.
+4. `Fases/2026-10-03_protocolo/Bugs/2026-10-03_01-05_s2-pendientes-heredados.md` — la Fase 1 cerró
+   con 52 tests en verde y 17 de ellos fallaban en otro shell. Lo que lo descubrió fue haber dejado
+   escrita la lista de pendientes y haberla ejecutado.
 
 ## Si vas a tocar código
 
@@ -36,9 +42,13 @@ Lee estos tres, en orden. Cuentan la historia completa de la primera fase:
   primero.
 
 ```powershell
-.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 31 pruebas, 2.4 s
-.venv\Scripts\python.exe -m pytest tests -q                              # 52 pruebas, ~105 s
+.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # los rapidos, ~5 s
+.venv\Scripts\python.exe -m pytest tests -q                              # 92 pruebas, ~113 s
 ```
+
+**Y si lo que quieres es saber si una estrategia funciona:** no mires el informe. Sella un
+preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué, y
+`python -m melate.lab --prereg prereg/<fichero>.json` es el único camino que puede afirmar algo.
 
 ## Si vas a subir algo
 
@@ -61,7 +71,8 @@ Lee estos tres, en orden. Cuentan la historia completa de la primera fase:
 | ¿Qué cambia en la superficie de ataque? ¿Qué se publica? | Seguridad |
 | ¿Qué sirve el servidor? | Red *(vacía: todo es local)* |
 | ¿Se puede volver a obtener este número exacto? | Reproducibilidad |
-| ¿Me puedo creer este resultado? | Protocolo_Estadistico |
+| ¿Me puedo creer este resultado? ¿Qué hace falta para afirmar algo? | Protocolo_Estadistico |
+| ¿Qué es un preregistro y por qué no se puede editar? | Protocolo_Estadistico · Almacenamiento |
 | ¿Cuánto tarda y dónde se va el tiempo? | Rendimiento |
 | ¿Qué se subió al repositorio y cuándo? | Despliegue |
 | ¿Por qué se eligió A y no B? | `<Área>/Decisiones` |
@@ -72,23 +83,28 @@ Un cambio normal va directo a la rejilla. Los bloques grandes viven en `Fases/<f
 al cerrarse, emiten a las áreas base **solo el estado final**. El proceso se queda en el dossier.
 
 - `Fases/2026-10-02_arranque/` — **cerrada el 2026-10-03.** Bitácora, entorno, snapshot congelado,
-  reproducción de la línea base, paquete `src/melate/` con paridad, 52 tests y primer push. Empieza
+  reproducción de la línea base, paquete `src/melate/` con paridad y primer push. Empieza
   por su `Fases/2026-10-02_arranque/00_ALCANCE.md`; la historia está en sus dos `Bugs/`.
+- `Fases/2026-10-03_protocolo/` — **cerrada el 2026-10-03.** Los pendientes de la Fase 1 ejecutados
+  (con un bug de 17 tests encontrado por el camino), `prereg/*.json` sellado, `lab.py` y las 5
+  condiciones de la regla 5.
 
 ## Estado ahora mismo
 
 - **Bugs abiertos:** ninguno.
-- **Fases abiertas:** ninguna. La siguiente es la Fase 2 (preregistro y `lab.py`), y **no empieza sin
-  que el usuario la apruebe** (`CLAUDE.md`).
-- **Pendiente de verificar en vivo** — los siete puntos de
-  `Fases/2026-10-02_arranque/99_CIERRE.md`. Los dos que más importan:
-  clonar el repositorio en limpio y recalcular los SHA-256 **en Linux o macOS**, que es donde la
-  conversión de finales de línea habría dado la cara; y correr el informe sin `--datos`, cuyo camino
-  de red no se ha ejercitado desde que se le quitó el respaldo al espejo.
+- **Fases abiertas:** ninguna. La siguiente es la Fase 3 (EV, popularidad con Scrapling y cartera),
+  y **no empieza sin que el usuario la apruebe** (`CLAUDE.md`).
+- **El veredicto del proyecto, hoy:** `sin ventaja demostrada`, 0 de 5 condiciones, porque el holdout
+  del preregistro está vacío. Es la respuesta correcta y seguirá siéndolo durante años.
+- **Pendiente de verificar en vivo** — los cinco puntos de
+  `Fases/2026-10-03_protocolo/99_CIERRE.md`. Los dos primeros no son falta de esfuerzo, son el
+  diseño funcionando: no habrá una evaluación preregistrada de verdad hasta que pasen sorteos, y la
+  condición 5 necesita del orden de once años de datos.
 - **Decisiones cerradas que atan el proyecto:**
   - `baseline_auditoria.py` es el oráculo y no se modifica.
   - El espejo es solo validación cruzada, nunca carga.
   - Para declarar ventaja manda `q_BH_global`, la familia de 36 pruebas.
+  - Un preregistro no se sobrescribe, no se sella en el pasado, y alterarlo lo invalida.
   - La bitácora se publica; nada personal sale de la máquina, y las rutas son siempre relativas.
   - `pandas < 3` mientras el oráculo use `df.attrs`.
 

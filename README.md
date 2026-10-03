@@ -54,6 +54,21 @@ El punto 3 es el que más duele y el más importante. La regresión logística e
 p = 0.017, que a simple vista parece un hallazgo; con la corrección por las 36 pruebas se convierte
 en q = 0.35, que no es nada.
 
+**Y hay una frontera que importa: el informe explora, el laboratorio juzga.** Las cifras de
+`melate.informe` son exploratorias y no bastan para afirmar nada. Solo `melate.lab` puede, y exige
+un preregistro sellado: un JSON que declara la hipótesis, el umbral y la familia de corrección
+**antes** de que existan los datos que la juzgarán, con un hash que lo invalida si se altera. El
+holdout son los sorteos posteriores al sello, así que el veredicto de hoy es:
+
+```
+sin ventaja demostrada  (0 de 5 condiciones)
+  [NO] holdout futuro positivo   holdout vacío: 0 sorteos posteriores al sello
+```
+
+Es imposible declarar una ventaja hoy, por construcción. Con un efecto mínimo detectable de 0.048
+aciertos harían falta del orden de 1 800 sorteos de holdout — unos once años a tres por semana. No
+es un defecto del diseño: es la medida honesta de cuánta evidencia haría falta.
+
 ## Cómo correrlo
 
 Todo es local. No hace falta Docker ni compilar nada: las dependencias tienen *wheel* precompilado.
@@ -63,12 +78,22 @@ python -m venv .venv
 .venv/Scripts/python -m pip install -r requirements.txt    # Linux/macOS: .venv/bin/python
 .venv/Scripts/python -m pip install -e .
 
-# Informe completo contra el snapshot congelado (~30 s)
+# Informe exploratorio contra el snapshot congelado (~70 s)
 .venv/Scripts/python -m melate.informe --datos data/raw/2026-10-02 --salida reportes/informe.json
 
 # Contra los datos de hoy, descargando del oficial
 .venv/Scripts/python -m melate.informe --salida reportes/hoy.json
+
+# El veredicto de una hipotesis preregistrada: el unico camino que puede afirmar algo
+.venv/Scripts/python -m melate.lab --prereg prereg/2026-10-03_logistica-revancha.json \
+    --datos data/raw/2026-10-02
+
+# Sellar una hipotesis nueva (no sobrescribe, y no sella en el pasado)
+.venv/Scripts/python -m melate.lab --sellar borrador.json --salida prereg/<fecha>_<slug>.json
 ```
+
+Todo esto está probado solo en Windows: los comandos usan `.venv/Scripts/` y los dos scripts de
+verificación (`scripts/colador.ps1` y `scripts/verificar-bitacora.ps1`) son PowerShell.
 
 Los tests:
 
@@ -86,12 +111,14 @@ src/melate/
   ingest.py               descarga y normalización; hash de lo que se cargó
   validate.py             las 7 reglas de datos
   audit.py                auditoría de la urna por Monte Carlo, y poder estadístico
-  protocolo.py            Benjamini-Hochberg y las familias de pruebas
+  protocolo.py            Benjamini-Hochberg, las familias, y las 5 condiciones
   backtest.py             walk-forward de las 8 estrategias
   ev.py                   premios mayores y valor esperado
-  informe.py              `python -m melate.informe`
+  informe.py              `python -m melate.informe` — explora
+  lab.py                  `python -m melate.lab` — juzga. Sin preregistro no evalúa
 data/raw/<fecha>/         snapshots congelados, con su SHA-256 y su procedencia
-tests/                    reglas de datos, línea base, paridad con el oráculo, no-fuga temporal
+prereg/                   hipótesis preregistradas, selladas e inmutables
+tests/                    reglas de datos, línea base, paridad, no-fuga temporal, protocolo
 Documentos_Contexto/      la bitácora: por qué cada cosa es como es
 ```
 

@@ -1,0 +1,70 @@
+{
+ "advertencia": "Este preregistro NO valida retroactivamente la medición de la Fase 1. Aquella fue exploratoria sobre los sorteos 2489-4272 y lo seguirá siendo. El holdout de este sello son solo los sorteos posteriores a sello_utc.",
+ "criterio_de_declaracion": "Las 5 condiciones de la regla 5 del CLAUDE.md a la vez: holdout futuro positivo; q_BH_global <= 0.05 contra la familia declarada de 36; estable al mover los hiperparámetros declarados arriba; mismo signo del efecto en los tres juegos; efecto >= mínimo detectable con el tamaño del holdout.",
+ "datos_al_sellar": {
+  "sha256": {
+   "Melate": "51de5afd3b7d348bff2b3032c1d125fa6870d7176f8006a1dd9baf12ae1891cc",
+   "Revancha": "5d1b191e3c8bc52de154124b3b0d6d5f730ebd0a1f6006f9d48f2776bf811581",
+   "Revanchita": "06beda9ab84cf015951756ade4c8df4d894ebdf5e7dda64ef20f21e81e913b5a"
+  },
+  "snapshot": "data/raw/2026-10-02",
+  "ultima_fecha": "2026-09-30",
+  "ultimo_concurso": 4272
+ },
+ "efecto_minimo_declarado": 0.048,
+ "entorno_al_sellar": {
+  "numpy": "2.5.3",
+  "pandas": "2.3.3",
+  "python": "3.13.9",
+  "scikit-learn": "1.9.1",
+  "scipy": "1.18.1"
+ },
+ "entrenamiento": "walk-forward estricto: para predecir el sorteo t se entrena con los sorteos de índice 100 a t-1 de la era 6/56, reentrenando cada 100 sorteos",
+ "estrategias": [
+  "Regresión logística"
+ ],
+ "familia_de_correccion": "Benjamini-Hochberg contra una familia declarada de 36 pruebas (15 de auditoría + 21 de backtest), según Protocolo_Estadistico/Decisiones. El holdout corre 3 pruebas, una por juego; corregir contra 3 en vez de contra 36 sería aflojar el criterio después de haberlo fijado.",
+ "hiperparametros": {
+  "max_iter": 500
+ },
+ "hiperparametros_alternativos": [
+  {
+   "max_iter": 200
+  },
+  {
+   "max_iter": 1000
+  },
+  {
+   "C": 0.1,
+   "max_iter": 500
+  },
+  {
+   "C": 10.0,
+   "max_iter": 500
+  }
+ ],
+ "hipotesis": "Una regresión logística entrenada walk-forward sobre las 7 variables de frecuencia, atraso y repetición predice los 6 números de Revancha con más aciertos por boleto que el azar (36/56 = 0.642857), y el efecto se replica con el mismo signo en Melate y Revanchita.",
+ "holdout": "los sorteos de la era 6/56 con FECHA posterior a sello_utc. En el momento de sellar está vacío, por construcción.",
+ "id": "2026-10-03_logistica-revancha",
+ "juego_principal": "Revancha",
+ "juegos": [
+  "Melate",
+  "Revancha",
+  "Revanchita"
+ ],
+ "linea_base": "azar = 36/56 = 0.642857 aciertos por boleto; desviación 0.722357",
+ "metrica": "aciertos por boleto de 6 números",
+ "notas": "A tres sorteos por semana, el mínimo detectable de 0.048 aciertos necesita del orden de 1.800 sorteos de holdout para ser alcanzable, es decir unos 11 años. Eso no es un defecto del diseño: es la medida honesta de cuánta evidencia haría falta para afirmar algo. Mientras tanto el veredicto será 'sin ventaja demostrada', y el motivo exacto estará en la condición que falle.",
+ "origen": "Hipótesis exploratoria de la Fase 1: era la única de las 8 estrategias con p < 0.05 sin corregir (0.6839 aciertos, p = 0.0165). Tras la corrección por las 36 pruebas quedó en q = 0.3465, que no pasa el umbral. Se preregistra para poder juzgarla con datos que todavía no existen, que es la única forma de saber si hay algo ahí.",
+ "prueba": "z de dos colas de la media de aciertos contra la media del azar, con el error estándar del muestreo sin reemplazo",
+ "reentrenar_cada": 100,
+ "sello_sha256": "36edc964461c0152468f69e48c196fde88319fd9b5ccd9be5d90ec69b00240f4",
+ "sello_utc": "2026-10-03T06:45:00+00:00",
+ "semillas": {
+  "backtest": 7
+ },
+ "tamano_familia": 36,
+ "titulo": "La regresión logística sobre 7 variables de frecuencia y atraso bate al azar en Revancha",
+ "tolerancia_estabilidad": 0.5,
+ "umbral_q": 0.05
+}
