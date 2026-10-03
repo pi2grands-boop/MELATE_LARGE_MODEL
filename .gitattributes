@@ -1,0 +1,19 @@
+# Normalizacion de finales de linea.
+#
+# El caso que importa esta abajo: los snapshots de datos NO se pueden tocar.
+# Su SHA-256 es parte del protocolo de reproducibilidad, se publica en
+# SHA256.txt y en CLAUDE.md, y lo comprueba un test. Los CSV oficiales vienen
+# con CRLF; con core.autocrlf=true (el valor por defecto en Windows) git los
+# normalizaria a LF en el repositorio y los devolveria con LF en un clon de
+# Linux o macOS. Eso cambia los bytes, cambia el hash, y convierte el hash
+# publicado en una cifra falsa: exactamente lo contrario de para lo que esta.
+#
+# El orden importa: en .gitattributes gana la ultima regla que coincide.
+
+* text=auto
+
+# PowerShell 5.1 lee un .ps1 sin BOM como ANSI. Se deja en CRLF nativo.
+*.ps1 text eol=crlf
+
+# Los snapshots son inmutables byte a byte. Nunca se convierten.
+data/raw/** -text
