@@ -1,0 +1,17 @@
+# Entorno local: se reconstruye con requirements.txt
+.venv/
+*.egg-info/
+build/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Lo que NO se ignora, a propósito:
+#   data/raw/<fecha>/   los snapshots congelados (435 KB) son lo que hace que el hash
+#                       del protocolo signifique algo y que las cifras se puedan reproducir
+#   reportes/*.json     la salida de cada corrida, con su hash y sus semillas
+#   Documentos_Contexto/  la bitácora; en este proyecto se publica a propósito
+#                       (ver REGLAS-DOCUMENTACION.md §0)

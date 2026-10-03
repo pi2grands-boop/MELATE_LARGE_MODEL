@@ -1,0 +1,24 @@
+# Máquina Melate — dependencias de la Fase 1
+#
+# Restricciones, no versiones exactas. El fijado exacto vive en
+# entorno/pip-freeze-2026-10-02.txt, que es lo que reproduce la línea base.
+# Instalar con:  python -m pip install -r requirements.txt
+#
+# Ninguna de estas compila: todas tienen wheel para cp313-win_amd64 o son
+# Python puro. Por eso este proyecto no necesita Docker.
+
+numpy>=2.3,<3
+
+# <3 a propósito: pandas 3.0 cambia la propagación de df.attrs, que
+# baseline_auditoria.py usa (línea 68, leída en la 279). Migrar a pandas 3
+# es un cambio aparte, con su propio documento.
+pandas>=2.3,<3
+
+scipy>=1.14,<2
+
+# La dependencia más sensible del proyecto: el mismo random_state puede dar
+# otro árbol en otra versión. Ver el documento de Reproducibilidad.
+scikit-learn>=1.5,<2
+
+requests>=2.32,<3
+pytest>=8,<10
