@@ -13,6 +13,7 @@ import argparse
 import datetime
 import json
 import pathlib
+import sys
 
 import numpy as np
 
@@ -31,8 +32,32 @@ NUEVAS_CLAVES = {
 }
 
 
+def _salida_robusta():
+    """Que el informe no muera por la codificacion de la consola.
+
+    El resumen imprime 'Δ', '≈' y '–', que no existen en las páginas de códigos ANSI de Windows
+    (cp1252, cp850…). Cuando la salida va a una tubería o a un fichero, Python usa la codificación
+    local y esos caracteres lanzan UnicodeEncodeError **a mitad del informe**, después de haber
+    gastado el minuto de cómputo. En una consola de verdad no pasa, porque Windows usa un escritor
+    UTF-16 aparte: de ahí que el fallo aparezca solo al redirigir, y que pueda pasar inadvertido
+    durante mucho tiempo.
+
+    Redirigido se pasa a UTF-8, que es lo que espera quien consume la salida. En consola se respeta
+    su codificación y solo se añade errors="replace", para degradar a '?' en vez de reventar.
+    """
+    for flujo in (sys.stdout, sys.stderr):
+        try:
+            if flujo.isatty():
+                flujo.reconfigure(errors="replace")
+            else:
+                flujo.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:  # noqa: BLE001 - un flujo sin reconfigure no debe tumbar el informe
+            pass
+
+
 def construir(carpeta=None, sims=2000):
     """El reporte completo, como dict. Separado de main() para que los tests no pasen por argparse."""
+    _salida_robusta()
     rng = np.random.default_rng(SEMILLA_AUDITORIA)
 
     crudos = {j: cargar(j, carpeta) for j in JUEGOS}

@@ -5,6 +5,7 @@ que se generan **una vez por sesión** y se reparten entre los tests que las nec
 que solo leen los CSV no pasan por aquí y son instantáneos.
 """
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -42,9 +43,28 @@ def datos(snapshot):
     return {"crudos": crudos, "era": {j: era_56(j, d) for j, d in crudos.items()}}
 
 
+def entorno_utf8():
+    """El entorno con el que se lanzan los subprocesos del arnés.
+
+    `PYTHONIOENCODING=utf-8` no es un adorno. Cuando la salida de un hijo va a una tubería, Python
+    usa la codificación local: en Windows con cp1252, los caracteres 'Δ', '≈' y '–' que imprime el
+    resumen lanzan UnicodeEncodeError y el proceso muere a mitad del informe. El fallo depende del
+    shell desde el que se lance pytest, así que sin fijarlo la suite pasa o falla según quién la
+    corra — que es la peor clase de test.
+
+    `melate.informe` ya se protege por su cuenta (`_salida_robusta`), pero `baseline_auditoria.py`
+    es el oráculo y no se modifica nunca, así que para él esta es la única solución posible. Y
+    fijarlo para los dos mantiene la comparación simétrica.
+    """
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "utf-8"
+    return env
+
+
 def _correr(cmd, salida, snapshot, raiz):
     r = subprocess.run([sys.executable, *cmd, "--datos", str(snapshot), "--salida", str(salida)],
-                       cwd=raiz, capture_output=True, text=True, encoding="utf-8", errors="replace")
+                       cwd=raiz, capture_output=True, text=True, encoding="utf-8", errors="replace",
+                       env=entorno_utf8())
     assert r.returncode == 0, f"{cmd} falló:\n{r.stdout[-3000:]}\n{r.stderr[-3000:]}"
     return json.loads(salida.read_text(encoding="utf-8"))
 

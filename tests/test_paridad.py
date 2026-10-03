@@ -111,7 +111,11 @@ def test_el_hash_registrado_es_el_de_los_datos_analizados(paquete, snapshot):
 
 
 def test_la_salida_se_crea_aunque_no_exista_la_carpeta(tmp_path, snapshot, raiz):
-    """En un clon nuevo reportes/ no existe, y el informe no puede morir por eso."""
+    """En un clon nuevo reportes/ no existe, y el informe no puede morir por eso.
+
+    Sin `env=`: hereda el entorno real, así que también comprueba que el informe sobrevive a la
+    codificación que le toque.
+    """
     import subprocess
     import sys
 
@@ -121,3 +125,29 @@ def test_la_salida_se_crea_aunque_no_exista_la_carpeta(tmp_path, snapshot, raiz)
                        cwd=raiz, capture_output=True, text=True, encoding="utf-8", errors="replace")
     assert r.returncode == 0, r.stderr[-2000:]
     assert destino.is_file()
+
+
+def test_el_informe_sobrevive_a_una_codificacion_hostil(tmp_path, snapshot, raiz):
+    """Fija el arreglo de `_salida_robusta`, con la codificación que lo rompía.
+
+    El resumen imprime 'Δ', '≈' y '–', que no existen en cp1252. Cuando la salida va a una tubería,
+    Python usa la codificación local y el proceso moría con UnicodeEncodeError **a mitad del
+    informe**, después de gastar el cómputo. En consola no pasaba, así que el fallo dependía del
+    shell desde el que se lanzara: la suite pasaba o fallaba según quién la corriera.
+
+    Aquí se fuerza cp1252 a propósito. Sin el arreglo, este test falla.
+    """
+    import os
+    import subprocess
+    import sys
+
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "cp1252"
+    destino = tmp_path / "hostil.json"
+    r = subprocess.run([sys.executable, "-m", "melate.informe", "--datos", str(snapshot),
+                        "--sims", "2", "--salida", str(destino)],
+                       cwd=raiz, capture_output=True, text=True, encoding="utf-8", errors="replace",
+                       env=env)
+    assert r.returncode == 0, f"murió con cp1252:\n{r.stdout[-1500:]}\n{r.stderr[-1500:]}"
+    assert "UnicodeEncodeError" not in r.stderr
+    assert destino.is_file(), "el informe no llegó a escribir el JSON"
