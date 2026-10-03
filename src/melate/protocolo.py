@@ -177,26 +177,44 @@ def condicion_mismo_signo(por_juego):
     return _cond("mismo signo en los tres juegos", ok, detalle)
 
 
-def condicion_efecto_minimo(res, minimo=None):
+def condicion_efecto_minimo(res, declarado=None):
     """5 · Efecto >= mínimo detectable.
 
     Si el efecto medido es menor que lo que el tamaño de muestra puede distinguir del azar, da igual
     que el signo sea favorable: no se está midiendo nada.
+
+    El umbral es **el mayor** de dos cosas:
+
+    * el mínimo detectable que permite el tamaño del holdout, y
+    * el `efecto_minimo_declarado` del preregistro, si lo hay.
+
+    Tomar solo el calculado abría un agujero concreto: con un holdout muy grande el mínimo
+    detectable baja, y la condición pasaba con un efecto **mucho menor** que el que el documento
+    sellado decía que haría falta. Se comprobó: delta 0.0100 contra un detectable de 0.0092 pasaba,
+    con 0.048 declarado en el sello. Quien se compromete por adelantado a un umbral no puede
+    beneficiarse después de que la muestra haya crecido.
     """
-    if minimo is None:
-        minimo = res.get("efecto_minimo_detectable")
+    calculado = res.get("efecto_minimo_detectable")
     d = res.get("delta")
-    if d is None or minimo is None:
+    if d is None or (calculado is None and declarado is None):
         return _cond("efecto >= mínimo detectable", False, "falta el efecto o el mínimo detectable")
-    return _cond("efecto >= mínimo detectable", d >= minimo,
-                 f"delta {d:+.4f} contra mínimo detectable {minimo:.4f}")
+    umbral = max(x for x in (calculado, declarado) if x is not None)
+    cual = "detectable" if umbral == calculado else "declarado en el sello"
+    detalle = f"delta {d:+.4f} contra {umbral:.4f} ({cual}"
+    if calculado is not None and declarado is not None:
+        detalle += f"; detectable {calculado:.4f}, declarado {declarado:.4f}"
+    return _cond("efecto >= mínimo detectable", d >= umbral, detalle + ")")
 
 
-def declara_ventaja(resultados, por_juego=None, umbral=UMBRAL_Q, tolerancia=0.5):
+def declara_ventaja(resultados, por_juego=None, umbral=UMBRAL_Q, tolerancia=0.5,
+                    efecto_minimo_declarado=None):
     """Las 5 condiciones de la regla 5, a la vez. Por defecto: sin ventaja demostrada.
 
     `resultados` es el resultado de la hipótesis preregistrada sobre su holdout.
     `por_juego` es el mismo resultado desglosado por juego, para la condición 4.
+
+    Los tres últimos parámetros los pasa `lab.evaluar` **desde el preregistro**: el umbral de `q`,
+    la tolerancia de estabilidad y el efecto mínimo declarado. Ninguno se decide aquí.
 
     Devuelve el veredicto **y** las cinco condiciones razonadas. Nunca lanza: si falta un dato, la
     condición correspondiente no se cumple y lo dice. Un sistema que se cae cuando le faltan datos
@@ -208,7 +226,7 @@ def declara_ventaja(resultados, por_juego=None, umbral=UMBRAL_Q, tolerancia=0.5)
         condicion_q(resultados, umbral),
         condicion_estabilidad(resultados, tolerancia),
         condicion_mismo_signo(por_juego),
-        condicion_efecto_minimo(resultados),
+        condicion_efecto_minimo(resultados, efecto_minimo_declarado),
     ]
     incumplidas = [c for c in condiciones if not c["cumple"]]
     hay_ventaja = not incumplidas

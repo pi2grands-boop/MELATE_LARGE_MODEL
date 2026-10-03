@@ -40,7 +40,12 @@ Forzar `core.eol=lf` es lo que hace válida la prueba desde Windows: un clon nor
 devolvería CRLF por el camino equivocado (normalizar a LF y volver a convertir) y no distinguiría
 los dos casos.
 
-### ❌ 2 · Entorno nuevo y suite completa en el clon limpio — **17 de 53 tests fallaban**
+### ❌ 2 · Entorno nuevo y suite completa en el clon limpio — **17 de 52 tests fallaban**
+
+> **Corregido el 2026-10-03 a las 02:05.** Este apartado decía "17 de 53". La salida real fue
+> `1 failed, 35 passed, 16 errors` = **52**; el 53 es el total *después* de añadir el test de
+> codificación. Se corrige en sitio por la segunda excepción del §9 del `REGLAS-DOCUMENTACION.md`.
+> Hallazgo de `Protocolo_Estadistico/Bugs/2026-10-03_01-59_auditoria-retrospectiva-fases-1-y-2.md`.
 
 Este es el hallazgo de la fase.
 
@@ -190,7 +195,7 @@ Lo ejecutado, con su evidencia:
 | Pendiente heredado | Resultado |
 |---|---|
 | 1 · Clon limpio y hashes, en Linux o macOS | ✅ **Ejecutado** emulando el checkout de Linux (`core.eol=lf`). `sha256sum -c SHA256.txt` → OK en los tres |
-| 2 · Entorno nuevo y suite en el clon | ❌ **17 de 53 fallaban** → causa raíz única encontrada y corregida, con test. Reejecutado: **53 en verde** |
+| 2 · Entorno nuevo y suite en el clon | ❌ **17 de 52 fallaban** → causa raíz única encontrada y corregida, con test. Reejecutado: **53 en verde** (52 + el test nuevo) |
 | 3 · Informe sin `--datos` | ✅ **Ejecutado.** Funciona, y los hashes en vivo coinciden con el snapshot |
 | 4 · El `SystemExit` de `_leer_bytes` | ⬜ **Sigue sin ejercitarse.** El oficial no ha fallado. Pasa a `Fases/2026-10-03_protocolo/99_CIERRE.md` |
 | 5 · Fuera de Windows | ⚠️ **Parcial.** Cubierta la conversión de finales de línea; el resto, no |

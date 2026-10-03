@@ -42,9 +42,13 @@ Lee estos cuatro, en orden. Cuentan la historia completa:
   primero.
 
 ```powershell
-.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # los rapidos, ~5 s
-.venv\Scripts\python.exe -m pytest tests -q                              # 92 pruebas, ~113 s
+.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 72 pruebas, ~2.5 s
+.venv\Scripts\python.exe -m pytest tests -q                              # 100 pruebas, ~136 s
 ```
+
+> Estas dos cifras se vuelven a medir al cerrar cada fase. Ya envejecieron una vez: dos tests de
+> subproceso sin marcar dejaron el bucle rápido en 30 s mientras este mapa decía 5
+> (`Rendimiento/Arreglos_Bugs/2026-10-03_01-59_la-suite-rapida-no-era-rapida.md`).
 
 **Y si lo que quieres es saber si una estrategia funciona:** no mires el informe. Sella un
 preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué, y

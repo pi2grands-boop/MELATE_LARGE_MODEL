@@ -124,7 +124,17 @@ def _sello(spec):
 
 
 def holdout(spec, juegos):
-    """Los sorteos posteriores al sello, por juego. Hoy: vacío, y eso es información, no un error."""
+    """Los sorteos posteriores al sello, por juego. Hoy: vacío, y eso es información, no un error.
+
+    **La frontera excluye el día del sello, a propósito.** `FECHA` es una fecha sin hora, así que
+    pandas la trata como medianoche: un sorteo celebrado el mismo día del sello nunca es `> sello`,
+    sea cual sea la hora del sello. Es decir, el holdout empieza al día siguiente.
+
+    Se deja así porque el error cae del lado seguro. Un sorteo del día del sello pudo celebrarse
+    antes o después de sellar —no hay forma de saberlo con una fecha sin hora— y meterlo en el
+    holdout significaría, en el peor caso, evaluar contra un sorteo que ya se podía mirar.
+    Perder un sorteo no cuesta nada; contaminar el holdout lo cuesta todo.
+    """
     corte = _sello(spec)
     corte_naive = corte.replace(tzinfo=None)
     out = {}
@@ -174,13 +184,19 @@ def _entrenar(estrategia, F, X, t, hiper):
     return None
 
 
-def _evaluar_una(estrategia, df, indices, hiper, reentrenar_cada=100):
-    """Aciertos por boleto de la estrategia en los sorteos `indices`. Devuelve None si están vacíos."""
+def _evaluar_una(estrategia, df, indices, hiper, reentrenar_cada=100, semilla=SEMILLA_BACKTEST):
+    """Aciertos por boleto de la estrategia en los sorteos `indices`. Devuelve None si están vacíos.
+
+    `reentrenar_cada` y `semilla` los pasa `evaluar()` **desde el preregistro**. Tenían valor por
+    defecto y nadie se los daba, así que un preregistro que declarara otro valor se ignoraba en
+    silencio: el defecto coincidía con lo declarado y no se notaba. Ver el `Arreglos_Bugs/` de
+    Protocolo_Estadistico.
+    """
     if not indices:
         return None
     X = matriz(df["nums"].tolist())
     F, atraso = variables(X)
-    rng = np.random.default_rng(SEMILLA_BACKTEST)
+    rng = np.random.default_rng(semilla)
     modelo = None
     aciertos = []
     for k, t in enumerate(sorted(indices)):
@@ -218,20 +234,31 @@ def evaluar(spec, juegos=None, carpeta=None):
     estrategia = spec["estrategias"][0]
     variantes_declaradas = spec.get("hiperparametros_alternativos") or []
 
+    # TODO lo que gobierna la corrida sale del preregistro, no de valores por defecto del código.
+    # Antes `reentrenar_cada` y la semilla eran defectos de `_evaluar_una` que nadie sobrescribía:
+    # el preregistro los declaraba y se ignoraban en silencio porque el defecto coincidía.
+    cada = int(spec.get("reentrenar_cada") or 100)
+    semilla = int((spec.get("semillas") or {}).get("backtest", SEMILLA_BACKTEST))
+    hiper = spec.get("hiperparametros")
+
     por_juego = {}
     for juego in JUEGOS:
         if juego not in juegos:
             continue
-        r = _evaluar_una(estrategia, juegos[juego], hold[juego]["indices"], spec.get("hiperparametros"))
+        r = _evaluar_una(estrategia, juegos[juego], hold[juego]["indices"], hiper,
+                         reentrenar_cada=cada, semilla=semilla)
         por_juego[juego] = r or {"sorteos_holdout": 0, "delta": None}
 
     base = por_juego.get(principal) or {"sorteos_holdout": 0, "delta": None}
     resultados = dict(base)
     resultados["variantes"] = [
         dict({"hiperparametros": h},
-             **(_evaluar_una(estrategia, juegos[principal], hold[principal]["indices"], h) or {"delta": None}))
+             **(_evaluar_una(estrategia, juegos[principal], hold[principal]["indices"], h,
+                             reentrenar_cada=cada, semilla=semilla) or {"delta": None}))
         for h in variantes_declaradas
     ]
+    resultados["reentrenar_cada"] = cada
+    resultados["semilla"] = semilla
 
     # Benjamini-Hochberg sobre las pruebas del holdout, corrigiendo contra la familia que el
     # preregistro DECLARO, no contra las 3 que se acaban de correr. Usar m = 3 seria aflojar el
@@ -250,9 +277,12 @@ def evaluar(spec, juegos=None, carpeta=None):
     resultados["familia_declarada"] = m
     resultados["pruebas_corridas"] = len(con_p)
 
-    veredicto = protocolo.declara_ventaja(resultados, por_juego,
-                                          umbral=spec.get("umbral_q", protocolo.UMBRAL_Q),
-                                          tolerancia=spec.get("tolerancia_estabilidad", 0.5))
+    veredicto = protocolo.declara_ventaja(
+        resultados, por_juego,
+        umbral=spec.get("umbral_q", protocolo.UMBRAL_Q),
+        tolerancia=spec.get("tolerancia_estabilidad", 0.5),
+        efecto_minimo_declarado=spec.get("efecto_minimo_declarado"),
+    )
     return {
         "preregistro": {"id": spec["id"], "sello_utc": spec["sello_utc"],
                         CLAVE_HASH: spec[CLAVE_HASH], "estrategia": estrategia,

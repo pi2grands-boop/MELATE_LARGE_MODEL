@@ -98,8 +98,8 @@ verificación (`scripts/colador.ps1` y `scripts/verificar-bitacora.ps1`) son Pow
 Los tests:
 
 ```bash
-.venv/Scripts/python -m pytest tests -m "not lento and not red" -q   # rápido, ~3 s
-.venv/Scripts/python -m pytest tests -q                              # completo, ~2 min
+.venv/Scripts/python -m pytest tests -m "not lento and not red" -q   # 72 pruebas, ~2.5 s
+.venv/Scripts/python -m pytest tests -q                              # 100 pruebas, ~2.5 min
 ```
 
 ## Estructura

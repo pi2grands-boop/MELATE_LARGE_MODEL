@@ -110,11 +110,37 @@ def test_el_hash_registrado_es_el_de_los_datos_analizados(paquete, snapshot):
         assert publicado[f"{juego}.csv"] == d["sha256"]
 
 
+def test_salida_robusta_no_revienta_con_una_pagina_de_codigos_estrecha():
+    """La versión rápida del test de codificación: comprueba el mecanismo, no el programa entero.
+
+    Los dos tests de subproceso de abajo tardan 14 s cada uno porque arrancan un informe completo,
+    y eso los saca del bucle del día a día. Este cubre la misma causa raíz en milisegundos: un flujo
+    con una codificación que no puede representar 'Δ' no debe hacer estallar una escritura.
+    """
+    import io
+    import sys
+
+    from melate.informe import _salida_robusta
+
+    crudo = io.BytesIO()
+    flujo = io.TextIOWrapper(crudo, encoding="cp1252", newline="")
+    original = sys.stdout
+    try:
+        sys.stdout = flujo
+        _salida_robusta()
+        print("Δ ≈ – delta")          # sin el arreglo, esto lanza UnicodeEncodeError
+        sys.stdout.flush()
+    finally:
+        sys.stdout = original
+    assert crudo.getvalue(), "no se escribió nada"
+
+
+@pytest.mark.lento
 def test_la_salida_se_crea_aunque_no_exista_la_carpeta(tmp_path, snapshot, raiz):
     """En un clon nuevo reportes/ no existe, y el informe no puede morir por eso.
 
     Sin `env=`: hereda el entorno real, así que también comprueba que el informe sobrevive a la
-    codificación que le toque.
+    codificación que le toque. Marcado `lento`: arranca un informe completo, 14 s.
     """
     import subprocess
     import sys
@@ -127,8 +153,12 @@ def test_la_salida_se_crea_aunque_no_exista_la_carpeta(tmp_path, snapshot, raiz)
     assert destino.is_file()
 
 
+@pytest.mark.lento
 def test_el_informe_sobrevive_a_una_codificacion_hostil(tmp_path, snapshot, raiz):
     """Fija el arreglo de `_salida_robusta`, con la codificación que lo rompía.
+
+    Marcado `lento`: arranca un informe completo, 14 s. La versión rápida del mismo mecanismo está
+    en `test_salida_robusta_no_revienta_con_una_pagina_de_codigos_estrecha`.
 
     El resumen imprime 'Δ', '≈' y '–', que no existen en cp1252. Cuando la salida va a una tubería,
     Python usa la codificación local y el proceso moría con UnicodeEncodeError **a mitad del

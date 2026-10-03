@@ -207,6 +207,25 @@ def test_el_holdout_solo_mira_hacia_delante(datos):
                 assert h[juego]["primer_concurso"] == int(df.loc[idx, "CONCURSO"].min())
 
 
+def test_la_frontera_excluye_el_dia_del_sello(datos):
+    """Un sorteo del mismo día del sello queda fuera, sea la hora que sea. Es deliberado.
+
+    `FECHA` no tiene hora, así que pandas la trata como medianoche y un sorteo del día del sello
+    nunca es `> sello`. El error cae del lado seguro: no se puede saber si ese sorteo se celebró
+    antes o después de sellar, y meterlo en el holdout significaría evaluar contra un sorteo que ya
+    se podía mirar. Perder un sorteo no cuesta nada; contaminar el holdout lo cuesta todo.
+    """
+    df = datos["era"]["Revancha"]
+    ultima = df.FECHA.iloc[-1]
+    for hora in ("00:00", "06:45", "23:59"):
+        sello = f"{ultima.date()}T{hora}:00+00:00"
+        assert lab.holdout({"sello_utc": sello}, {"Revancha": df})["Revancha"]["sorteos"] == 0, \
+            f"el sorteo del dia del sello entro en el holdout con sello {sello}"
+    # El dia anterior si lo incluye: la frontera existe y esta donde se dice.
+    ayer = (ultima - datetime.timedelta(days=1)).strftime("%Y-%m-%dT12:00:00+00:00")
+    assert lab.holdout({"sello_utc": ayer}, {"Revancha": df})["Revancha"]["sorteos"] == 1
+
+
 def test_un_sello_antiguo_si_produce_holdout(datos):
     """La contraprueba del test anterior: si el sello es viejo, el holdout NO esta vacio.
 
@@ -269,6 +288,39 @@ def test_condicion_mismo_signo_es_la_mas_dura():
 def test_condicion_efecto_minimo():
     assert protocolo.condicion_efecto_minimo({"delta": 0.06, "efecto_minimo_detectable": 0.048})["cumple"]
     assert not protocolo.condicion_efecto_minimo({"delta": 0.02, "efecto_minimo_detectable": 0.048})["cumple"]
+
+
+def test_condicion_efecto_minimo_respeta_el_umbral_declarado():
+    """El umbral es el MAYOR del detectable y el declarado en el sello.
+
+    Sin esto había un agujero concreto: con un holdout muy grande el mínimo detectable baja, y la
+    condición pasaba con un efecto mucho menor que el que el documento sellado decía que haría
+    falta. Quien se compromete por adelantado a un umbral no puede beneficiarse después de que la
+    muestra haya crecido.
+    """
+    # holdout enorme: el detectable (0.0092) queda muy por debajo del declarado (0.048)
+    res = {"sorteos_holdout": 20000, "delta": 0.010, "efecto_minimo_detectable": 0.0092}
+    assert protocolo.condicion_efecto_minimo(res)["cumple"], "sin declarado, manda el detectable"
+    c = protocolo.condicion_efecto_minimo(res, declarado=0.048)
+    assert not c["cumple"], "con 0.048 declarado, un delta de 0.010 no puede pasar"
+    assert "declarado en el sello" in c["motivo"]
+
+    # y al revés: si el detectable es el mayor, manda el detectable
+    res2 = {"sorteos_holdout": 100, "delta": 0.10, "efecto_minimo_detectable": 0.20}
+    c2 = protocolo.condicion_efecto_minimo(res2, declarado=0.048)
+    assert not c2["cumple"] and "detectable" in c2["motivo"]
+
+
+def test_declara_ventaja_propaga_el_efecto_declarado():
+    """El camino completo: lo que llega de `lab.evaluar` tiene que llegar a la condición 5."""
+    res = {"sorteos_holdout": 20000, "delta": 0.010, "q_BH_global": 0.01,
+           "efecto_minimo_detectable": 0.0092,
+           "variantes": [{"delta": 0.0098}, {"delta": 0.0102}]}
+    por_juego = {j: {"delta": 0.010} for j in JUEGOS}
+    assert protocolo.declara_ventaja(res, por_juego)["ventaja"] is True
+    v = protocolo.declara_ventaja(res, por_juego, efecto_minimo_declarado=0.048)
+    assert v["ventaja"] is False, "el umbral declarado en el sello tiene que poder tumbar el veredicto"
+    assert v["cumplidas"] == 4
 
 
 # ---------------------------------------------------------------- el veredicto completo
@@ -377,6 +429,78 @@ def test_evaluar_con_holdout_de_verdad_mide_algo(tmp_path, datos):
     assert "vacío" not in cond["holdout futuro positivo"]["motivo"]
     assert "sin q" not in cond["q <= 0.05"]["motivo"], "la condicion 2 no se pudo evaluar"
     assert "q_BH_global =" in cond["q <= 0.05"]["motivo"]
+
+
+@pytest.mark.lento
+def test_los_parametros_del_sello_llegan_al_resultado(tmp_path, datos):
+    """Lo que el preregistro declara tiene que aparecer en el resultado, no un valor por defecto.
+
+    Este es el test que faltaba. `reentrenar_cada` y la semilla eran valores por defecto de
+    `_evaluar_una` que `evaluar()` no sobrescribía: el preregistro los declaraba y se ignoraban en
+    silencio, y no se notaba porque el defecto coincidía con lo declarado. Toda la suite pasaba.
+    """
+    ruta = tmp_path / "gobierna.json"
+    sellar_a_mano(spec_base("2026-02-01T00:00:00+00:00", tamano_familia=36,
+                            reentrenar_cada=37, semillas={"backtest": 4242}), ruta)
+    r = lab.evaluar(lab.cargar_preregistro(ruta), datos["era"])
+    assert r["resultados"]["reentrenar_cada"] == 37
+    assert r["resultados"]["semilla"] == 4242
+
+
+@pytest.mark.lento
+@pytest.mark.parametrize("estrategia,campo,valores", [
+    # La semilla solo decide desempates de magnitud 1e-9 en top6, asi que importa donde hay
+    # empates de verdad: las frecuencias son discretas y empatan mucho.
+    ("Calientes últimos 50", "semillas", ({"backtest": 7}, {"backtest": 99})),
+    # Y la cadencia de reentrenamiento importa donde el modelo es sensible a datos nuevos: un
+    # arbol lo es; una logistica de 7 parametros sobre 112.000 filas, practicamente no.
+    ("Gradient boosting (HGB)", "reentrenar_cada", (100, 20)),
+])
+def test_cambiar_un_parametro_del_sello_cambia_el_resultado(tmp_path, datos, estrategia, campo, valores):
+    """La contraprueba del anterior: que los parámetros no solo se copien, sino que se usen.
+
+    Se eligen a propósito una estrategia y un parámetro donde el efecto es **medible**. Para la
+    hipótesis preregistrada —la regresión logística— ni la semilla ni la cadencia mueven el
+    resultado, así que un test sobre ella no detectaría un descableado.
+    """
+    deltas = []
+    for i, valor in enumerate(valores):
+        ruta = tmp_path / f"{campo}-{i}.json"
+        sellar_a_mano(spec_base("2026-02-01T00:00:00+00:00", tamano_familia=36,
+                                estrategias=[estrategia], **{campo: valor}), ruta)
+        r = lab.evaluar(lab.cargar_preregistro(ruta), datos["era"])
+        deltas.append(r["resultados"]["delta"])
+    assert deltas[0] != deltas[1], (
+        f"{estrategia}: declarar {campo}={valores[0]} y {campo}={valores[1]} da el mismo delta "
+        f"({deltas[0]}): el preregistro no gobierna la corrida"
+    )
+
+
+@pytest.mark.lento
+def test_el_laboratorio_reproduce_el_backtest_en_el_mismo_tramo(tmp_path, datos):
+    """Las dos formas de medir lo mismo tienen que coincidir.
+
+    `backtest()` y `lab._evaluar_una` implementan la misma predicción por caminos distintos. Si
+    divergieran, las cifras exploratorias del informe y las del laboratorio no serían comparables y
+    nada lo diría. Se comprueba sobre el tramo exacto del backtest: desde el índice 400.
+    """
+    from melate.backtest import backtest
+
+    df = datos["era"]["Revancha"]
+    b = backtest(df)
+    esperado = b["estrategias"]["Regresión logística"]["delta"]
+
+    # Un sello justo antes del sorteo 400 hace que el holdout sea ese mismo tramo.
+    sello = (df.FECHA.iloc[400] - datetime.timedelta(days=1)).strftime("%Y-%m-%dT00:00:00+00:00")
+    ruta = tmp_path / "mismo-tramo.json"
+    sellar_a_mano(spec_base(sello, tamano_familia=36), ruta)
+    r = lab.evaluar(lab.cargar_preregistro(ruta), {"Revancha": df})
+
+    assert r["resultados"]["sorteos_holdout"] == b["sorteos_prueba"]
+    assert round(r["resultados"]["delta"], 4) == esperado, (
+        f"el laboratorio dice {r['resultados']['delta']} y el backtest {esperado} "
+        "sobre los mismos sorteos"
+    )
 
 
 @pytest.mark.lento

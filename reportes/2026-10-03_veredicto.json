@@ -54,6 +54,8 @@
     "delta": null
    }
   ],
+  "reentrenar_cada": 100,
+  "semilla": 7,
   "q_BH_global": null,
   "familia_declarada": 36,
   "pruebas_corridas": 0
@@ -113,7 +115,7 @@
   ],
   "linea_base_azar": 0.642857
  },
- "corrida_utc": "2026-10-03T06:14:37+00:00",
+ "corrida_utc": "2026-10-03T07:06:36+00:00",
  "versiones": {
   "python": "3.13.9",
   "numpy": "2.5.3",
