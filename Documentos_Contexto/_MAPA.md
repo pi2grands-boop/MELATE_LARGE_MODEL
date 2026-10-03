@@ -81,6 +81,24 @@ preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué, y
 | ¿Qué se subió al repositorio y cuándo? | Despliegue |
 | ¿Por qué se eligió A y no B? | `<Área>/Decisiones` |
 
+## Hoja de ruta — en qué fase estamos y qué falta
+
+**Ninguna fase empieza sin que el usuario la apruebe** (`CLAUDE.md`, Forma de trabajo). Esta tabla se
+actualiza al cerrar cada una, y es la referencia: no hay ningún plan fuera del repositorio.
+
+| Fase | Estado | Qué entra |
+|---|---|---|
+| **1 · Arranque** | ✅ cerrada 2026-10-03 | Bitácora, entorno, snapshot congelado, reproducción de la línea base, paquete `src/melate/` con paridad contra el oráculo, primer push |
+| **2 · Protocolo** | ✅ cerrada 2026-10-03 | `prereg/*.json` sellado, `lab.py`, las 5 condiciones de la regla 5, y los pendientes de la Fase 1 ejecutados |
+| — *auditoría* | ✅ 2026-10-03 | Revisión retrospectiva de las fases 1 y 2: siete defectos con las 92 pruebas en verde |
+| **3 · EV, popularidad y cartera** | ⬜ **siguiente** | `popularity.py` con Scrapling sobre las tablas de ganadores, para sustituir el `menores_brutos` escrito a mano en `baseline_auditoria.py:252`; `portfolio.py` con presupuesto fijo. Primera fase que toca un sitio de terceros: el dictamen de términos va escrito **antes** del código que dependa de él |
+| **4 · App local** | ⬜ | `app/streamlit_app.py` y `melate.duckdb`, los dos en esta máquina: `streamlit run` escuchando solo en `localhost`, nunca en `0.0.0.0`. Textos en español y "sin ventaja demostrada" visible en cada pantalla |
+
+Lo que **no** está en ninguna fase y es deliberado: migrar a pandas 3 (rompe `df.attrs`, que el
+oráculo usa), optimizar el backtest (es el 85 % del coste y crece de forma cuadrática, pero son 62 s
+hoy y ~110 s en cinco años), y añadir estrategias nuevas (agranda la familia de Benjamini-Hochberg:
+es una decisión con consecuencias estadísticas y lleva su documento).
+
 ## Fases
 
 Un cambio normal va directo a la rejilla. Los bloques grandes viven en `Fases/<fecha>_<nombre>/` y,
