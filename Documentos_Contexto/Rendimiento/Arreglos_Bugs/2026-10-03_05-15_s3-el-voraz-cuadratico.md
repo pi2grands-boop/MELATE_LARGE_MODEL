@@ -54,8 +54,8 @@ El mapa dice que estas dos se vuelven a medir al cerrar cada fase. Hechas:
 
 | | Fase 2 | **Fase 3** |
 |---|---|---|
-| Bucle rápido (`-m "not lento and not red"`) | 72 pruebas, 2,5 s | **132 pruebas, 5,1 s** |
-| Suite completa | 100 pruebas, ~136 s | **161 pruebas, 133 s** |
+| Bucle rápido (`-m "not lento and not red"`) | 72 pruebas, 2,5 s | **135 pruebas, ~5 s** |
+| Suite completa | 100 pruebas, ~136 s | **164 pruebas, ~130 s** |
 
 La suite completa **no creció en tiempo** pese a 61 pruebas más: las nuevas son de milisegundos y
 el coste sigue dominado por el backtest, que es el 85 % y no se ha tocado.

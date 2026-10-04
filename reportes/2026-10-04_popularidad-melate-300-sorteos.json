@@ -1,0 +1,3070 @@
+{
+ "ventana": [
+  3973,
+  4272
+ ],
+ "juegos": {
+  "Melate": {
+   "juego": "Melate",
+   "sorteos_pedidos": 300,
+   "sorteos_usados": 300,
+   "ventana": [
+    3973,
+    4272
+   ],
+   "fallos": [],
+   "ventas": {
+    "n": 300,
+    "media": 995387.1726616009,
+    "mediana": 982692.5415726892,
+    "desviacion": 185937.10911127395,
+    "cv": 0.18679877962872493,
+    "min": 583212.36864716,
+    "max": 1586603.865742878
+   },
+   "menores_brutos_directo": {
+    "n": 300,
+    "media": 4.936840361288114,
+    "mediana": 4.721919318041682,
+    "desviacion": 1.1804862817101667,
+    "cv": 0.23911777479516386,
+    "min": 0.0,
+    "max": 10.746160497228754
+   },
+   "menores_brutos_por_bolsa": {
+    "n": 300,
+    "media": 4.603516767085947,
+    "mediana": 4.642232688306877,
+    "desviacion": 0.5321433849101863,
+    "cv": 0.115594970504916,
+    "min": 0.0,
+    "max": 5.413887526634238
+   },
+   "efecto_calendario": {
+    "corte": 31,
+    "dentro_del_calendario": {
+     "n": 164,
+     "razon_media": 1.1179088118790417,
+     "desviacion": 0.15066242545439665
+    },
+    "fuera_del_calendario": {
+     "n": 136,
+     "razon_media": 0.8439595388454885,
+     "desviacion": 0.10227158882466168
+    },
+    "cociente_fuera_entre_dentro": 0.7549448844820497,
+    "t_welch": -18.669406462215505
+   },
+   "muestras": [
+    {
+     "sorteo": 3973,
+     "ventas": 873331.4662668023,
+     "ventas_con_adicional": 993379.9598580531,
+     "razon_adicional": 1.1374604010369829,
+     "bolsa_repartida": 3873886.79,
+     "menores_directo": 4.177913050077311,
+     "menores_por_bolsa": 4.435757715864241,
+     "adicional": 23
+    },
+    {
+     "sorteo": 3974,
+     "ventas": 1069396.2756260603,
+     "ventas_con_adicional": 913586.804735913,
+     "razon_adicional": 0.8543014648158082,
+     "bolsa_repartida": 4801937.99,
+     "menores_directo": 4.117438312088701,
+     "menores_por_bolsa": 4.490326083461237,
+     "adicional": 36
+    },
+    {
+     "sorteo": 3975,
+     "ventas": 1029449.3963509017,
+     "ventas_con_adicional": 1171118.220130334,
+     "razon_adicional": 1.1376161123427795,
+     "bolsa_repartida": 4779522.88,
+     "menores_directo": 4.287668256025636,
+     "menores_por_bolsa": 4.642795359288195,
+     "adicional": 22
+    },
+    {
+     "sorteo": 3976,
+     "ventas": 835006.7270019789,
+     "ventas_con_adicional": 813583.3724319986,
+     "razon_adicional": 0.9743434946363857,
+     "bolsa_repartida": 3733139.54,
+     "menores_directo": 4.282504536097766,
+     "menores_por_bolsa": 4.4707897784291175,
+     "adicional": 25
+    },
+    {
+     "sorteo": 3977,
+     "ventas": 947613.2792952813,
+     "ventas_con_adicional": 936898.7553477496,
+     "razon_adicional": 0.9886931471079639,
+     "bolsa_repartida": 4499605.45,
+     "menores_directo": 4.545340248295298,
+     "menores_por_bolsa": 4.748356263375979,
+     "adicional": 10
+    },
+    {
+     "sorteo": 3978,
+     "ventas": 843433.02781904,
+     "ventas_con_adicional": 959033.3122844415,
+     "razon_adicional": 1.137059233694372,
+     "bolsa_repartida": 4302558.12,
+     "menores_directo": 4.923654074683486,
+     "menores_por_bolsa": 5.101244530494152,
+     "adicional": 6
+    },
+    {
+     "sorteo": 3979,
+     "ventas": 784846.5228910655,
+     "ventas_con_adicional": 951612.9248710459,
+     "razon_adicional": 1.2124828193997454,
+     "bolsa_repartida": 3694359.42,
+     "menores_directo": 4.537889384323901,
+     "menores_por_bolsa": 4.707110641697736,
+     "adicional": 27
+    },
+    {
+     "sorteo": 3980,
+     "ventas": 981053.0707116222,
+     "ventas_con_adicional": 1034376.7797157273,
+     "razon_adicional": 1.0543535417155627,
+     "bolsa_repartida": 4611447.82,
+     "menores_directo": 5.035363202588508,
+     "menores_por_bolsa": 4.70050801294064,
+     "adicional": 10
+    },
+    {
+     "sorteo": 3981,
+     "ventas": 1161835.5158648998,
+     "ventas_con_adicional": 887717.8927116389,
+     "razon_adicional": 0.7640650338105728,
+     "bolsa_repartida": 4990363.7,
+     "menores_directo": 4.505862802877231,
+     "menores_por_bolsa": 4.295241135131806,
+     "adicional": 53
+    },
+    {
+     "sorteo": 3982,
+     "ventas": 797145.0624116767,
+     "ventas_con_adicional": 1109757.2453433184,
+     "razon_adicional": 1.3921647359714768,
+     "bolsa_repartida": 3689179.78,
+     "menores_directo": 5.734785044157963,
+     "menores_por_bolsa": 4.627990505064139,
+     "adicional": 9
+    },
+    {
+     "sorteo": 3983,
+     "ventas": 984332.0124337561,
+     "ventas_con_adicional": 1220956.673449206,
+     "razon_adicional": 1.2403911058733084,
+     "bolsa_repartida": 4711727.1,
+     "menores_directo": 4.436065135690551,
+     "menores_por_bolsa": 4.786725454910561,
+     "adicional": 14
+    },
+    {
+     "sorteo": 3984,
+     "ventas": 929572.982467011,
+     "ventas_con_adicional": 1224391.3486834585,
+     "razon_adicional": 1.3171546202149977,
+     "bolsa_repartida": 4539889.73,
+     "menores_directo": 4.695130231711808,
+     "menores_por_bolsa": 4.883844319519166,
+     "adicional": 27
+    },
+    {
+     "sorteo": 3985,
+     "ventas": 791165.1098250118,
+     "ventas_con_adicional": 707351.1179609284,
+     "razon_adicional": 0.894062578312356,
+     "bolsa_repartida": 3583546.0,
+     "menores_directo": 4.57474379240195,
+     "menores_por_bolsa": 4.5294540362031395,
+     "adicional": 37
+    },
+    {
+     "sorteo": 3986,
+     "ventas": 1212330.1189942642,
+     "ventas_con_adicional": 1261649.2974640147,
+     "razon_adicional": 1.0406813108880486,
+     "bolsa_repartida": 5388037.029999999,
+     "menores_directo": 4.6506042000298375,
+     "menores_por_bolsa": 4.444364571648072,
+     "adicional": 19
+    },
+    {
+     "sorteo": 3987,
+     "ventas": 1094056.7829001357,
+     "ventas_con_adicional": 1286012.6693842188,
+     "razon_adicional": 1.175453312373097,
+     "bolsa_repartida": 5092295.819999999,
+     "menores_directo": 4.228622630914528,
+     "menores_por_bolsa": 4.6545077911781645,
+     "adicional": 2
+    },
+    {
+     "sorteo": 3988,
+     "ventas": 819905.1354817125,
+     "ventas_con_adicional": 637669.3852541478,
+     "razon_adicional": 0.7777355667854219,
+     "bolsa_repartida": 3736787.86,
+     "menores_directo": 5.674501320297657,
+     "menores_por_bolsa": 4.55758562581091,
+     "adicional": 50
+    },
+    {
+     "sorteo": 3989,
+     "ventas": 1210545.288741517,
+     "ventas_con_adicional": 1255743.4513351675,
+     "razon_adicional": 1.0373370273826257,
+     "bolsa_repartida": 5386080.16,
+     "menores_directo": 4.4900401414469115,
+     "menores_por_bolsa": 4.449300831693269,
+     "adicional": 18
+    },
+    {
+     "sorteo": 3990,
+     "ventas": 970018.6465633962,
+     "ventas_con_adicional": 826019.8627782806,
+     "razon_adicional": 0.8515504992658877,
+     "bolsa_repartida": 4648075.0,
+     "menores_directo": 4.811338627459604,
+     "menores_por_bolsa": 4.791737784080032,
+     "adicional": 56
+    },
+    {
+     "sorteo": 3991,
+     "ventas": 1002003.3378851993,
+     "ventas_con_adicional": 1081434.687943131,
+     "razon_adicional": 1.0792725403745433,
+     "bolsa_repartida": 4382109.3100000005,
+     "menores_directo": 4.09158403595418,
+     "menores_por_bolsa": 4.373348016233917,
+     "adicional": 4
+    },
+    {
+     "sorteo": 3992,
+     "ventas": 1328139.203319112,
+     "ventas_con_adicional": 1100817.1333761066,
+     "razon_adicional": 0.8288416836315713,
+     "bolsa_repartida": 5665572.699999999,
+     "menores_directo": 3.975084070880408,
+     "menores_por_bolsa": 4.265797354555411,
+     "adicional": 38
+    },
+    {
+     "sorteo": 3993,
+     "ventas": 962310.2762982361,
+     "ventas_con_adicional": 748714.4956715249,
+     "razon_adicional": 0.7780385537933149,
+     "bolsa_repartida": 4682558.88,
+     "menores_directo": 6.074985688870261,
+     "menores_por_bolsa": 4.865955394358479,
+     "adicional": 34
+    },
+    {
+     "sorteo": 3994,
+     "ventas": 811953.3421611503,
+     "ventas_con_adicional": 848379.5251917309,
+     "razon_adicional": 1.044862409130094,
+     "bolsa_repartida": 3859596.88,
+     "menores_directo": 4.777920209954061,
+     "menores_por_bolsa": 4.753471264404226,
+     "adicional": 25
+    },
+    {
+     "sorteo": 3995,
+     "ventas": 1048987.0903581933,
+     "ventas_con_adicional": 1324306.8782519756,
+     "razon_adicional": 1.2624625130512999,
+     "bolsa_repartida": 5079098.69,
+     "menores_directo": 4.571364244646708,
+     "menores_por_bolsa": 4.841907719060357,
+     "adicional": 11
+    },
+    {
+     "sorteo": 3996,
+     "ventas": 849557.5095817562,
+     "ventas_con_adicional": 895651.3177679601,
+     "razon_adicional": 1.054256254186837,
+     "bolsa_repartida": 4006522.97,
+     "menores_directo": 5.837312273680198,
+     "menores_por_bolsa": 4.7160114822273105,
+     "adicional": 19
+    },
+    {
+     "sorteo": 3997,
+     "ventas": 880458.9194777698,
+     "ventas_con_adicional": 960178.9366052122,
+     "razon_adicional": 1.0905437100628466,
+     "bolsa_repartida": 4208264.55,
+     "menores_directo": 4.8593670363426185,
+     "menores_por_bolsa": 4.779626234573289,
+     "adicional": 26
+    },
+    {
+     "sorteo": 3998,
+     "ventas": 1352423.700611596,
+     "ventas_con_adicional": 1263889.1221818826,
+     "razon_adicional": 0.9345363598776951,
+     "bolsa_repartida": 5877695.13,
+     "menores_directo": 4.195798848149014,
+     "menores_por_bolsa": 4.346045641866507,
+     "adicional": 31
+    },
+    {
+     "sorteo": 3999,
+     "ventas": 976715.1583363381,
+     "ventas_con_adicional": 852922.5774621159,
+     "razon_adicional": 0.873256210044819,
+     "bolsa_repartida": 4492765.41,
+     "menores_directo": 4.982706370888946,
+     "menores_por_bolsa": 4.599872717909522,
+     "adicional": 35
+    },
+    {
+     "sorteo": 4000,
+     "ventas": 893196.9043575778,
+     "ventas_con_adicional": 868364.937126219,
+     "razon_adicional": 0.9721987759807353,
+     "bolsa_repartida": 4222986.0,
+     "menores_directo": 4.831847496134399,
+     "menores_por_bolsa": 4.727945181401336,
+     "adicional": 2
+    },
+    {
+     "sorteo": 4001,
+     "ventas": 1144405.8472743279,
+     "ventas_con_adicional": 1190489.6721748773,
+     "razon_adicional": 1.0402687779080375,
+     "bolsa_repartida": 5385322.52,
+     "menores_directo": 7.549408261303378,
+     "menores_por_bolsa": 4.705780325071227,
+     "adicional": 26
+    },
+    {
+     "sorteo": 4002,
+     "ventas": 1156257.9686311162,
+     "ventas_con_adicional": 1321197.6188993861,
+     "razon_adicional": 1.142649525229686,
+     "bolsa_repartida": 5399882.4399999995,
+     "menores_directo": 4.674484090025155,
+     "menores_por_bolsa": 4.670136411161666,
+     "adicional": 5
+    },
+    {
+     "sorteo": 4003,
+     "ventas": 794293.4416140597,
+     "ventas_con_adicional": 799429.837146499,
+     "razon_adicional": 1.0064666221113467,
+     "bolsa_repartida": 3767376.59,
+     "menores_directo": 5.964993560207212,
+     "menores_por_bolsa": 4.743053879866397,
+     "adicional": 16
+    },
+    {
+     "sorteo": 4004,
+     "ventas": 1201031.1292374376,
+     "ventas_con_adicional": 927510.4626521353,
+     "razon_adicional": 0.772261800775333,
+     "bolsa_repartida": 5357701.93,
+     "menores_directo": 10.471916591855548,
+     "menores_por_bolsa": 4.46091845546229,
+     "adicional": 54
+    },
+    {
+     "sorteo": 4005,
+     "ventas": 1294213.3894921767,
+     "ventas_con_adicional": 1090211.7303965152,
+     "razon_adicional": 0.8423740159451545,
+     "bolsa_repartida": 5718789.71,
+     "menores_directo": 4.87912283640641,
+     "menores_por_bolsa": 4.418737865356143,
+     "adicional": 51
+    },
+    {
+     "sorteo": 4006,
+     "ventas": 913329.7658763974,
+     "ventas_con_adicional": 956750.8346472563,
+     "razon_adicional": 1.0475415018683791,
+     "bolsa_repartida": 4174774.59,
+     "menores_directo": 4.554897836471088,
+     "menores_por_bolsa": 4.570938937913669,
+     "adicional": 25
+    },
+    {
+     "sorteo": 4007,
+     "ventas": 1184239.1643155403,
+     "ventas_con_adicional": 994903.1108574488,
+     "razon_adicional": 0.8401200879321341,
+     "bolsa_repartida": 5414893.73,
+     "menores_directo": 4.586536141747018,
+     "menores_por_bolsa": 4.572466350688266,
+     "adicional": 38
+    },
+    {
+     "sorteo": 4008,
+     "ventas": 1302992.217457739,
+     "ventas_con_adicional": 1017226.4335088575,
+     "razon_adicional": 0.7806849648676816,
+     "bolsa_repartida": 5655141.16,
+     "menores_directo": 4.216215661265606,
+     "menores_por_bolsa": 4.340118908026723,
+     "adicional": 51
+    },
+    {
+     "sorteo": 4009,
+     "ventas": 1003720.8110410182,
+     "ventas_con_adicional": 1404908.7331668467,
+     "razon_adicional": 1.399700711306098,
+     "bolsa_repartida": 4490152.38,
+     "menores_directo": 3.9544250471442477,
+     "menores_por_bolsa": 4.473507304628861,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4010,
+     "ventas": 1218005.9016041888,
+     "ventas_con_adicional": 868842.7813160501,
+     "razon_adicional": 0.7133321605188699,
+     "bolsa_repartida": 5348058.71,
+     "menores_directo": 5.231560020938489,
+     "menores_por_bolsa": 4.390831524671824,
+     "adicional": 49
+    },
+    {
+     "sorteo": 4011,
+     "ventas": 1171328.5026190549,
+     "ventas_con_adicional": 1528240.4956796214,
+     "razon_adicional": 1.3047069991573859,
+     "bolsa_repartida": 5339891.34,
+     "menores_directo": 4.291697843715046,
+     "menores_por_bolsa": 4.558833263307574,
+     "adicional": 11
+    },
+    {
+     "sorteo": 4012,
+     "ventas": 946882.8726809886,
+     "ventas_con_adicional": 946480.7945984178,
+     "razon_adicional": 0.9995753666116778,
+     "bolsa_repartida": 4182110.0199999996,
+     "menores_directo": 4.157025557991152,
+     "menores_por_bolsa": 4.416713133862947,
+     "adicional": 31
+    },
+    {
+     "sorteo": 4013,
+     "ventas": 1124557.3523461798,
+     "ventas_con_adicional": 806745.723267636,
+     "razon_adicional": 0.7173895769606691,
+     "bolsa_repartida": 5069980.59,
+     "menores_directo": 5.23244609287617,
+     "menores_por_bolsa": 4.508423318225992,
+     "adicional": 46
+    },
+    {
+     "sorteo": 4014,
+     "ventas": 1210250.1565341158,
+     "ventas_con_adicional": 1397127.1632468512,
+     "razon_adicional": 1.1544118839429933,
+     "bolsa_repartida": 5492695.63,
+     "menores_directo": 4.459677904719525,
+     "menores_por_bolsa": 4.5384795865094905,
+     "adicional": 17
+    },
+    {
+     "sorteo": 4015,
+     "ventas": 872020.1276851991,
+     "ventas_con_adicional": 819860.7108229814,
+     "razon_adicional": 0.940185535624417,
+     "bolsa_repartida": 4013115.04,
+     "menores_directo": 4.841167437199624,
+     "menores_por_bolsa": 4.602089920393147,
+     "adicional": 35
+    },
+    {
+     "sorteo": 4016,
+     "ventas": 1289352.5973224207,
+     "ventas_con_adicional": 1076722.0701018388,
+     "razon_adicional": 0.8350873704662723,
+     "bolsa_repartida": 5606624.27,
+     "menores_directo": 4.159121083627188,
+     "menores_por_bolsa": 4.348402664750661,
+     "adicional": 45
+    },
+    {
+     "sorteo": 4017,
+     "ventas": 956388.3304424479,
+     "ventas_con_adicional": 756394.9849065767,
+     "razon_adicional": 0.7908868822736999,
+     "bolsa_repartida": 4403775.12,
+     "menores_directo": 4.7797804603215255,
+     "menores_por_bolsa": 4.604588930902899,
+     "adicional": 49
+    },
+    {
+     "sorteo": 4018,
+     "ventas": 823011.4651445744,
+     "ventas_con_adicional": 833892.8846017806,
+     "razon_adicional": 1.0132214676441897,
+     "bolsa_repartida": 3661621.2899999996,
+     "menores_directo": 4.678977291052763,
+     "menores_por_bolsa": 4.449052589269556,
+     "adicional": 10
+    },
+    {
+     "sorteo": 4019,
+     "ventas": 730376.6453490166,
+     "ventas_con_adicional": 800558.3956591754,
+     "razon_adicional": 1.09608980620762,
+     "bolsa_repartida": 3954177.01,
+     "menores_directo": 5.56649059535852,
+     "menores_por_bolsa": 5.413887526634238,
+     "adicional": 18
+    },
+    {
+     "sorteo": 4020,
+     "ventas": 771339.9649204717,
+     "ventas_con_adicional": 722220.6870041497,
+     "razon_adicional": 0.9363195476052036,
+     "bolsa_repartida": 3917449.15,
+     "menores_directo": 6.129686448709756,
+     "menores_por_bolsa": 5.078758171701767,
+     "adicional": 42
+    },
+    {
+     "sorteo": 4021,
+     "ventas": 738770.4394391746,
+     "ventas_con_adicional": 625344.6584549375,
+     "razon_adicional": 0.8464668117062962,
+     "bolsa_repartida": 3343588.17,
+     "menores_directo": 4.71569125688715,
+     "menores_por_bolsa": 4.52588245482349,
+     "adicional": 43
+    },
+    {
+     "sorteo": 4022,
+     "ventas": 994396.8105993262,
+     "ventas_con_adicional": 848873.8041524695,
+     "razon_adicional": 0.8536570060405267,
+     "bolsa_repartida": 4576070.77,
+     "menores_directo": 4.7889357353092095,
+     "menores_por_bolsa": 4.601855839865363,
+     "adicional": 34
+    },
+    {
+     "sorteo": 4023,
+     "ventas": 917863.3883154349,
+     "ventas_con_adicional": 778327.3295621432,
+     "razon_adicional": 0.8479773128227897,
+     "bolsa_repartida": 4307546.98,
+     "menores_directo": 4.647722960847267,
+     "menores_por_bolsa": 4.6930153602767515,
+     "adicional": 43
+    },
+    {
+     "sorteo": 4024,
+     "ventas": 621103.5647137129,
+     "ventas_con_adicional": 551862.4641858649,
+     "razon_adicional": 0.888519235017169,
+     "bolsa_repartida": 3170347.96,
+     "menores_directo": 7.004353271897666,
+     "menores_por_bolsa": 5.104378947593576,
+     "adicional": 51
+    },
+    {
+     "sorteo": 4025,
+     "ventas": 1214845.1018165173,
+     "ventas_con_adicional": 947901.4895478532,
+     "razon_adicional": 0.7802653096518131,
+     "bolsa_repartida": 5217831.71,
+     "menores_directo": 4.344064328506614,
+     "menores_por_bolsa": 4.295059264920236,
+     "adicional": 38
+    },
+    {
+     "sorteo": 4026,
+     "ventas": 824624.3850924304,
+     "ventas_con_adicional": 734109.0850367703,
+     "razon_adicional": 0.8902345095633881,
+     "bolsa_repartida": 4166013.51,
+     "menores_directo": 5.468100888505994,
+     "menores_por_bolsa": 5.052013480698901,
+     "adicional": 29
+    },
+    {
+     "sorteo": 4027,
+     "ventas": 661364.8100589584,
+     "ventas_con_adicional": 656908.4988011377,
+     "razon_adicional": 0.9932619468256507,
+     "bolsa_repartida": 3298179.96,
+     "menores_directo": 6.063187136885805,
+     "menores_por_bolsa": 4.9869299210309945,
+     "adicional": 29
+    },
+    {
+     "sorteo": 4028,
+     "ventas": 911545.3353879661,
+     "ventas_con_adicional": 1049771.2146387035,
+     "razon_adicional": 1.1516390615853533,
+     "bolsa_repartida": 4482237.14,
+     "menores_directo": 4.979011363528566,
+     "menores_por_bolsa": 4.917185098744758,
+     "adicional": 17
+    },
+    {
+     "sorteo": 4029,
+     "ventas": 1065754.1051611328,
+     "ventas_con_adicional": 1186915.8783736983,
+     "razon_adicional": 1.1136864241252413,
+     "bolsa_repartida": 4853743.18,
+     "menores_directo": 4.819354112714268,
+     "menores_por_bolsa": 4.554280538535815,
+     "adicional": 6
+    },
+    {
+     "sorteo": 4030,
+     "ventas": 926515.8822735416,
+     "ventas_con_adicional": 683020.1966903073,
+     "razon_adicional": 0.7371921083686881,
+     "bolsa_repartida": 3922050.81,
+     "menores_directo": 4.022389745228258,
+     "menores_por_bolsa": 4.233117731749865,
+     "adicional": 49
+    },
+    {
+     "sorteo": 4031,
+     "ventas": 1099179.1206214544,
+     "ventas_con_adicional": 995689.5361611939,
+     "razon_adicional": 0.9058482984995662,
+     "bolsa_repartida": 4897192.83,
+     "menores_directo": 4.166985603495037,
+     "menores_por_bolsa": 4.45531828081962,
+     "adicional": 36
+    },
+    {
+     "sorteo": 4032,
+     "ventas": 871815.6008345167,
+     "ventas_con_adicional": 881749.3387579811,
+     "razon_adicional": 1.0113943108083356,
+     "bolsa_repartida": 4289392.81,
+     "menores_directo": 4.907361235077661,
+     "menores_por_bolsa": 4.920068883711326,
+     "adicional": 14
+    },
+    {
+     "sorteo": 4033,
+     "ventas": 763162.8907221891,
+     "ventas_con_adicional": 903114.9199960524,
+     "razon_adicional": 1.1833842171511055,
+     "bolsa_repartida": 3578280.76,
+     "menores_directo": 4.3602542373768785,
+     "menores_por_bolsa": 4.688750990779747,
+     "adicional": 23
+    },
+    {
+     "sorteo": 4034,
+     "ventas": 949622.6957665271,
+     "ventas_con_adicional": 770050.6375439154,
+     "razon_adicional": 0.8109016780841967,
+     "bolsa_repartida": 4486360.33,
+     "menores_directo": 5.0547376673764015,
+     "menores_por_bolsa": 4.724360896175348,
+     "adicional": 34
+    },
+    {
+     "sorteo": 4035,
+     "ventas": 836855.7487967244,
+     "ventas_con_adicional": 802503.8862733609,
+     "razon_adicional": 0.9589512737735788,
+     "bolsa_repartida": 4214838.46,
+     "menores_directo": 5.364320635277904,
+     "menores_por_bolsa": 5.0365173042789255,
+     "adicional": 43
+    },
+    {
+     "sorteo": 4036,
+     "ventas": 843186.4961636175,
+     "ventas_con_adicional": 710461.6594392849,
+     "razon_adicional": 0.8425913634430672,
+     "bolsa_repartida": 3766907.71,
+     "menores_directo": 4.567668618223557,
+     "menores_por_bolsa": 4.467466838165592,
+     "adicional": 37
+    },
+    {
+     "sorteo": 4037,
+     "ventas": 1230564.4043541504,
+     "ventas_con_adicional": 1388746.7334369922,
+     "razon_adicional": 1.1285445349492798,
+     "bolsa_repartida": 5429546.46,
+     "menores_directo": 4.044510384485412,
+     "menores_por_bolsa": 4.412240790314136,
+     "adicional": 27
+    },
+    {
+     "sorteo": 4038,
+     "ventas": 890913.6617860832,
+     "ventas_con_adicional": 815569.1650226148,
+     "razon_adicional": 0.9154300803824025,
+     "bolsa_repartida": 4425650.34,
+     "menores_directo": 4.7811512473221685,
+     "menores_por_bolsa": 4.967541221814421,
+     "adicional": 37
+    },
+    {
+     "sorteo": 4039,
+     "ventas": 653025.943794787,
+     "ventas_con_adicional": 720902.2459558962,
+     "razon_adicional": 1.1039412029584528,
+     "bolsa_repartida": 3340621.92,
+     "menores_directo": 5.0018323679034,
+     "menores_por_bolsa": 5.115603678143893,
+     "adicional": 12
+    },
+    {
+     "sorteo": 4040,
+     "ventas": 921182.1558863403,
+     "ventas_con_adicional": 1156565.5172875004,
+     "razon_adicional": 1.2555231447950483,
+     "bolsa_repartida": 4594989.52,
+     "menores_directo": 4.901684461795449,
+     "menores_por_bolsa": 4.988144299841334,
+     "adicional": 13
+    },
+    {
+     "sorteo": 4041,
+     "ventas": 878007.67163729,
+     "ventas_con_adicional": 801262.0715627077,
+     "razon_adicional": 0.9125911964624764,
+     "bolsa_repartida": 4324930.03,
+     "menores_directo": 5.24031429200963,
+     "menores_por_bolsa": 4.925845376652533,
+     "adicional": 26
+    },
+    {
+     "sorteo": 4042,
+     "ventas": 774667.1617458069,
+     "ventas_con_adicional": 1135631.3328248584,
+     "razon_adicional": 1.4659603361340046,
+     "bolsa_repartida": 3731754.42,
+     "menores_directo": 6.232131866776705,
+     "menores_por_bolsa": 4.817235845637288,
+     "adicional": 7
+    },
+    {
+     "sorteo": 4043,
+     "ventas": 895201.3517342593,
+     "ventas_con_adicional": 907767.9580357143,
+     "razon_adicional": 1.014037742768272,
+     "bolsa_repartida": 4447277.88,
+     "menores_directo": 4.848418096270482,
+     "menores_por_bolsa": 4.9679079141071,
+     "adicional": 22
+    },
+    {
+     "sorteo": 4044,
+     "ventas": 1318961.5991147761,
+     "ventas_con_adicional": 954129.3949850263,
+     "razon_adicional": 0.7233943699539034,
+     "bolsa_repartida": 5461992.399999999,
+     "menores_directo": 3.997648367479111,
+     "menores_por_bolsa": 4.141130722581937,
+     "adicional": 41
+    },
+    {
+     "sorteo": 4045,
+     "ventas": 587838.8331078221,
+     "ventas_con_adicional": 594441.9853815385,
+     "razon_adicional": 1.011232929677011,
+     "bolsa_repartida": 2818867.35,
+     "menores_directo": 4.707160092343222,
+     "menores_por_bolsa": 4.795306453466234,
+     "adicional": 25
+    },
+    {
+     "sorteo": 4046,
+     "ventas": 895936.8010708365,
+     "ventas_con_adicional": 860697.7241738435,
+     "razon_adicional": 0.9606678988351915,
+     "bolsa_repartida": 4293496.7,
+     "menores_directo": 5.537343125181637,
+     "menores_por_bolsa": 4.792187010142179,
+     "adicional": 20
+    },
+    {
+     "sorteo": 4047,
+     "ventas": 953552.4572120806,
+     "ventas_con_adicional": 705175.1626679824,
+     "razon_adicional": 0.7395242467621722,
+     "bolsa_repartida": 4399143.8,
+     "menores_directo": 6.531174241346272,
+     "menores_por_bolsa": 4.613426106479616,
+     "adicional": 51
+    },
+    {
+     "sorteo": 4048,
+     "ventas": 1065134.1628096197,
+     "ventas_con_adicional": 706404.9129593811,
+     "razon_adicional": 0.663207450877381,
+     "bolsa_repartida": 4271115.74,
+     "menores_directo": 3.874430943948147,
+     "menores_por_bolsa": 4.009932165478212,
+     "adicional": 50
+    },
+    {
+     "sorteo": 4049,
+     "ventas": 900017.0310678075,
+     "ventas_con_adicional": 877437.365634132,
+     "razon_adicional": 0.9749119576027507,
+     "bolsa_repartida": 4415410.08,
+     "menores_directo": 6.045114275599847,
+     "menores_por_bolsa": 4.905918363301885,
+     "adicional": 19
+    },
+    {
+     "sorteo": 4050,
+     "ventas": 945864.821814976,
+     "ventas_con_adicional": 1229304.6080056618,
+     "razon_adicional": 1.2996620443572542,
+     "bolsa_repartida": 4682623.04,
+     "menores_directo": 4.833938374179772,
+     "menores_por_bolsa": 4.950626064107905,
+     "adicional": 22
+    },
+    {
+     "sorteo": 4051,
+     "ventas": 879602.3183501165,
+     "ventas_con_adicional": 772947.0656129686,
+     "razon_adicional": 0.8787460531741177,
+     "bolsa_repartida": 3923307.4,
+     "menores_directo": 5.033579513654431,
+     "menores_por_bolsa": 4.460319530943265,
+     "adicional": 34
+    },
+    {
+     "sorteo": 4052,
+     "ventas": 1261496.394512133,
+     "ventas_con_adicional": 916600.1847645543,
+     "razon_adicional": 0.726597546177718,
+     "bolsa_repartida": 5360638.77,
+     "menores_directo": 4.320263261833739,
+     "menores_por_bolsa": 4.249428530529535,
+     "adicional": 39
+    },
+    {
+     "sorteo": 4053,
+     "ventas": 905769.3422975659,
+     "ventas_con_adicional": 1086332.3903249176,
+     "razon_adicional": 1.1993477142528772,
+     "bolsa_repartida": 4560772.26,
+     "menores_directo": 4.8006445074841295,
+     "menores_por_bolsa": 5.035246885737144,
+     "adicional": 21
+    },
+    {
+     "sorteo": 4054,
+     "ventas": 984872.8456341106,
+     "ventas_con_adicional": 955874.1393678307,
+     "razon_adicional": 0.9705558881079627,
+     "bolsa_repartida": 4272025.32,
+     "menores_directo": 4.017681891114188,
+     "menores_por_bolsa": 4.337641492440027,
+     "adicional": 34
+    },
+    {
+     "sorteo": 4055,
+     "ventas": 1083222.3957232053,
+     "ventas_con_adicional": 785154.2104280244,
+     "razon_adicional": 0.7248319583568267,
+     "bolsa_repartida": 4899066.93,
+     "menores_directo": 4.570692835035232,
+     "menores_por_bolsa": 4.522678767852814,
+     "adicional": 40
+    },
+    {
+     "sorteo": 4056,
+     "ventas": 1127947.6129364832,
+     "ventas_con_adicional": 913209.8077687521,
+     "razon_adicional": 0.8096207636729815,
+     "bolsa_repartida": 5076262.08,
+     "menores_directo": 5.451979970947784,
+     "menores_por_bolsa": 4.500441351867867,
+     "adicional": 47
+    },
+    {
+     "sorteo": 4057,
+     "ventas": 839519.240097474,
+     "ventas_con_adicional": 983906.6406050394,
+     "razon_adicional": 1.1719881970671704,
+     "bolsa_repartida": 3940549.41,
+     "menores_directo": 4.333896165186398,
+     "menores_por_bolsa": 4.693816677200245,
+     "adicional": 27
+    },
+    {
+     "sorteo": 4058,
+     "ventas": 978695.3726440881,
+     "ventas_con_adicional": 1081022.0175517814,
+     "razon_adicional": 1.1045541317225633,
+     "bolsa_repartida": 4756094.02,
+     "menores_directo": 5.441344830098992,
+     "menores_por_bolsa": 4.859626552796217,
+     "adicional": 4
+    },
+    {
+     "sorteo": 4059,
+     "ventas": 1264136.4525727052,
+     "ventas_con_adicional": 1334771.8233407976,
+     "razon_adicional": 1.055876381560186,
+     "bolsa_repartida": 5520541.11,
+     "menores_directo": 4.0901312600951885,
+     "menores_por_bolsa": 4.367045265378496,
+     "adicional": 14
+    },
+    {
+     "sorteo": 4060,
+     "ventas": 910436.9870791356,
+     "ventas_con_adicional": 624463.691355936,
+     "razon_adicional": 0.6858944663038578,
+     "bolsa_repartida": 3921171.6199999996,
+     "menores_directo": 4.472056833596789,
+     "menores_por_bolsa": 4.3069115992089735,
+     "adicional": 51
+    },
+    {
+     "sorteo": 4061,
+     "ventas": 1169236.162923454,
+     "ventas_con_adicional": 1543432.2336317704,
+     "razon_adicional": 1.3200346367774922,
+     "bolsa_repartida": 5449525.09,
+     "menores_directo": 4.340110847655242,
+     "menores_por_bolsa": 4.6607565373059385,
+     "adicional": 13
+    },
+    {
+     "sorteo": 4062,
+     "ventas": 1129202.931229844,
+     "ventas_con_adicional": 1155915.8034675552,
+     "razon_adicional": 1.0236563964712857,
+     "bolsa_repartida": 5177530.75,
+     "menores_directo": 4.67274821121658,
+     "menores_por_bolsa": 4.585119828161461,
+     "adicional": 44
+    },
+    {
+     "sorteo": 4063,
+     "ventas": 1006105.6835147552,
+     "ventas_con_adicional": 868842.4113236725,
+     "razon_adicional": 0.8635697278723606,
+     "bolsa_repartida": 4357847.52,
+     "menores_directo": 4.136120612954686,
+     "menores_por_bolsa": 4.33140135415614,
+     "adicional": 26
+    },
+    {
+     "sorteo": 4064,
+     "ventas": 1586603.865742878,
+     "ventas_con_adicional": 1963870.1267719206,
+     "razon_adicional": 1.237782265110264,
+     "bolsa_repartida": 6660779.09,
+     "menores_directo": 3.808648467083539,
+     "menores_por_bolsa": 4.198136178674503,
+     "adicional": 17
+    },
+    {
+     "sorteo": 4065,
+     "ventas": 835004.3218329009,
+     "ventas_con_adicional": 919972.2334022538,
+     "razon_adicional": 1.1017574512462902,
+     "bolsa_repartida": 4480346.2299999995,
+     "menores_directo": 6.015064525128343,
+     "menores_por_bolsa": 5.365656335963966,
+     "adicional": 5
+    },
+    {
+     "sorteo": 4066,
+     "ventas": 790440.8275223761,
+     "ventas_con_adicional": 972879.5446710822,
+     "razon_adicional": 1.2308062928891936,
+     "bolsa_repartida": 3848710.52,
+     "menores_directo": 9.167527199339075,
+     "menores_por_bolsa": 4.869068481778352,
+     "adicional": 4
+    },
+    {
+     "sorteo": 4067,
+     "ventas": 988500.3307124836,
+     "ventas_con_adicional": 827591.9743289197,
+     "razon_adicional": 0.8372197242791152,
+     "bolsa_repartida": 4785121.319999999,
+     "menores_directo": 5.99314412588275,
+     "menores_por_bolsa": 4.84078879017776,
+     "adicional": 30
+    },
+    {
+     "sorteo": 4068,
+     "ventas": 1088599.1982481582,
+     "ventas_con_adicional": 929235.6601283571,
+     "razon_adicional": 0.853606783491795,
+     "bolsa_repartida": 4998929.74,
+     "menores_directo": 4.325743248920274,
+     "menores_por_bolsa": 4.592075529767604,
+     "adicional": 47
+    },
+    {
+     "sorteo": 4069,
+     "ventas": 977084.3136997469,
+     "ventas_con_adicional": 886642.4145070392,
+     "razon_adicional": 0.9074369551075405,
+     "bolsa_repartida": 4300219.4799999995,
+     "menores_directo": 4.8211860192465075,
+     "menores_por_bolsa": 4.401073090322312,
+     "adicional": 36
+    },
+    {
+     "sorteo": 4070,
+     "ventas": 941792.030004035,
+     "ventas_con_adicional": 1040410.1505459938,
+     "razon_adicional": 1.1047132672608584,
+     "bolsa_repartida": 4669996.81,
+     "menores_directo": 6.704416675937209,
+     "menores_por_bolsa": 4.958628509502243,
+     "adicional": 14
+    },
+    {
+     "sorteo": 4071,
+     "ventas": 1211973.8164269535,
+     "ventas_con_adicional": 1041374.6738139198,
+     "razon_adicional": 0.8592385905530692,
+     "bolsa_repartida": 5288620.43,
+     "menores_directo": 4.316473132244497,
+     "menores_por_bolsa": 4.363642479993088,
+     "adicional": 42
+    },
+    {
+     "sorteo": 4072,
+     "ventas": 905703.1049547388,
+     "ventas_con_adicional": 1066580.5945718442,
+     "razon_adicional": 1.177627181288227,
+     "bolsa_repartida": 4104523.43,
+     "menores_directo": 4.31405306156416,
+     "menores_por_bolsa": 4.531864147915357,
+     "adicional": 22
+    },
+    {
+     "sorteo": 4073,
+     "ventas": 1058468.9597270198,
+     "ventas_con_adicional": 1326004.2557978658,
+     "razon_adicional": 1.252756865104333,
+     "bolsa_repartida": 5014575.21,
+     "menores_directo": 4.295882180465976,
+     "menores_por_bolsa": 4.7375741762831325,
+     "adicional": 3
+    },
+    {
+     "sorteo": 4074,
+     "ventas": 1009957.4980236288,
+     "ventas_con_adicional": 1397462.478861549,
+     "razon_adicional": 1.3836844437476061,
+     "bolsa_repartida": 4890716.579999999,
+     "menores_directo": 4.314862644138449,
+     "menores_por_bolsa": 4.842497421496025,
+     "adicional": 3
+    },
+    {
+     "sorteo": 4075,
+     "ventas": 852168.9789510191,
+     "ventas_con_adicional": 712310.2108914141,
+     "razon_adicional": 0.8358790668116496,
+     "bolsa_repartida": 3712005.65,
+     "menores_directo": 4.234634647939309,
+     "menores_por_bolsa": 4.355950218428871,
+     "adicional": 44
+    },
+    {
+     "sorteo": 4076,
+     "ventas": 986897.9396219745,
+     "ventas_con_adicional": 720716.6377913629,
+     "razon_adicional": 0.7302848743077012,
+     "bolsa_repartida": 4517788.5200000005,
+     "menores_directo": 6.196412586981399,
+     "menores_por_bolsa": 4.577766695642827,
+     "adicional": 49
+    },
+    {
+     "sorteo": 4077,
+     "ventas": 999716.5273896947,
+     "ventas_con_adicional": 932674.4982415037,
+     "razon_adicional": 0.932938960884001,
+     "bolsa_repartida": 4667849.36,
+     "menores_directo": 5.216180146465939,
+     "menores_por_bolsa": 4.669172942642018,
+     "adicional": 29
+    },
+    {
+     "sorteo": 4078,
+     "ventas": 717965.0764943892,
+     "ventas_con_adicional": 613154.5302156316,
+     "razon_adicional": 0.8540172082038914,
+     "bolsa_repartida": 3415878.53,
+     "menores_directo": 5.386406372330345,
+     "menores_por_bolsa": 4.757722404380339,
+     "adicional": 49
+    },
+    {
+     "sorteo": 4079,
+     "ventas": 895718.4192524091,
+     "ventas_con_adicional": 830589.2282519791,
+     "razon_adicional": 0.9272883200785481,
+     "bolsa_repartida": 4287425.62,
+     "menores_directo": 5.027794216820299,
+     "menores_por_bolsa": 4.786577486682033,
+     "adicional": 36
+    },
+    {
+     "sorteo": 4080,
+     "ventas": 1102302.0939709588,
+     "ventas_con_adicional": 1505428.6787818316,
+     "razon_adicional": 1.3657133439333677,
+     "bolsa_repartida": 4981557.27,
+     "menores_directo": 4.28621932851955,
+     "menores_por_bolsa": 4.5192305242334445,
+     "adicional": 12
+    },
+    {
+     "sorteo": 4081,
+     "ventas": 843401.7101531053,
+     "ventas_con_adicional": 891157.1172129242,
+     "razon_adicional": 1.0566223739944156,
+     "bolsa_repartida": 3745306.57,
+     "menores_directo": 3.9917326378147684,
+     "menores_por_bolsa": 4.440714934429174,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4082,
+     "ventas": 871266.6058357692,
+     "ventas_con_adicional": 890209.7104306329,
+     "razon_adicional": 1.0217420298998978,
+     "bolsa_repartida": 4230359.79,
+     "menores_directo": 4.34121935439083,
+     "menores_por_bolsa": 4.855413672078014,
+     "adicional": 14
+    },
+    {
+     "sorteo": 4083,
+     "ventas": 836047.6998833687,
+     "ventas_con_adicional": 707192.1606440869,
+     "razon_adicional": 0.8458753737887712,
+     "bolsa_repartida": 4101692.98,
+     "menores_directo": 5.059105457374048,
+     "menores_por_bolsa": 4.90605138985754,
+     "adicional": 41
+    },
+    {
+     "sorteo": 4084,
+     "ventas": 757893.758322615,
+     "ventas_con_adicional": 705980.8422055326,
+     "razon_adicional": 0.9315037027986917,
+     "bolsa_repartida": 3497592.1,
+     "menores_directo": 4.731004713316034,
+     "menores_por_bolsa": 4.614884423564773,
+     "adicional": 32
+    },
+    {
+     "sorteo": 4085,
+     "ventas": 992019.2878136958,
+     "ventas_con_adicional": 1182022.4049641315,
+     "razon_adicional": 1.1915316763338162,
+     "bolsa_repartida": 4670627.25,
+     "menores_directo": 4.365222663327547,
+     "menores_por_bolsa": 4.708202055520071,
+     "adicional": 12
+    },
+    {
+     "sorteo": 4086,
+     "ventas": 839567.2255171824,
+     "ventas_con_adicional": 908862.6298890573,
+     "razon_adicional": 1.0825370527407001,
+     "bolsa_repartida": 4163484.9599999995,
+     "menores_directo": 5.158224902486833,
+     "menores_por_bolsa": 4.959084672981664,
+     "adicional": 36
+    },
+    {
+     "sorteo": 4087,
+     "ventas": 613034.7867927694,
+     "ventas_con_adicional": 537368.1666334856,
+     "razon_adicional": 0.8765704299503932,
+     "bolsa_repartida": 3078873.42,
+     "menores_directo": 5.3897214349961295,
+     "menores_por_bolsa": 5.0223469961759015,
+     "adicional": 43
+    },
+    {
+     "sorteo": 4088,
+     "ventas": 908139.2833422937,
+     "ventas_con_adicional": 692561.5135805245,
+     "razon_adicional": 0.7626159624233388,
+     "bolsa_repartida": 4277308.05,
+     "menores_directo": 7.222271914483346,
+     "menores_por_bolsa": 4.709969195758055,
+     "adicional": 40
+    },
+    {
+     "sorteo": 4089,
+     "ventas": 1009701.0456461849,
+     "ventas_con_adicional": 824104.5932211574,
+     "razon_adicional": 0.8161867285120517,
+     "bolsa_repartida": 4514291.04,
+     "menores_directo": 5.648004233403789,
+     "menores_por_bolsa": 4.470918455978185,
+     "adicional": 38
+    },
+    {
+     "sorteo": 4090,
+     "ventas": 816762.4164827783,
+     "ventas_con_adicional": 563750.5598792944,
+     "razon_adicional": 0.6902258827076935,
+     "bolsa_repartida": 3542845.36,
+     "menores_directo": 4.406990965317824,
+     "menores_por_bolsa": 4.337669423204541,
+     "adicional": 40
+    },
+    {
+     "sorteo": 4091,
+     "ventas": 1017002.3634263268,
+     "ventas_con_adicional": 996179.0930156691,
+     "razon_adicional": 0.9795248554383855,
+     "bolsa_repartida": 4603674.41,
+     "menores_directo": 4.521903507455671,
+     "menores_por_bolsa": 4.5267096474486195,
+     "adicional": 26
+    },
+    {
+     "sorteo": 4092,
+     "ventas": 1011277.1954553915,
+     "ventas_con_adicional": 1355652.5651422916,
+     "razon_adicional": 1.3405350889296215,
+     "bolsa_repartida": 4709717.85,
+     "menores_directo": 4.597311665705117,
+     "menores_por_bolsa": 4.65719772102559,
+     "adicional": 3
+    },
+    {
+     "sorteo": 4093,
+     "ventas": 664281.6191248997,
+     "ventas_con_adicional": 784998.0408776151,
+     "razon_adicional": 1.1817247659384926,
+     "bolsa_repartida": 3277537.0,
+     "menores_directo": 5.924186486223112,
+     "menores_por_bolsa": 4.933957083319131,
+     "adicional": 33
+    },
+    {
+     "sorteo": 4094,
+     "ventas": 1201876.035114657,
+     "ventas_con_adicional": 1545877.1476913637,
+     "razon_adicional": 1.2862201279717584,
+     "bolsa_repartida": 5255423.96,
+     "menores_directo": 3.8837903156160647,
+     "menores_por_bolsa": 4.37268387625238,
+     "adicional": 18
+    },
+    {
+     "sorteo": 4095,
+     "ventas": 830393.585970391,
+     "ventas_con_adicional": 820081.8872384913,
+     "razon_adicional": 0.9875821551296672,
+     "bolsa_repartida": 4104373.6999999997,
+     "menores_directo": 5.001387679406547,
+     "menores_por_bolsa": 4.942684733292662,
+     "adicional": 29
+    },
+    {
+     "sorteo": 4096,
+     "ventas": 648897.3774767531,
+     "ventas_con_adicional": 727806.547683251,
+     "razon_adicional": 1.1216050071173618,
+     "bolsa_repartida": 3202304.9,
+     "menores_directo": 4.78726731586332,
+     "menores_por_bolsa": 4.934994362979566,
+     "adicional": 3
+    },
+    {
+     "sorteo": 4097,
+     "ventas": 936224.1629971928,
+     "ventas_con_adicional": 792031.2934839259,
+     "razon_adicional": 0.84598467417071,
+     "bolsa_repartida": 4447142.24,
+     "menores_directo": 4.699792850816713,
+     "menores_por_bolsa": 4.750082742751572,
+     "adicional": 29
+    },
+    {
+     "sorteo": 4098,
+     "ventas": 811089.3446330708,
+     "ventas_con_adicional": 850465.9357860629,
+     "razon_adicional": 1.0485477850418632,
+     "bolsa_repartida": 4085587.23,
+     "menores_directo": 4.828912017813239,
+     "menores_por_bolsa": 5.037160526191207,
+     "adicional": 35
+    },
+    {
+     "sorteo": 4099,
+     "ventas": 583212.36864716,
+     "ventas_con_adicional": 625408.0729146422,
+     "razon_adicional": 1.072350496210087,
+     "bolsa_repartida": 2989044.46,
+     "menores_directo": 6.852657403023662,
+     "menores_por_bolsa": 5.125139007139874,
+     "adicional": 28
+    },
+    {
+     "sorteo": 4100,
+     "ventas": 993084.2116731908,
+     "ventas_con_adicional": 1090115.278589058,
+     "razon_adicional": 1.0977067863684844,
+     "bolsa_repartida": 4614319.27,
+     "menores_directo": 4.178761327770761,
+     "menores_por_bolsa": 4.646453156500794,
+     "adicional": 11
+    },
+    {
+     "sorteo": 4101,
+     "ventas": 871536.6066999856,
+     "ventas_con_adicional": 1274908.6961385047,
+     "razon_adicional": 1.4628286251404405,
+     "bolsa_repartida": 4298225.53,
+     "menores_directo": 4.649775898660471,
+     "menores_por_bolsa": 4.931778535700228,
+     "adicional": 7
+    },
+    {
+     "sorteo": 4102,
+     "ventas": 810918.0471264023,
+     "ventas_con_adicional": 637639.7725002678,
+     "razon_adicional": 0.786318389089786,
+     "bolsa_repartida": 3555550.76,
+     "menores_directo": 4.483281664075227,
+     "menores_por_bolsa": 4.384599371785564,
+     "adicional": 52
+    },
+    {
+     "sorteo": 4103,
+     "ventas": 943381.7541323786,
+     "ventas_con_adicional": 755250.6620498567,
+     "razon_adicional": 0.8005779831352106,
+     "bolsa_repartida": 4493316.74,
+     "menores_directo": 4.9493297419684765,
+     "menores_por_bolsa": 4.762988811599893,
+     "adicional": 39
+    },
+    {
+     "sorteo": 4104,
+     "ventas": 1072955.3293952497,
+     "ventas_con_adicional": 1028232.0786815692,
+     "razon_adicional": 0.9583176955382775,
+     "bolsa_repartida": 4811685.739999999,
+     "menores_directo": 4.924038276127622,
+     "menores_por_bolsa": 4.4845163709769835,
+     "adicional": 18
+    },
+    {
+     "sorteo": 4105,
+     "ventas": 1455027.1660702862,
+     "ventas_con_adicional": 719467.2724962197,
+     "razon_adicional": 0.4944699929138404,
+     "bolsa_repartida": 4511623.1,
+     "menores_directo": 3.953553668245677,
+     "menores_por_bolsa": 3.100713997103517,
+     "adicional": 56
+    },
+    {
+     "sorteo": 4106,
+     "ventas": 906493.9596022215,
+     "ventas_con_adicional": 956042.3139209726,
+     "razon_adicional": 1.054659332027423,
+     "bolsa_repartida": 4491063.77,
+     "menores_directo": 5.578774220907961,
+     "menores_por_bolsa": 4.9543228859139035,
+     "adicional": 14
+    },
+    {
+     "sorteo": 4107,
+     "ventas": 1081498.5130608475,
+     "ventas_con_adicional": 1571386.45876856,
+     "razon_adicional": 1.452971446369571,
+     "bolsa_repartida": 0.0,
+     "menores_directo": 0.0,
+     "menores_por_bolsa": 0.0,
+     "adicional": 3
+    },
+    {
+     "sorteo": 4108,
+     "ventas": 719169.4777067602,
+     "ventas_con_adicional": 749878.5869579983,
+     "razon_adicional": 1.0427007961310613,
+     "bolsa_repartida": 3477235.63,
+     "menores_directo": 5.0703226816961555,
+     "menores_por_bolsa": 4.8350712005854,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4109,
+     "ventas": 1253805.3561371595,
+     "ventas_con_adicional": 1469276.8890339958,
+     "razon_adicional": 1.1718540536153723,
+     "bolsa_repartida": 5428362.16,
+     "menores_directo": 3.8377076062425672,
+     "menores_por_bolsa": 4.329509467661077,
+     "adicional": 19
+    },
+    {
+     "sorteo": 4110,
+     "ventas": 978089.1596598085,
+     "ventas_con_adicional": 1179872.5433156667,
+     "razon_adicional": 1.206303670440475,
+     "bolsa_repartida": 4535561.58,
+     "menores_directo": 4.452873790409861,
+     "menores_por_bolsa": 4.637165779014998,
+     "adicional": 27
+    },
+    {
+     "sorteo": 4111,
+     "ventas": 926093.346934279,
+     "ventas_con_adicional": 1306375.3221762655,
+     "razon_adicional": 1.410630285274011,
+     "bolsa_repartida": 0.0,
+     "menores_directo": 0.0,
+     "menores_por_bolsa": 0.0,
+     "adicional": 29
+    },
+    {
+     "sorteo": 4112,
+     "ventas": 992726.6294441068,
+     "ventas_con_adicional": 1137049.343691492,
+     "razon_adicional": 1.1453801177149856,
+     "bolsa_repartida": 4707434.97,
+     "menores_directo": 6.202301472420784,
+     "menores_por_bolsa": 4.741924745824541,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4113,
+     "ventas": 816182.4243089855,
+     "ventas_con_adicional": 728553.9233756275,
+     "razon_adicional": 0.8926361333894834,
+     "bolsa_repartida": 4153232.76,
+     "menores_directo": 5.971465448474327,
+     "menores_por_bolsa": 5.088608424172209,
+     "adicional": 56
+    },
+    {
+     "sorteo": 4114,
+     "ventas": 642047.2538840201,
+     "ventas_con_adicional": 766874.0988191818,
+     "razon_adicional": 1.1944200277783767,
+     "bolsa_repartida": 3261297.7899999996,
+     "menores_directo": 4.760387165861639,
+     "menores_por_bolsa": 5.079529225101433,
+     "adicional": 13
+    },
+    {
+     "sorteo": 4115,
+     "ventas": 934750.7768454967,
+     "ventas_con_adicional": 815499.0988658111,
+     "razon_adicional": 0.8724240932089683,
+     "bolsa_repartida": 4484777.95,
+     "menores_directo": 5.571523426012882,
+     "menores_por_bolsa": 4.797832813934405,
+     "adicional": 56
+    },
+    {
+     "sorteo": 4116,
+     "ventas": 1133488.9285454077,
+     "ventas_con_adicional": 1014776.6407334886,
+     "razon_adicional": 0.8952682423071735,
+     "bolsa_repartida": 5029290.26,
+     "menores_directo": 4.383593115479908,
+     "menores_por_bolsa": 4.43699989769995,
+     "adicional": 32
+    },
+    {
+     "sorteo": 4117,
+     "ventas": 787238.9076874176,
+     "ventas_con_adicional": 699886.433787526,
+     "razon_adicional": 0.8890394351106234,
+     "bolsa_repartida": 3647773.78,
+     "menores_directo": 5.059148060904443,
+     "menores_por_bolsa": 4.6336299494084345,
+     "adicional": 20
+    },
+    {
+     "sorteo": 4118,
+     "ventas": 1282743.7056916582,
+     "ventas_con_adicional": 1351835.6979198602,
+     "razon_adicional": 1.0538626632285422,
+     "bolsa_repartida": 5560291.34,
+     "menores_directo": 4.17138945805705,
+     "menores_por_bolsa": 4.334686122666943,
+     "adicional": 29
+    },
+    {
+     "sorteo": 4119,
+     "ventas": 782348.5512399607,
+     "ventas_con_adicional": 837660.2018709495,
+     "razon_adicional": 1.070699499019106,
+     "bolsa_repartida": 0.0,
+     "menores_directo": 0.0,
+     "menores_por_bolsa": 0.0,
+     "adicional": 25
+    },
+    {
+     "sorteo": 4120,
+     "ventas": 694560.7193153753,
+     "ventas_con_adicional": 572659.4478231795,
+     "razon_adicional": 0.8244915554505398,
+     "bolsa_repartida": 3369880.35,
+     "menores_directo": 5.109784597878383,
+     "menores_por_bolsa": 4.851815336349099,
+     "adicional": 48
+    },
+    {
+     "sorteo": 4121,
+     "ventas": 877257.8614708615,
+     "ventas_con_adicional": 838445.3076688063,
+     "razon_adicional": 0.9557569609727067,
+     "bolsa_repartida": 4335517.81,
+     "menores_directo": 10.746160497228754,
+     "menores_por_bolsa": 4.942124773588029,
+     "adicional": 29
+    },
+    {
+     "sorteo": 4122,
+     "ventas": 944208.3291967318,
+     "ventas_con_adicional": 1006459.0096268492,
+     "razon_adicional": 1.065928967691988,
+     "bolsa_repartida": 4565390.43,
+     "menores_directo": 5.015524762264495,
+     "menores_por_bolsa": 4.835151617317254,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4123,
+     "ventas": 883905.4705716695,
+     "ventas_con_adicional": 802424.5644463743,
+     "razon_adicional": 0.9078171718152201,
+     "bolsa_repartida": 3961276.7800000003,
+     "menores_directo": 4.302324640152054,
+     "menores_por_bolsa": 4.481561560466447,
+     "adicional": 2
+    },
+    {
+     "sorteo": 4124,
+     "ventas": 1083443.9041223866,
+     "ventas_con_adicional": 1249229.571028334,
+     "razon_adicional": 1.15301730553391,
+     "bolsa_repartida": 5089049.7,
+     "menores_directo": 4.6385311472964075,
+     "menores_por_bolsa": 4.6971049268325915,
+     "adicional": 25
+    },
+    {
+     "sorteo": 4125,
+     "ventas": 1220679.9043833788,
+     "ventas_con_adicional": 1054383.836969629,
+     "razon_adicional": 0.8637676701184381,
+     "bolsa_repartida": 5311166.92,
+     "menores_directo": 4.219731878677495,
+     "menores_por_bolsa": 4.350990706841293,
+     "adicional": 36
+    },
+    {
+     "sorteo": 4126,
+     "ventas": 785024.1448610467,
+     "ventas_con_adicional": 672098.1042350174,
+     "razon_adicional": 0.8561495956968078,
+     "bolsa_repartida": 3642628.6799999997,
+     "menores_directo": 5.071797551628295,
+     "menores_por_bolsa": 4.640148591410222,
+     "adicional": 50
+    },
+    {
+     "sorteo": 4127,
+     "ventas": 1028091.0796564944,
+     "ventas_con_adicional": 1209107.3856217815,
+     "razon_adicional": 1.1760703011116176,
+     "bolsa_repartida": 4829321.33,
+     "menores_directo": 4.7703669797953925,
+     "menores_por_bolsa": 4.6973672134316855,
+     "adicional": 13
+    },
+    {
+     "sorteo": 4128,
+     "ventas": 1234953.7958085309,
+     "ventas_con_adicional": 910294.1176889382,
+     "razon_adicional": 0.7371078341380082,
+     "bolsa_repartida": 5259581.8,
+     "menores_directo": 4.263937274650371,
+     "menores_por_bolsa": 4.258930024630212,
+     "adicional": 43
+    },
+    {
+     "sorteo": 4129,
+     "ventas": 1076272.4760719675,
+     "ventas_con_adicional": 959823.826067044,
+     "razon_adicional": 0.891803746175948,
+     "bolsa_repartida": 4528036.569999999,
+     "menores_directo": 3.8740208435047503,
+     "menores_por_bolsa": 4.207147047489135,
+     "adicional": 32
+    },
+    {
+     "sorteo": 4130,
+     "ventas": 953213.3475693288,
+     "ventas_con_adicional": 1141463.8116239898,
+     "razon_adicional": 1.1974903777152253,
+     "bolsa_repartida": 4715830.17,
+     "menores_directo": 4.6112669252069916,
+     "menores_por_bolsa": 4.947297666388383,
+     "adicional": 11
+    },
+    {
+     "sorteo": 4131,
+     "ventas": 1130116.8977296092,
+     "ventas_con_adicional": 1456785.2019950217,
+     "razon_adicional": 1.2890570921660274,
+     "bolsa_repartida": 5368370.6,
+     "menores_directo": 4.612081598879601,
+     "menores_por_bolsa": 4.750279029350848,
+     "adicional": 9
+    },
+    {
+     "sorteo": 4132,
+     "ventas": 692989.063527866,
+     "ventas_con_adicional": 874224.2959903994,
+     "razon_adicional": 1.2615268292112747,
+     "bolsa_repartida": 3612589.53,
+     "menores_directo": 5.762674782056025,
+     "menores_por_bolsa": 5.213054173768692,
+     "adicional": 12
+    },
+    {
+     "sorteo": 4133,
+     "ventas": 1095959.0999409514,
+     "ventas_con_adicional": 900546.6347604309,
+     "razon_adicional": 0.8216973013034437,
+     "bolsa_repartida": 5034143.24,
+     "menores_directo": 4.630662986045894,
+     "menores_por_bolsa": 4.593367800195493,
+     "adicional": 49
+    },
+    {
+     "sorteo": 4134,
+     "ventas": 1006061.7368883773,
+     "ventas_con_adicional": 1024287.0214264509,
+     "razon_adicional": 1.0181154733052884,
+     "bolsa_repartida": 4891500.31,
+     "menores_directo": 5.379865309804266,
+     "menores_por_bolsa": 4.862027975667573,
+     "adicional": 2
+    },
+    {
+     "sorteo": 4135,
+     "ventas": 869917.6629920899,
+     "ventas_con_adicional": 900159.8433408288,
+     "razon_adicional": 1.034764416950359,
+     "bolsa_repartida": 4075052.4099999997,
+     "menores_directo": 4.512046905493076,
+     "menores_por_bolsa": 4.684411621191618,
+     "adicional": 2
+    },
+    {
+     "sorteo": 4136,
+     "ventas": 1149941.100127222,
+     "ventas_con_adicional": 1438333.8310583655,
+     "razon_adicional": 1.2507891325036018,
+     "bolsa_repartida": 5319684.239999999,
+     "menores_directo": 4.813968999307511,
+     "menores_por_bolsa": 4.62604931627495,
+     "adicional": 8
+    },
+    {
+     "sorteo": 4137,
+     "ventas": 1040548.8240943474,
+     "ventas_con_adicional": 1121965.1657365274,
+     "razon_adicional": 1.078243653499913,
+     "bolsa_repartida": 4994528.05,
+     "menores_directo": 5.437833457084289,
+     "menores_por_bolsa": 4.799897836939117,
+     "adicional": 13
+    },
+    {
+     "sorteo": 4138,
+     "ventas": 877925.0898641043,
+     "ventas_con_adicional": 1097933.594066527,
+     "razon_adicional": 1.2506005429648652,
+     "bolsa_repartida": 4181237.06,
+     "menores_directo": 5.050328315167382,
+     "menores_por_bolsa": 4.7626353412991325,
+     "adicional": 12
+    },
+    {
+     "sorteo": 4139,
+     "ventas": 1214273.637741797,
+     "ventas_con_adicional": 995558.9536356273,
+     "razon_adicional": 0.8198802334925787,
+     "bolsa_repartida": 5391469.1,
+     "menores_directo": 4.561711005728764,
+     "menores_por_bolsa": 4.440077534769343,
+     "adicional": 56
+    },
+    {
+     "sorteo": 4140,
+     "ventas": 1123222.651139738,
+     "ventas_con_adicional": 821199.6162042222,
+     "razon_adicional": 0.7311102704089416,
+     "bolsa_repartida": 5184032.78,
+     "menores_directo": 4.273323452660301,
+     "menores_por_bolsa": 4.615320724470561,
+     "adicional": 40
+    },
+    {
+     "sorteo": 4141,
+     "ventas": 1024503.3578590201,
+     "ventas_con_adicional": 968064.741599239,
+     "razon_adicional": 0.9449112432606125,
+     "bolsa_repartida": 4550290.09,
+     "menores_directo": 4.3043372381718665,
+     "menores_por_bolsa": 4.441459420405488,
+     "adicional": 44
+    },
+    {
+     "sorteo": 4142,
+     "ventas": 900963.2405211881,
+     "ventas_con_adicional": 808227.795268175,
+     "razon_adicional": 0.897070778160308,
+     "bolsa_repartida": 4695646.4,
+     "menores_directo": 8.396626458385615,
+     "menores_por_bolsa": 5.211806862712477,
+     "adicional": 1
+    },
+    {
+     "sorteo": 4143,
+     "ventas": 1074883.5586333878,
+     "ventas_con_adicional": 992117.4496789183,
+     "razon_adicional": 0.9229999302811007,
+     "bolsa_repartida": 5203304.289999999,
+     "menores_directo": 5.4039711928224685,
+     "menores_por_bolsa": 4.840807404864863,
+     "adicional": 56
+    },
+    {
+     "sorteo": 4144,
+     "ventas": 889182.7986984061,
+     "ventas_con_adicional": 1065860.4371591185,
+     "razon_adicional": 1.198696644513743,
+     "bolsa_repartida": 4249642.8,
+     "menores_directo": 5.424325783662631,
+     "menores_por_bolsa": 4.779267892069736,
+     "adicional": 5
+    },
+    {
+     "sorteo": 4145,
+     "ventas": 1570542.7726725014,
+     "ventas_con_adicional": 1194225.5859362532,
+     "razon_adicional": 0.7603903610368464,
+     "bolsa_repartida": 6450052.399999999,
+     "menores_directo": 3.9750680436224273,
+     "menores_por_bolsa": 4.106893815457391,
+     "adicional": 38
+    },
+    {
+     "sorteo": 4146,
+     "ventas": 1202684.1984073718,
+     "ventas_con_adicional": 1434468.7338650746,
+     "razon_adicional": 1.1927226912639564,
+     "bolsa_repartida": 5760466.529999999,
+     "menores_directo": 4.585666051792578,
+     "menores_por_bolsa": 4.789675076489881,
+     "adicional": 9
+    },
+    {
+     "sorteo": 4147,
+     "ventas": 1000629.3882726553,
+     "ventas_con_adicional": 1086718.8205035476,
+     "razon_adicional": 1.0860352826329684,
+     "bolsa_repartida": 4644591.43,
+     "menores_directo": 4.987704339993463,
+     "menores_por_bolsa": 4.641670017325559,
+     "adicional": 1
+    },
+    {
+     "sorteo": 4148,
+     "ventas": 1529096.8899817218,
+     "ventas_con_adicional": 1359150.9487120486,
+     "razon_adicional": 0.8888586181927918,
+     "bolsa_repartida": 6461470.029999999,
+     "menores_directo": 4.292247071586694,
+     "menores_por_bolsa": 4.225677308177141,
+     "adicional": 45
+    },
+    {
+     "sorteo": 4149,
+     "ventas": 1356370.4872506617,
+     "ventas_con_adicional": 1081765.7259879026,
+     "razon_adicional": 0.7975444291630247,
+     "bolsa_repartida": 6147844.79,
+     "menores_directo": 5.5086108243710905,
+     "menores_por_bolsa": 4.532570450173662,
+     "adicional": 47
+    },
+    {
+     "sorteo": 4150,
+     "ventas": 1022959.7779572506,
+     "ventas_con_adicional": 831255.3289604257,
+     "razon_adicional": 0.8125982534918043,
+     "bolsa_repartida": 4619837.27,
+     "menores_directo": 4.265284423616832,
+     "menores_por_bolsa": 4.51614752559026,
+     "adicional": 37
+    },
+    {
+     "sorteo": 4151,
+     "ventas": 1202059.1638256912,
+     "ventas_con_adicional": 1542670.6620529208,
+     "razon_adicional": 1.283356683662054,
+     "bolsa_repartida": 5861827.39,
+     "menores_directo": 4.9821677373064714,
+     "menores_por_bolsa": 4.876488251496758,
+     "adicional": 11
+    },
+    {
+     "sorteo": 4152,
+     "ventas": 1190257.861769468,
+     "ventas_con_adicional": 1302303.07722139,
+     "razon_adicional": 1.094135245017708,
+     "bolsa_repartida": 5792840.51,
+     "menores_directo": 5.109490221518523,
+     "menores_por_bolsa": 4.866878595019918,
+     "adicional": 44
+    },
+    {
+     "sorteo": 4153,
+     "ventas": 872490.8910702309,
+     "ventas_con_adicional": 1001212.7999087606,
+     "razon_adicional": 1.1475338139984872,
+     "bolsa_repartida": 4401121.22,
+     "menores_directo": 7.488470317449229,
+     "menores_por_bolsa": 5.0443176714445865,
+     "adicional": 4
+    },
+    {
+     "sorteo": 4154,
+     "ventas": 1185559.7845451229,
+     "ventas_con_adicional": 1206429.8145541048,
+     "razon_adicional": 1.0176035239057888,
+     "bolsa_repartida": 5812404.15,
+     "menores_directo": 4.866789635016604,
+     "menores_por_bolsa": 4.90266642456172,
+     "adicional": 1
+    },
+    {
+     "sorteo": 4155,
+     "ventas": 1393454.3313045243,
+     "ventas_con_adicional": 1275119.2542364656,
+     "razon_adicional": 0.9150778935415301,
+     "bolsa_repartida": 6598550.27,
+     "menores_directo": 5.676581649328597,
+     "menores_por_bolsa": 4.735390404809728,
+     "adicional": 10
+    },
+    {
+     "sorteo": 4156,
+     "ventas": 1021977.3566561427,
+     "ventas_con_adicional": 1352857.6997898808,
+     "razon_adicional": 1.3237648476051969,
+     "bolsa_repartida": 4919279.1,
+     "menores_directo": 4.4908550867679615,
+     "menores_por_bolsa": 4.8134912852625495,
+     "adicional": 9
+    },
+    {
+     "sorteo": 4157,
+     "ventas": 1286216.0662885595,
+     "ventas_con_adicional": 1131443.2675453292,
+     "razon_adicional": 0.8796681189111291,
+     "bolsa_repartida": 6054133.35,
+     "menores_directo": 4.714023924035023,
+     "menores_por_bolsa": 4.7069333906468005,
+     "adicional": 48
+    },
+    {
+     "sorteo": 4158,
+     "ventas": 1050653.3239918912,
+     "ventas_con_adicional": 1053941.3502964315,
+     "razon_adicional": 1.0031295064027852,
+     "bolsa_repartida": 5142118.12,
+     "menores_directo": 5.602397584226107,
+     "menores_por_bolsa": 4.8942101096324,
+     "adicional": 28
+    },
+    {
+     "sorteo": 4159,
+     "ventas": 811960.7096927274,
+     "ventas_con_adicional": 689993.7600058956,
+     "razon_adicional": 0.8497871285754848,
+     "bolsa_repartida": 3977042.9699999997,
+     "menores_directo": 6.34332797459046,
+     "menores_por_bolsa": 4.898073173399047,
+     "adicional": 55
+    },
+    {
+     "sorteo": 4160,
+     "ventas": 1085372.8965218072,
+     "ventas_con_adicional": 912813.554894558,
+     "razon_adicional": 0.841013773072615,
+     "bolsa_repartida": 5166672.85,
+     "menores_directo": 4.7450231310802895,
+     "menores_por_bolsa": 4.7602744333833575,
+     "adicional": 54
+    },
+    {
+     "sorteo": 4161,
+     "ventas": 1216238.1233851763,
+     "ventas_con_adicional": 1408963.2818028934,
+     "razon_adicional": 1.1584600537609377,
+     "bolsa_repartida": 5706324.02,
+     "menores_directo": 4.556638991172842,
+     "menores_por_bolsa": 4.6917819054359935,
+     "adicional": 28
+    },
+    {
+     "sorteo": 4162,
+     "ventas": 898398.524928853,
+     "ventas_con_adicional": 744499.9114340874,
+     "razon_adicional": 0.8286967206374773,
+     "bolsa_repartida": 4263775.04,
+     "menores_directo": 5.0472365807826405,
+     "menores_por_bolsa": 4.745972885850032,
+     "adicional": 51
+    },
+    {
+     "sorteo": 4163,
+     "ventas": 1083352.5133562963,
+     "ventas_con_adicional": 962558.4759040992,
+     "razon_adicional": 0.888499785653361,
+     "bolsa_repartida": 5249280.699999999,
+     "menores_directo": 5.549048320652094,
+     "menores_por_bolsa": 4.84540409080456,
+     "adicional": 55
+    },
+    {
+     "sorteo": 4164,
+     "ventas": 1291802.7811869835,
+     "ventas_con_adicional": 1657690.4540830802,
+     "razon_adicional": 1.2832380284550076,
+     "bolsa_repartida": 5903462.05,
+     "menores_directo": 4.1875017050405505,
+     "menores_por_bolsa": 4.569940656557153,
+     "adicional": 11
+    },
+    {
+     "sorteo": 4165,
+     "ventas": 978030.2614023199,
+     "ventas_con_adicional": 987505.415778257,
+     "razon_adicional": 1.0096879971406523,
+     "bolsa_repartida": 4446280.8,
+     "menores_directo": 4.6432049039873675,
+     "menores_por_bolsa": 4.546158718672806,
+     "adicional": 45
+    },
+    {
+     "sorteo": 4166,
+     "ventas": 1219033.2976498613,
+     "ventas_con_adicional": 1554023.8308760247,
+     "razon_adicional": 1.2748001501451862,
+     "bolsa_repartida": 5716615.01,
+     "menores_directo": 4.198553482526846,
+     "menores_por_bolsa": 4.689465842336625,
+     "adicional": 11
+    },
+    {
+     "sorteo": 4167,
+     "ventas": 1225416.4557296275,
+     "ventas_con_adicional": 1297049.6348636243,
+     "razon_adicional": 1.0584561916065878,
+     "bolsa_repartida": 5589420.1899999995,
+     "menores_directo": 4.737121692895832,
+     "menores_por_bolsa": 4.561241334622026,
+     "adicional": 25
+    },
+    {
+     "sorteo": 4168,
+     "ventas": 836065.03514389,
+     "ventas_con_adicional": 705002.2273769374,
+     "razon_adicional": 0.8432385014828467,
+     "bolsa_repartida": 3985502.88,
+     "menores_directo": 9.921851499714984,
+     "menores_por_bolsa": 4.76697710401689,
+     "adicional": 10
+    },
+    {
+     "sorteo": 4169,
+     "ventas": 1061313.9493609704,
+     "ventas_con_adicional": 1172482.5261648435,
+     "razon_adicional": 1.1047461751264167,
+     "bolsa_repartida": 5128284.52,
+     "menores_directo": 4.899940931555804,
+     "menores_por_bolsa": 4.832014620261799,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4170,
+     "ventas": 1019521.0550711784,
+     "ventas_con_adicional": 1439366.7192618137,
+     "razon_adicional": 1.4118067617164842,
+     "bolsa_repartida": 5162219.98,
+     "menores_directo": 5.127165706410989,
+     "menores_por_bolsa": 5.063377508804463,
+     "adicional": 13
+    },
+    {
+     "sorteo": 4171,
+     "ventas": 846221.1948864205,
+     "ventas_con_adicional": 730631.6497225869,
+     "razon_adicional": 0.8634050460301363,
+     "bolsa_repartida": 4022025.9799999995,
+     "menores_directo": 5.296831436537318,
+     "menores_por_bolsa": 4.752925126792451,
+     "adicional": 32
+    },
+    {
+     "sorteo": 4172,
+     "ventas": 1308605.3875973332,
+     "ventas_con_adicional": 1169937.6977112663,
+     "razon_adicional": 0.8940339913007176,
+     "bolsa_repartida": 5826614.02,
+     "menores_directo": 4.572918043234358,
+     "menores_por_bolsa": 4.4525370865987055,
+     "adicional": 20
+    },
+    {
+     "sorteo": 4173,
+     "ventas": 1139176.9513443734,
+     "ventas_con_adicional": 863252.1030310611,
+     "razon_adicional": 0.7577857873724657,
+     "bolsa_repartida": 5202251.68,
+     "menores_directo": 4.376487497272736,
+     "menores_por_bolsa": 4.566675680947268,
+     "adicional": 49
+    },
+    {
+     "sorteo": 4174,
+     "ventas": 1143796.497229599,
+     "ventas_con_adicional": 1183781.0050747397,
+     "razon_adicional": 1.0349577113953292,
+     "bolsa_repartida": 4950777.89,
+     "menores_directo": 4.147796383540002,
+     "menores_por_bolsa": 4.328373012149739,
+     "adicional": 1
+    },
+    {
+     "sorteo": 4175,
+     "ventas": 1455399.2309532186,
+     "ventas_con_adicional": 1029078.2936286711,
+     "razon_adicional": 0.7070762933924822,
+     "bolsa_repartida": 6147172.069999999,
+     "menores_directo": 4.173123480601283,
+     "menores_por_bolsa": 4.223701606585218,
+     "adicional": 43
+    },
+    {
+     "sorteo": 4176,
+     "ventas": 984916.280615215,
+     "ventas_con_adicional": 1189086.8588097328,
+     "razon_adicional": 1.2072973939135065,
+     "bolsa_repartida": 5007786.35,
+     "menores_directo": 4.973720030740008,
+     "menores_por_bolsa": 5.084479207584986,
+     "adicional": 3
+    },
+    {
+     "sorteo": 4177,
+     "ventas": 868899.3085313472,
+     "ventas_con_adicional": 963194.1150073174,
+     "razon_adicional": 1.1085221331748456,
+     "bolsa_repartida": 4151280.01,
+     "menores_directo": 4.726453198423232,
+     "menores_por_bolsa": 4.777630698103191,
+     "adicional": 14
+    },
+    {
+     "sorteo": 4178,
+     "ventas": 1105704.4390054105,
+     "ventas_con_adicional": 881754.3192738539,
+     "razon_adicional": 0.7974593283418474,
+     "bolsa_repartida": 5032050.17,
+     "menores_directo": 4.830953818040388,
+     "menores_por_bolsa": 4.550990294048532,
+     "adicional": 51
+    },
+    {
+     "sorteo": 4179,
+     "ventas": 1063710.532426898,
+     "ventas_con_adicional": 1002591.9750973508,
+     "razon_adicional": 0.942542115108983,
+     "bolsa_repartida": 5074647.43,
+     "menores_directo": 4.511742361720164,
+     "menores_por_bolsa": 4.770703377752582,
+     "adicional": 1
+    },
+    {
+     "sorteo": 4180,
+     "ventas": 993948.1915270401,
+     "ventas_con_adicional": 874934.9734189799,
+     "razon_adicional": 0.8802621513650367,
+     "bolsa_repartida": 4482378.54,
+     "menores_directo": 4.754910002440524,
+     "menores_por_bolsa": 4.509670200328603,
+     "adicional": 38
+    },
+    {
+     "sorteo": 4181,
+     "ventas": 1220282.1543437573,
+     "ventas_con_adicional": 1543685.945979411,
+     "razon_adicional": 1.2650237819871861,
+     "bolsa_repartida": 5796150.52,
+     "menores_directo": 4.939163661286303,
+     "menores_por_bolsa": 4.749844533387486,
+     "adicional": 22
+    },
+    {
+     "sorteo": 4182,
+     "ventas": 1276383.0342754307,
+     "ventas_con_adicional": 907492.4467119987,
+     "razon_adicional": 0.7109875502436135,
+     "bolsa_repartida": 5537939.56,
+     "menores_directo": 4.215079355839622,
+     "menores_por_bolsa": 4.338775595794207,
+     "adicional": 40
+    },
+    {
+     "sorteo": 4183,
+     "ventas": 913171.6717193137,
+     "ventas_con_adicional": 1023700.7779321484,
+     "razon_adicional": 1.121038693638767,
+     "bolsa_repartida": 4236782.52,
+     "menores_directo": 4.6642546247069,
+     "menores_por_bolsa": 4.639634201554909,
+     "adicional": 22
+    },
+    {
+     "sorteo": 4184,
+     "ventas": 1040152.1926652475,
+     "ventas_con_adicional": 901934.8678135026,
+     "razon_adicional": 0.8671181719113796,
+     "bolsa_repartida": 4946734.84,
+     "menores_directo": 4.723383933245199,
+     "menores_por_bolsa": 4.755779851143388,
+     "adicional": 56
+    },
+    {
+     "sorteo": 4185,
+     "ventas": 1099370.947765771,
+     "ventas_con_adicional": 916330.1220474371,
+     "razon_adicional": 0.8335040360213957,
+     "bolsa_repartida": 5074700.819999999,
+     "menores_directo": 5.704331669378839,
+     "menores_por_bolsa": 4.6160041160931256,
+     "adicional": 48
+    },
+    {
+     "sorteo": 4186,
+     "ventas": 839234.7209036291,
+     "ventas_con_adicional": 907931.2769475054,
+     "razon_adicional": 1.081856189136108,
+     "bolsa_repartida": 4047400.65,
+     "menores_directo": 4.788324979065822,
+     "menores_por_bolsa": 4.822727836667724,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4187,
+     "ventas": 1134600.2922234766,
+     "ventas_con_adicional": 1148896.2917988317,
+     "razon_adicional": 1.0126000316352284,
+     "bolsa_repartida": 5265503.38,
+     "menores_directo": 4.837187561174797,
+     "menores_por_bolsa": 4.640844371440441,
+     "adicional": 42
+    },
+    {
+     "sorteo": 4188,
+     "ventas": 884435.2500201692,
+     "ventas_con_adicional": 1039997.3468115189,
+     "razon_adicional": 1.175888621340909,
+     "bolsa_repartida": 4540574.47,
+     "menores_directo": 6.631199045436004,
+     "menores_por_bolsa": 5.1338687257167255,
+     "adicional": 5
+    },
+    {
+     "sorteo": 4189,
+     "ventas": 883207.0929980675,
+     "ventas_con_adicional": 736024.226818768,
+     "razon_adicional": 0.8333540713767551,
+     "bolsa_repartida": 4067548.82,
+     "menores_directo": 6.614343757734434,
+     "menores_por_bolsa": 4.605430427639127,
+     "adicional": 54
+    },
+    {
+     "sorteo": 4190,
+     "ventas": 1236706.1170164312,
+     "ventas_con_adicional": 1028175.8748730128,
+     "razon_adicional": 0.8313825416773225,
+     "bolsa_repartida": 5442258.89,
+     "menores_directo": 4.028642277379791,
+     "menores_por_bolsa": 4.400608046743972,
+     "adicional": 55
+    },
+    {
+     "sorteo": 4191,
+     "ventas": 1226531.5908159271,
+     "ventas_con_adicional": 1688538.4801179268,
+     "razon_adicional": 1.376677529353042,
+     "bolsa_repartida": 5633485.67,
+     "menores_directo": 4.437839814951357,
+     "menores_por_bolsa": 4.59302125781565,
+     "adicional": 3
+    },
+    {
+     "sorteo": 4192,
+     "ventas": 933525.2758531113,
+     "ventas_con_adicional": 845134.8600731165,
+     "razon_adicional": 0.9053154552251214,
+     "bolsa_repartida": 4235652.89,
+     "menores_directo": 4.319195638188424,
+     "menores_por_bolsa": 4.537266423910382,
+     "adicional": 23
+    },
+    {
+     "sorteo": 4193,
+     "ventas": 1361032.1153167065,
+     "ventas_con_adicional": 1024134.8193317353,
+     "razon_adicional": 0.7524692531545616,
+     "bolsa_repartida": 5823617.01,
+     "menores_directo": 4.348640155934828,
+     "menores_por_bolsa": 4.278824095671592,
+     "adicional": 50
+    },
+    {
+     "sorteo": 4194,
+     "ventas": 1401168.0598428785,
+     "ventas_con_adicional": 1062517.8563349883,
+     "razon_adicional": 0.7583086474681238,
+     "bolsa_repartida": 5959843.7,
+     "menores_directo": 4.130684388062301,
+     "menores_por_bolsa": 4.253482412857965,
+     "adicional": 53
+    },
+    {
+     "sorteo": 4195,
+     "ventas": 676637.596377149,
+     "ventas_con_adicional": 562312.1176439672,
+     "razon_adicional": 0.8310388317981399,
+     "bolsa_repartida": 3268643.29,
+     "menores_directo": 5.1442232363763996,
+     "menores_por_bolsa": 4.830714857555892,
+     "adicional": 40
+    },
+    {
+     "sorteo": 4196,
+     "ventas": 1149392.2596055516,
+     "ventas_con_adicional": 1449919.9190313418,
+     "razon_adicional": 1.2614665767184872,
+     "bolsa_repartida": 5250189.75,
+     "menores_directo": 4.685462580642936,
+     "menores_por_bolsa": 4.567796334213839,
+     "adicional": 11
+    },
+    {
+     "sorteo": 4197,
+     "ventas": 988290.7669949449,
+     "ventas_con_adicional": 793595.4803499065,
+     "razon_adicional": 0.8029979706913175,
+     "bolsa_repartida": 4769938.8,
+     "menores_directo": 6.031264823165489,
+     "menores_por_bolsa": 4.826452861138991,
+     "adicional": 39
+    },
+    {
+     "sorteo": 4198,
+     "ventas": 970169.204493698,
+     "ventas_con_adicional": 853675.1823975963,
+     "razon_adicional": 0.879924015773211,
+     "bolsa_repartida": 4267477.38,
+     "menores_directo": 4.164391658409416,
+     "menores_por_bolsa": 4.398693918786123,
+     "adicional": 52
+    },
+    {
+     "sorteo": 4199,
+     "ventas": 848447.2778064857,
+     "ventas_con_adicional": 945746.9503100486,
+     "razon_adicional": 1.1146796920076336,
+     "bolsa_repartida": 4254841.57,
+     "menores_directo": 10.61442657816964,
+     "menores_por_bolsa": 5.014856763993822,
+     "adicional": 6
+    },
+    {
+     "sorteo": 4200,
+     "ventas": 933377.686296389,
+     "ventas_con_adicional": 794272.5112803444,
+     "razon_adicional": 0.8509658233120945,
+     "bolsa_repartida": 4461377.47,
+     "menores_directo": 5.348545693423607,
+     "menores_por_bolsa": 4.7798201473002795,
+     "adicional": 56
+    },
+    {
+     "sorteo": 4201,
+     "ventas": 882568.4466792695,
+     "ventas_con_adicional": 840580.7485470254,
+     "razon_adicional": 0.9524255616771412,
+     "bolsa_repartida": 3963074.69,
+     "menores_directo": 4.370973687183454,
+     "menores_por_bolsa": 4.490387918253103,
+     "adicional": 32
+    },
+    {
+     "sorteo": 4202,
+     "ventas": 1018096.0579276456,
+     "ventas_con_adicional": 815963.8316159343,
+     "razon_adicional": 0.8014605549861813,
+     "bolsa_repartida": 4705515.42,
+     "menores_directo": 6.229258867596825,
+     "menores_por_bolsa": 4.621877654234482,
+     "adicional": 50
+    },
+    {
+     "sorteo": 4203,
+     "ventas": 1096353.4877789502,
+     "ventas_con_adicional": 870767.394778376,
+     "razon_adicional": 0.7942396357423204,
+     "bolsa_repartida": 4805225.2,
+     "menores_directo": 4.937993410892966,
+     "menores_por_bolsa": 4.382915960558191,
+     "adicional": 37
+    },
+    {
+     "sorteo": 4204,
+     "ventas": 1050203.5326869204,
+     "ventas_con_adicional": 1170017.9004295205,
+     "razon_adicional": 1.1140868069983139,
+     "bolsa_repartida": 4421576.159999999,
+     "menores_directo": 3.8064151547059426,
+     "menores_por_bolsa": 4.210208804656658,
+     "adicional": 26
+    },
+    {
+     "sorteo": 4205,
+     "ventas": 1202801.2445588855,
+     "ventas_con_adicional": 1055540.385130912,
+     "razon_adicional": 0.8775684178128866,
+     "bolsa_repartida": 5217424.46,
+     "menores_directo": 4.0359431470613485,
+     "menores_por_bolsa": 4.337727852878499,
+     "adicional": 53
+    },
+    {
+     "sorteo": 4206,
+     "ventas": 916984.0097789511,
+     "ventas_con_adicional": 992866.0151487848,
+     "razon_adicional": 1.082751721470177,
+     "bolsa_repartida": 4406739.27,
+     "menores_directo": 4.6672300713837895,
+     "menores_por_bolsa": 4.8056882377505055,
+     "adicional": 11
+    },
+    {
+     "sorteo": 4207,
+     "ventas": 692496.1048572094,
+     "ventas_con_adicional": 526318.9042651629,
+     "razon_adicional": 0.7600315735691947,
+     "bolsa_repartida": 3294393.17,
+     "menores_directo": 5.802045062164374,
+     "menores_por_bolsa": 4.757273213369618,
+     "adicional": 40
+    },
+    {
+     "sorteo": 4208,
+     "ventas": 1001318.9355222901,
+     "ventas_con_adicional": 1088964.3395417365,
+     "razon_adicional": 1.0875299576490387,
+     "bolsa_repartida": 4694395.52,
+     "menores_directo": 5.573482328190985,
+     "menores_por_bolsa": 4.688212070564104,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4209,
+     "ventas": 1155707.4650278834,
+     "ventas_con_adicional": 1111126.9554842215,
+     "razon_adicional": 0.9614257838660007,
+     "bolsa_repartida": 5145410.4399999995,
+     "menores_directo": 4.559506669184804,
+     "menores_por_bolsa": 4.452173751318512,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4210,
+     "ventas": 857909.7856719202,
+     "ventas_con_adicional": 666004.4759008454,
+     "razon_adicional": 0.7763106179972369,
+     "bolsa_repartida": 3842578.25,
+     "menores_directo": 4.923845315185493,
+     "menores_por_bolsa": 4.479000372970999,
+     "adicional": 56
+    },
+    {
+     "sorteo": 4211,
+     "ventas": 869726.2682750104,
+     "ventas_con_adicional": 781733.16221081,
+     "razon_adicional": 0.8988266661892099,
+     "bolsa_repartida": 4233499.25,
+     "menores_directo": 6.446905725917934,
+     "menores_por_bolsa": 4.867622612338246,
+     "adicional": 35
+    },
+    {
+     "sorteo": 4212,
+     "ventas": 1123861.014853738,
+     "ventas_con_adicional": 876467.7790150597,
+     "razon_adicional": 0.7798720370499953,
+     "bolsa_repartida": 4969244.2299999995,
+     "menores_directo": 4.020521528354491,
+     "menores_por_bolsa": 4.4215825305113095,
+     "adicional": 39
+    },
+    {
+     "sorteo": 4213,
+     "ventas": 998648.2467553135,
+     "ventas_con_adicional": 708847.5665595123,
+     "razon_adicional": 0.7098070505431854,
+     "bolsa_repartida": 4225532.8,
+     "menores_directo": 4.260433145594078,
+     "menores_por_bolsa": 4.231252409173187,
+     "adicional": 46
+    },
+    {
+     "sorteo": 4214,
+     "ventas": 1111986.4570882597,
+     "ventas_con_adicional": 867582.1144687346,
+     "razon_adicional": 0.7802092453000743,
+     "bolsa_repartida": 5000753.97,
+     "menores_directo": 4.5022372922428415,
+     "menores_por_bolsa": 4.497135678337748,
+     "adicional": 39
+    },
+    {
+     "sorteo": 4215,
+     "ventas": 994802.2819262436,
+     "ventas_con_adicional": 839136.6719345732,
+     "razon_adicional": 0.843521056575932,
+     "bolsa_repartida": 4656999.54,
+     "menores_directo": 5.223945669880742,
+     "menores_por_bolsa": 4.681331782816797,
+     "adicional": 31
+    },
+    {
+     "sorteo": 4216,
+     "ventas": 719046.2532031033,
+     "ventas_con_adicional": 816938.1750527674,
+     "razon_adicional": 1.1361413419701296,
+     "bolsa_repartida": 3510192.48,
+     "menores_directo": 5.54646729827085,
+     "menores_por_bolsa": 4.881733914005256,
+     "adicional": 44
+    },
+    {
+     "sorteo": 4217,
+     "ventas": 865286.4864507475,
+     "ventas_con_adicional": 916865.9571873255,
+     "razon_adicional": 1.0596097033112672,
+     "bolsa_repartida": 4368106.1,
+     "menores_directo": 6.715911343866393,
+     "menores_por_bolsa": 5.048161699505097,
+     "adicional": 16
+    },
+    {
+     "sorteo": 4218,
+     "ventas": 1363417.398668443,
+     "ventas_con_adicional": 1003774.0291944536,
+     "razon_adicional": 0.7362191726281118,
+     "bolsa_repartida": 5604013.88,
+     "menores_directo": 3.960698158051099,
+     "menores_por_bolsa": 4.110270182464342,
+     "adicional": 50
+    },
+    {
+     "sorteo": 4219,
+     "ventas": 711868.4038531604,
+     "ventas_con_adicional": 657305.8998582534,
+     "razon_adicional": 0.9233531033269995,
+     "bolsa_repartida": 3499955.89,
+     "menores_directo": 5.157157641039439,
+     "menores_por_bolsa": 4.916577096350449,
+     "adicional": 44
+    },
+    {
+     "sorteo": 4220,
+     "ventas": 1007747.4194392188,
+     "ventas_con_adicional": 1229211.014529596,
+     "razon_adicional": 1.2197610143359285,
+     "bolsa_repartida": 4904124.34,
+     "menores_directo": 4.9335970867213925,
+     "menores_por_bolsa": 4.866422126616804,
+     "adicional": 8
+    },
+    {
+     "sorteo": 4221,
+     "ventas": 1156701.4300267892,
+     "ventas_con_adicional": 1208716.6708946256,
+     "razon_adicional": 1.0449685973558722,
+     "bolsa_repartida": 5229175.25,
+     "menores_directo": 4.311432059739496,
+     "menores_por_bolsa": 4.520764921920164,
+     "adicional": 2
+    },
+    {
+     "sorteo": 4222,
+     "ventas": 879982.8542117929,
+     "ventas_con_adicional": 815788.0630905158,
+     "razon_adicional": 0.9270499523780189,
+     "bolsa_repartida": 3971070.05,
+     "menores_directo": 4.336214458251084,
+     "menores_por_bolsa": 4.512667526410973,
+     "adicional": 36
+    },
+    {
+     "sorteo": 4223,
+     "ventas": 912493.9317220711,
+     "ventas_con_adicional": 874316.7957973594,
+     "razon_adicional": 0.9581617645909565,
+     "bolsa_repartida": 4563549.05,
+     "menores_directo": 5.727106221870373,
+     "menores_por_bolsa": 5.001182902540083,
+     "adicional": 1
+    },
+    {
+     "sorteo": 4224,
+     "ventas": 934856.2622340419,
+     "ventas_con_adicional": 936439.5041627745,
+     "razon_adicional": 1.001693567228131,
+     "bolsa_repartida": 4488983.18,
+     "menores_directo": 5.477083080010383,
+     "menores_por_bolsa": 4.801789709652905,
+     "adicional": 2
+    },
+    {
+     "sorteo": 4225,
+     "ventas": 798893.0538953048,
+     "ventas_con_adicional": 735017.7414605939,
+     "razon_adicional": 0.9200452274265464,
+     "bolsa_repartida": 3617442.47,
+     "menores_directo": 4.6809472402674395,
+     "menores_por_bolsa": 4.528068497231004,
+     "adicional": 41
+    },
+    {
+     "sorteo": 4226,
+     "ventas": 885494.877926069,
+     "ventas_con_adicional": 833990.5243914669,
+     "razon_adicional": 0.9418355150114124,
+     "bolsa_repartida": 4320910.31,
+     "menores_directo": 4.613792938779065,
+     "menores_por_bolsa": 4.879655905091252,
+     "adicional": 2
+    },
+    {
+     "sorteo": 4227,
+     "ventas": 1071946.0917818104,
+     "ventas_con_adicional": 1276898.0350926984,
+     "razon_adicional": 1.1911961290611293,
+     "bolsa_repartida": 4829081.72,
+     "menores_directo": 4.1588313770333745,
+     "menores_por_bolsa": 4.504966954049903,
+     "adicional": 13
+    },
+    {
+     "sorteo": 4228,
+     "ventas": 752672.8821785008,
+     "ventas_con_adicional": 842228.7420154696,
+     "razon_adicional": 1.1189837736385062,
+     "bolsa_repartida": 3489581.68,
+     "menores_directo": 4.14364161119433,
+     "menores_por_bolsa": 4.6362526970546885,
+     "adicional": 33
+    },
+    {
+     "sorteo": 4229,
+     "ventas": 986862.6234053964,
+     "ventas_con_adicional": 905464.350138959,
+     "razon_adicional": 0.9175181313630525,
+     "bolsa_repartida": 4514233.08,
+     "menores_directo": 5.0814734879745975,
+     "menores_por_bolsa": 4.574327746269892,
+     "adicional": 31
+    },
+    {
+     "sorteo": 4230,
+     "ventas": 985252.8748958714,
+     "ventas_con_adicional": 1030695.770281104,
+     "razon_adicional": 1.0461230781894804,
+     "bolsa_repartida": 4521470.79,
+     "menores_directo": 4.180140657837661,
+     "menores_por_bolsa": 4.5891475226376395,
+     "adicional": 35
+    },
+    {
+     "sorteo": 4231,
+     "ventas": 873487.8441370081,
+     "ventas_con_adicional": 1039043.4600422042,
+     "razon_adicional": 1.1895339666332305,
+     "bolsa_repartida": 3918762.4599999995,
+     "menores_directo": 4.2190627180194324,
+     "menores_por_bolsa": 4.486338861271359,
+     "adicional": 24
+    },
+    {
+     "sorteo": 4232,
+     "ventas": 1008729.7856183666,
+     "ventas_con_adicional": 1074857.727105736,
+     "razon_adicional": 1.0655556546759766,
+     "bolsa_repartida": 4676339.069999999,
+     "menores_directo": 4.029442508410321,
+     "menores_por_bolsa": 4.635868928102815,
+     "adicional": 19
+    },
+    {
+     "sorteo": 4233,
+     "ventas": 1257696.1250531443,
+     "ventas_con_adicional": 1065362.1975845038,
+     "razon_adicional": 0.8470744056236054,
+     "bolsa_repartida": 5203888.17,
+     "menores_directo": 3.837612619837925,
+     "menores_por_bolsa": 4.137635527643936,
+     "adicional": 37
+    },
+    {
+     "sorteo": 4234,
+     "ventas": 923003.1944087588,
+     "ventas_con_adicional": 756237.4309649477,
+     "razon_adicional": 0.8193226584111283,
+     "bolsa_repartida": 3996979.73,
+     "menores_directo": 4.564646461874542,
+     "menores_por_bolsa": 4.330407255589527,
+     "adicional": 52
+    },
+    {
+     "sorteo": 4235,
+     "ventas": 909794.5350323225,
+     "ventas_con_adicional": 995032.1917958927,
+     "razon_adicional": 1.0936889082989951,
+     "bolsa_repartida": 4338621.899999999,
+     "menores_directo": 4.914953763710701,
+     "menores_por_bolsa": 4.768793098813085,
+     "adicional": 28
+    },
+    {
+     "sorteo": 4236,
+     "ventas": 861309.4617618973,
+     "ventas_con_adicional": 841667.641507653,
+     "razon_adicional": 0.9771953970944834,
+     "bolsa_repartida": 4187487.04,
+     "menores_directo": 5.494865232190426,
+     "menores_por_bolsa": 4.861768302688866,
+     "adicional": 56
+    },
+    {
+     "sorteo": 4237,
+     "ventas": 659833.1161526592,
+     "ventas_con_adicional": 766682.509703996,
+     "razon_adicional": 1.1619339662342987,
+     "bolsa_repartida": 3303831.42,
+     "menores_directo": 5.601197441416642,
+     "menores_por_bolsa": 5.007071241382835,
+     "adicional": 4
+    },
+    {
+     "sorteo": 4238,
+     "ventas": 1193607.6043431403,
+     "ventas_con_adicional": 912827.5750507395,
+     "razon_adicional": 0.7647635384771881,
+     "bolsa_repartida": 5052838.39,
+     "menores_directo": 4.107840791592179,
+     "menores_por_bolsa": 4.233249161294219,
+     "adicional": 54
+    },
+    {
+     "sorteo": 4239,
+     "ventas": 856429.1935643427,
+     "ventas_con_adicional": 841693.0089825495,
+     "razon_adicional": 0.9827934583588129,
+     "bolsa_repartida": 4212843.52,
+     "menores_directo": 10.088917554267166,
+     "menores_por_bolsa": 4.919079769416446,
+     "adicional": 33
+    },
+    {
+     "sorteo": 4240,
+     "ventas": 666747.0773647189,
+     "ventas_con_adicional": 805133.3502018083,
+     "razon_adicional": 1.2075543748673838,
+     "bolsa_repartida": 3417023.82,
+     "menores_directo": 9.398155864976065,
+     "menores_por_bolsa": 5.124917582699572,
+     "adicional": 14
+    },
+    {
+     "sorteo": 4241,
+     "ventas": 863378.1479984935,
+     "ventas_con_adicional": 757247.8272634101,
+     "razon_adicional": 0.8770755074342366,
+     "bolsa_repartida": 4167777.13,
+     "menores_directo": 5.404380766600522,
+     "menores_por_bolsa": 4.8272904979838245,
+     "adicional": 34
+    },
+    {
+     "sorteo": 4242,
+     "ventas": 1156799.5793475083,
+     "ventas_con_adicional": 1226887.0713154578,
+     "razon_adicional": 1.060587411353903,
+     "bolsa_repartida": 5077252.13,
+     "menores_directo": 4.298217632657144,
+     "menores_por_bolsa": 4.389050809357848,
+     "adicional": 6
+    },
+    {
+     "sorteo": 4243,
+     "ventas": 704136.7259680685,
+     "ventas_con_adicional": 516722.9721426851,
+     "razon_adicional": 0.7338389734355621,
+     "bolsa_repartida": 3346703.4699999997,
+     "menores_directo": 4.720454702838166,
+     "menores_por_bolsa": 4.752917077857075,
+     "adicional": 46
+    },
+    {
+     "sorteo": 4244,
+     "ventas": 1017159.583670179,
+     "ventas_con_adicional": 1344525.4751208553,
+     "razon_adicional": 1.3218431961968584,
+     "bolsa_repartida": 4756926.56,
+     "menores_directo": 4.142371020889334,
+     "menores_por_bolsa": 4.676676734279747,
+     "adicional": 13
+    },
+    {
+     "sorteo": 4245,
+     "ventas": 1056168.590972706,
+     "ventas_con_adicional": 849530.3588173529,
+     "razon_adicional": 0.8043510913678619,
+     "bolsa_repartida": 4725026.03,
+     "menores_directo": 4.478940903097396,
+     "menores_por_bolsa": 4.473742232429355,
+     "adicional": 51
+    },
+    {
+     "sorteo": 4246,
+     "ventas": 754604.807684612,
+     "ventas_con_adicional": 679491.0245302394,
+     "razon_adicional": 0.9004594426255411,
+     "bolsa_repartida": 3594191.15,
+     "menores_directo": 4.6745036939876,
+     "menores_por_bolsa": 4.763011199237146,
+     "adicional": 45
+    },
+    {
+     "sorteo": 4247,
+     "ventas": 1098339.8690689688,
+     "ventas_con_adicional": 1177885.2857217286,
+     "razon_adicional": 1.0724233171287756,
+     "bolsa_repartida": 4989433.79,
+     "menores_directo": 4.598193798740414,
+     "menores_por_bolsa": 4.54270479521917,
+     "adicional": 16
+    },
+    {
+     "sorteo": 4248,
+     "ventas": 1369928.838819441,
+     "ventas_con_adicional": 2055470.0785709196,
+     "razon_adicional": 1.5004210586166324,
+     "bolsa_repartida": 5990664.03,
+     "menores_directo": 3.802650476912408,
+     "menores_por_bolsa": 4.372974610245124,
+     "adicional": 5
+    },
+    {
+     "sorteo": 4249,
+     "ventas": 767314.1188187256,
+     "ventas_con_adicional": 888000.8291265365,
+     "razon_adicional": 1.1572846209237062,
+     "bolsa_repartida": 3729175.55,
+     "menores_directo": 4.813639399199888,
+     "menores_por_bolsa": 4.860037706253911,
+     "adicional": 27
+    },
+    {
+     "sorteo": 4250,
+     "ventas": 954850.9039813281,
+     "ventas_con_adicional": 887980.1097877652,
+     "razon_adicional": 0.9299672923649758,
+     "bolsa_repartida": 4586304.63,
+     "menores_directo": 5.43123493536923,
+     "menores_por_bolsa": 4.803163102089584,
+     "adicional": 35
+    },
+    {
+     "sorteo": 4251,
+     "ventas": 1207599.8664653744,
+     "ventas_con_adicional": 925825.353256599,
+     "razon_adicional": 0.7666656638232954,
+     "bolsa_repartida": 5190579.95,
+     "menores_directo": 4.308975001444479,
+     "menores_por_bolsa": 4.298261447471624,
+     "adicional": 48
+    },
+    {
+     "sorteo": 4252,
+     "ventas": 904808.3314111182,
+     "ventas_con_adicional": 965176.863412866,
+     "razon_adicional": 1.0667196906858698,
+     "bolsa_repartida": 4022309.82,
+     "menores_directo": 4.331264344546808,
+     "menores_por_bolsa": 4.4454827396724985,
+     "adicional": 1
+    },
+    {
+     "sorteo": 4253,
+     "ventas": 955860.2847990122,
+     "ventas_con_adicional": 735853.2833816264,
+     "razon_adicional": 0.7698335155083397,
+     "bolsa_repartida": 4549638.04,
+     "menores_directo": 5.481566501694138,
+     "menores_por_bolsa": 4.759731220506403,
+     "adicional": 50
+    },
+    {
+     "sorteo": 4254,
+     "ventas": 1024004.4543282914,
+     "ventas_con_adicional": 688345.9646042333,
+     "razon_adicional": 0.6722099319926909,
+     "bolsa_repartida": 4590120.84,
+     "menores_directo": 5.227415616508291,
+     "menores_por_bolsa": 4.482520384162731,
+     "adicional": 40
+    },
+    {
+     "sorteo": 4255,
+     "ventas": 858062.4106364258,
+     "ventas_con_adicional": 791601.505546749,
+     "razon_adicional": 0.922545371681784,
+     "bolsa_repartida": 3814522.01,
+     "menores_directo": 4.65059845013785,
+     "menores_por_bolsa": 4.4455064838124825,
+     "adicional": 22
+    },
+    {
+     "sorteo": 4256,
+     "ventas": 890952.7535558293,
+     "ventas_con_adicional": 915706.4700932566,
+     "razon_adicional": 1.0277834222282092,
+     "bolsa_repartida": 4403079.68,
+     "menores_directo": 5.184227453395045,
+     "menores_por_bolsa": 4.9419900914241826,
+     "adicional": 34
+    },
+    {
+     "sorteo": 4257,
+     "ventas": 884948.7496617925,
+     "ventas_con_adicional": 857630.8472857393,
+     "razon_adicional": 0.9691305260485497,
+     "bolsa_repartida": 4318817.51,
+     "menores_directo": 6.235208466462628,
+     "menores_por_bolsa": 4.880302403557895,
+     "adicional": 19
+    },
+    {
+     "sorteo": 4258,
+     "ventas": 814320.49130405,
+     "ventas_con_adicional": 678295.1246634271,
+     "razon_adicional": 0.8329584382399707,
+     "bolsa_repartida": 3763444.06,
+     "menores_directo": 4.483427539287694,
+     "menores_por_bolsa": 4.621576025887834,
+     "adicional": 43
+    },
+    {
+     "sorteo": 4259,
+     "ventas": 1149941.878572673,
+     "ventas_con_adicional": 970130.9625522416,
+     "razon_adicional": 0.8436347789649893,
+     "bolsa_repartida": 5140934.89,
+     "menores_directo": 4.779532715095978,
+     "menores_por_bolsa": 4.470604111210397,
+     "adicional": 49
+    },
+    {
+     "sorteo": 4260,
+     "ventas": 1134071.2919037053,
+     "ventas_con_adicional": 1233297.402435847,
+     "razon_adicional": 1.0874954786709892,
+     "bolsa_repartida": 5139736.1,
+     "menores_directo": 4.775735386823067,
+     "menores_por_bolsa": 4.532110226837854,
+     "adicional": 4
+    },
+    {
+     "sorteo": 4261,
+     "ventas": 865218.7774873658,
+     "ventas_con_adicional": 787857.9129937333,
+     "razon_adicional": 0.9105880888088307,
+     "bolsa_repartida": 3977578.5799999996,
+     "menores_directo": 4.970821163052017,
+     "menores_por_bolsa": 4.597194008607935,
+     "adicional": 35
+    },
+    {
+     "sorteo": 4262,
+     "ventas": 1275695.1785841833,
+     "ventas_con_adicional": 1353314.2034260011,
+     "razon_adicional": 1.0608444918071749,
+     "bolsa_repartida": 5593422.66,
+     "menores_directo": 4.207263215265435,
+     "menores_por_bolsa": 4.384607509615111,
+     "adicional": 1
+    },
+    {
+     "sorteo": 4263,
+     "ventas": 995124.3672570063,
+     "ventas_con_adicional": 1751011.1297564916,
+     "razon_adicional": 1.759590245572055,
+     "bolsa_repartida": 4994528.359999999,
+     "menores_directo": 4.4155354702025065,
+     "menores_por_bolsa": 5.018999156625099,
+     "adicional": 7
+    },
+    {
+     "sorteo": 4264,
+     "ventas": 946698.7110460756,
+     "ventas_con_adicional": 736981.5119990646,
+     "razon_adicional": 0.7784752460312538,
+     "bolsa_repartida": 4165244.4399999995,
+     "menores_directo": 4.366628127083177,
+     "menores_por_bolsa": 4.399757168146475,
+     "adicional": 53
+    },
+    {
+     "sorteo": 4265,
+     "ventas": 1038201.5248713364,
+     "ventas_con_adicional": 1119931.553589406,
+     "razon_adicional": 1.0787227014795593,
+     "bolsa_repartida": 4883574.03,
+     "menores_directo": 5.0587974080426905,
+     "menores_por_bolsa": 4.703878691186875,
+     "adicional": 16
+    },
+    {
+     "sorteo": 4266,
+     "ventas": 1183477.0000192453,
+     "ventas_con_adicional": 805240.4501318244,
+     "razon_adicional": 0.6804022808375066,
+     "bolsa_repartida": 5044753.01,
+     "menores_directo": 4.222861223435585,
+     "menores_por_bolsa": 4.26265403545482,
+     "adicional": 51
+    },
+    {
+     "sorteo": 4267,
+     "ventas": 801079.0508360699,
+     "ventas_con_adicional": 901817.2584908411,
+     "razon_adicional": 1.1257531420271605,
+     "bolsa_repartida": 3914226.86,
+     "menores_directo": 4.972212064048912,
+     "menores_por_bolsa": 4.886193011681932,
+     "adicional": 5
+    },
+    {
+     "sorteo": 4268,
+     "ventas": 1124146.7905577298,
+     "ventas_con_adicional": 1368045.260987284,
+     "razon_adicional": 1.2169631870839104,
+     "bolsa_repartida": 5296748.1899999995,
+     "menores_directo": 4.2258466416429785,
+     "menores_por_bolsa": 4.7117940775084115,
+     "adicional": 4
+    },
+    {
+     "sorteo": 4269,
+     "ventas": 1226399.1649809044,
+     "ventas_con_adicional": 1238934.499216011,
+     "razon_adicional": 1.0102212514432867,
+     "bolsa_repartida": 5436054.8100000005,
+     "menores_directo": 4.299245550355428,
+     "menores_por_bolsa": 4.432533032656331,
+     "adicional": 29
+    },
+    {
+     "sorteo": 4270,
+     "ventas": 821468.8819459898,
+     "ventas_con_adicional": 803425.563778685,
+     "razon_adicional": 0.9780352992500925,
+     "bolsa_repartida": 3875968.21,
+     "menores_directo": 6.810787232868254,
+     "menores_por_bolsa": 4.718338448582692,
+     "adicional": 4
+    },
+    {
+     "sorteo": 4271,
+     "ventas": 1188021.3219361801,
+     "ventas_con_adicional": 1263875.1184318643,
+     "razon_adicional": 1.0638488511065285,
+     "bolsa_repartida": 5403279.16,
+     "menores_directo": 4.349446408505787,
+     "menores_por_bolsa": 4.548133152352851,
+     "adicional": 15
+    },
+    {
+     "sorteo": 4272,
+     "ventas": 1191631.2885193045,
+     "ventas_con_adicional": 971704.1879953069,
+     "razon_adicional": 0.8154403105701645,
+     "bolsa_repartida": 5263688.1,
+     "menores_directo": 4.410609458367505,
+     "menores_por_bolsa": 4.417212061073476,
+     "adicional": 32
+    }
+   ]
+  }
+ },
+ "procedencia": {
+  "fuente": "https://resultados.melate-e.com/{juego}/sorteo/{sorteo}",
+  "descargado_utc": "2026-10-04T05:03:24+00:00",
+  "peticiones_de_red": 0,
+  "cache": "data\\cache\\melate-e",
+  "user_agent": "MaquinaMelate/0.1 (analisis personal; github.com/pi2grands-boop/MELATE_LARGE_MODEL)",
+  "pausa_segundos": 1.0
+ }
+}

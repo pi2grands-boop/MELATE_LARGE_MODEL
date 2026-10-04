@@ -483,9 +483,15 @@ def analizar(juego, sorteos, descargador=None, adicionales=None):
 
     `adicionales` es {concurso: R7} y solo hace falta en Melate, para el efecto calendario. Si no se
     pasa, las muestras no llevan `adicional` y `efecto_calendario` no tendrá nada que agrupar.
+
+    `sorteos` se materializa a lista antes de recorrerlo. No es un detalle de estilo: la versión
+    anterior lo recorría y después hacía `len(list(sorteos))` para el recuento, y con un generador
+    eso devolvía **0 pedidos** junto a 3 usados — un reporte absurdo, y silencioso. Con un `range`
+    no pasaba, que es justo por qué no se vio.
     """
     d = descargador or Descargador()
     adicionales = adicionales or {}
+    sorteos = list(sorteos)
     muestras, fallos = [], []
     for s in sorteos:
         try:
@@ -513,7 +519,7 @@ def analizar(juego, sorteos, descargador=None, adicionales=None):
 
     return {
         "juego": juego,
-        "sorteos_pedidos": len(list(sorteos)),
+        "sorteos_pedidos": len(sorteos),
         "sorteos_usados": len(muestras),
         "ventana": [muestras[0]["sorteo"], muestras[-1]["sorteo"]] if muestras else None,
         "fallos": fallos,

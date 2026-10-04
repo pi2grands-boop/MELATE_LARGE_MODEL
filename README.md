@@ -33,7 +33,8 @@ entre varios acertantes:
 
 La penúltima columna es de la Fase 3, y es la más honesta de las dos. La columna de rendimiento usa
 el premio esperado de las categorías menores que el oráculo lleva escrito a mano, sacado de dos
-tablas de ganadores; la siguiente lo usa **medido sobre 100 sorteos**. La diferencia en Revancha es
+tablas de ganadores; la siguiente lo usa **medido sobre 100 sorteos** (ventana 4173–4272,
+`reportes/2026-10-03_popularidad.json`). La diferencia en Revancha es
 de casi cinco puntos, y la razón es que ese dato no es un apéndice: **los premios menores son el
 65 % del valor esperado de un boleto de Melate**, no la bolsa. Las dos columnas conviven a propósito
 — la primera es la que reproduce el oráculo y la paridad es bloqueante.
@@ -41,9 +42,11 @@ de casi cinco puntos, y la razón es que ese dato no es un apéndice: **los prem
 La última columna es la bolsa que haría que el boleto valiera lo que cuesta. Revanchita es el menos
 malo y ni así llega.
 
-**Y la gente no elige al azar.** Medido sobre 300 sorteos: los números mayores que 31 aparecen en un
-**24 % menos de boletos** que los que caben en un calendario (t de Welch = −18.7). Eso no cambia qué
-sale —el sorteo no sabe qué apostó nadie— pero sí **con cuánta gente repartirías si ganaras**. Es
+**Y la gente no elige al azar.** Medido sobre 300 sorteos (ventana 3973–4272,
+`reportes/2026-10-04_popularidad-melate-300-sorteos.json`): los números mayores que 31 aparecen en
+un **24.5 % menos de boletos** que los que caben en un calendario (t de Welch = −18.7). Eso no
+cambia qué sale —el sorteo no sabe qué apostó nadie— pero sí **con cuánta gente repartirías si
+ganaras**. Es
 todo lo que puede hacer una cartera, y tiene un techo medido: **+0.27 % del precio en Melate**,
 contra un suelo de −14 % si eligieras una combinación muy jugada. Una asimetría de 54 a 1, que es
 por qué `melate.portfolio` está escrito como un seguro y no como una estrategia.
@@ -125,8 +128,8 @@ verificación (`scripts/colador.ps1` y `scripts/verificar-bitacora.ps1`) son Pow
 Los tests:
 
 ```bash
-.venv/Scripts/python -m pytest tests -m "not lento and not red" -q   # 132 pruebas, ~5 s
-.venv/Scripts/python -m pytest tests -q                              # 161 pruebas, ~2.5 min
+.venv/Scripts/python -m pytest tests -m "not lento and not red" -q   # 135 pruebas, ~5 s
+.venv/Scripts/python -m pytest tests -q                              # 164 pruebas, ~130 s
 ```
 
 ## Estructura

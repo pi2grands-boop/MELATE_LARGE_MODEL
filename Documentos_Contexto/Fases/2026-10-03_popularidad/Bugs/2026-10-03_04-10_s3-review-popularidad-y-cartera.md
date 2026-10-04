@@ -256,8 +256,8 @@ intenta el OCR como validación cruzada de la validación cruzada.
 Los ocho fallos tienen test, así que la review se vuelve a correr entera con dos comandos:
 
 ```powershell
-.venv\Scripts\python.exe -m pytest tests/test_popularidad.py tests/test_cartera.py -q  # 64, ~2 s
-.venv\Scripts\python.exe -m pytest tests -q                                            # 161, ~133 s
+.venv\Scripts\python.exe -m pytest tests/test_popularidad.py tests/test_cartera.py -q  # 62, ~3 s
+.venv\Scripts\python.exe -m pytest tests -q                                            # 164, ~130 s
 ```
 
 | Fallo | Test que lo fija |

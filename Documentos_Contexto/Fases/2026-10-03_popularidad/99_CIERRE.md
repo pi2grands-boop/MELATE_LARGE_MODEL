@@ -96,7 +96,7 @@ de esfuerzo.
 
 ## Integridad, comprobada
 
-- `scripts/verificar-bitacora.ps1` — **0 hallazgos** en las 5 comprobaciones, 46 documentos.
+- `scripts/verificar-bitacora.ps1` — **0 hallazgos** en las 5 comprobaciones, 48 documentos (50 tras la auditoría posterior).
 - `scripts/colador.ps1 -Autoprueba` — **0 coincidencias**, autoprueba 3/3.
 - `pytest tests` — **161 en verde**, 133 s, con `test_paridad.py` intacto.
 - `q_BH_global` mínima **0,306** · veredicto `sin ventaja demostrada`, 0 de 5 condiciones.

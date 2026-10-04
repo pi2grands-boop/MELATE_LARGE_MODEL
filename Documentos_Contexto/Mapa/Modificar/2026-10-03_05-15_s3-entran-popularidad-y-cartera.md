@@ -90,8 +90,8 @@ cambian ni pueden cambiarlo: **ninguno habla de la urna.**
 ## Cómo verificar
 
 ```powershell
-.venv\Scripts\python.exe -m pytest tests -q          # 161 pruebas, 133 s
-.venv\Scripts\python.exe -m pytest tests -q -m "not lento and not red"   # 132, 5 s
+.venv\Scripts\python.exe -m pytest tests -q          # 164 pruebas, ~130 s
+.venv\Scripts\python.exe -m pytest tests -q -m "not lento and not red"   # 135, ~5 s
 ```
 
 ## Cómo revertir

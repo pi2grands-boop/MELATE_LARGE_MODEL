@@ -249,6 +249,24 @@ def test_un_bloqueo_no_se_traga_en_el_agregado(tmp_path):
         pop.analizar("Melate", [4270, 4271], descargador=d)
 
 
+def test_el_recuento_de_sorteos_pedidos_no_depende_del_tipo_que_le_pases(tmp_path):
+    """Un generador consumido no se puede volver a contar, y eso daba 0 pedidos con 3 usados.
+
+    `analizar` recorría `sorteos` y después hacía `len(list(sorteos))` para el recuento. Con un
+    `range` funciona —es re-iterable— así que el fallo era invisible desde la CLI. Con cualquier
+    generador el reporte salía absurdo, y sin error: 0 pedidos, 3 usados.
+    """
+    esperado = None
+    for envoltorio in (list, tuple, iter, lambda s: (x for x in s)):
+        d = pop.Descargador(cache=tmp_path, pausa=0, sesion=SesionFalsa())
+        r = pop.analizar("Melate", envoltorio([4270, 4271, 4272]), descargador=d)
+        assert r["sorteos_pedidos"] == 3, f"con {envoltorio}: {r['sorteos_pedidos']} pedidos"
+        assert r["sorteos_usados"] == 3
+        if esperado is None:
+            esperado = r["ventana"]
+        assert r["ventana"] == esperado
+
+
 def test_los_404_se_anotan_y_la_corrida_sigue(tmp_path):
     d = pop.Descargador(cache=tmp_path, pausa=0, sesion=SesionFalsa(status=404))
     r = pop.analizar("Melate", [4270, 4271], descargador=d)

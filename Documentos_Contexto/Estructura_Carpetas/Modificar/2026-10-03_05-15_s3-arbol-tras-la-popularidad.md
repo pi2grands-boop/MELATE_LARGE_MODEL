@@ -12,7 +12,7 @@ src/melate/
   informe.py             +       clave `valor_esperado_medido` y opción --popularidad
 
 tests/
-  test_popularidad.py    NUEVO   38 pruebas (1 marcada `red`)
+  test_popularidad.py    NUEVO   36 pruebas (1 marcada `red`)
   test_cartera.py        NUEVO   26 pruebas
 
 data/cache/melate-e/     NUEVO   caché de páginas. EN .gitignore: contenido de terceros

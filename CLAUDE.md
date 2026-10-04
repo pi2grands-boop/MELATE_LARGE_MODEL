@@ -44,8 +44,13 @@ Herramienta personal de análisis para Melate, Revancha y Revanchita. El diseño
 - Ventas de Melate, **medidas** sobre 300 sorteos (ventana 3973–4272, descarga del 2026-10-03):
   mediana 0.98 M de combinaciones por sorteo, rango 0.58 M a 1.59 M. Las ventas suben con la bolsa,
   así que un rango estrecho no las describe: solo el 16 % de esos 300 sorteos cae entre 1.06 y 1.18 M,
-  que era la estimación anterior, sacada de las tablas de 2021 y 2026. Reproducir con
-  `python -m melate.popularity --desde 3973 --hasta 4272`.
+  que era la estimación anterior, sacada de las tablas de 2021 y 2026.
+  Reporte: `reportes/2026-10-04_popularidad-melate-300-sorteos.json`; reproducir con
+  `python -m melate.popularity --juegos Melate --desde 3973 --hasta 4272`.
+- Efecto calendario, misma ventana: los números > 31 aparecen en un **24.5 % menos** de boletos que
+  los <= 31 (t de Welch = -18.67). Mide la conducta de los jugadores, **no la urna**, y por eso no
+  entra en la familia de Benjamini-Hochberg
+  (`Documentos_Contexto/Protocolo_Estadistico/Decisiones/2026-10-03_05-10_s3-la-popularidad-no-entra-en-la-familia.md`).
 
 ## Protocolo de evaluación (no negociable)
 
@@ -105,7 +110,8 @@ Entorno: Python 3.13.9 · numpy 2.5.3 · pandas 2.3.3 · scipy 1.18.1 · scikit-
 > el 4.38 de Melate es exactamente la media de las tablas 4271 y 4272; el **2.10 de Revancha es solo
 > la tabla 4271**, porque la 4272 daba 4.41 (su categoría de 5 aciertos tuvo 3 ganadores y el premio
 > individual se disparó). Las dos constantes se calcularon con métodos distintos. Medido sobre 100
-> sorteos con el estimador estable: Melate 4.6013 y Revancha 2.6042, con lo que el EV real es
+> sorteos con el estimador estable (ventana 4173-4272, `reportes/2026-10-03_popularidad.json`):
+> Melate 4.6013 y Revancha 2.6042, con lo que el EV real es
 > **Melate −57.2 % y Revancha −44.4 %** (Revanchita no cambia: solo paga 6 aciertos).
 > **Las cifras de arriba NO se tocan**: son las que reproduce el oráculo y la paridad es bloqueante.
 > Lo medido vive en la clave `valor_esperado_medido` del informe

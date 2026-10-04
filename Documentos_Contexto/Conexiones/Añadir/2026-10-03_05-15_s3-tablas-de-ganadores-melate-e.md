@@ -83,7 +83,7 @@ Revancha  4173-4272: 0 discrepancias
 ## Cómo verificar
 
 ```powershell
-.venv\Scripts\python.exe -m pytest tests/test_popularidad.py -q      # 38 pruebas
+.venv\Scripts\python.exe -m pytest tests/test_popularidad.py -q      # 36 pruebas
 .venv\Scripts\python.exe -m pytest tests/test_popularidad.py -q -m red  # contra el sitio real
 .venv\Scripts\python.exe -m melate.popularity --desde 4173 --hasta 4272 --datos data/raw/2026-10-02
 ```

@@ -110,6 +110,53 @@ def test_el_hash_registrado_es_el_de_los_datos_analizados(paquete, snapshot):
         assert publicado[f"{juego}.csv"] == d["sha256"]
 
 
+def test_una_ruta_de_popularidad_mala_falla_antes_de_gastar_el_computo():
+    """Una errata en --popularidad no puede costar dos minutos de backtest.
+
+    La primera versión leía el fichero **al final**, donde se usa, así que una ruta mal escrita
+    levantaba FileNotFoundError después de todo el cómputo. Es la misma forma de fallo que el
+    UnicodeEncodeError de la Fase 1 —morir tarde, con el trabajo ya hecho— y la lección era más
+    general que su arreglo.
+
+    Este test es instantáneo a propósito: comprueba la validación, no el informe. Si algún día
+    tarda, es que la validación volvió a estar al final.
+    """
+    import json
+    import time
+
+    from melate.informe import cargar_popularidad
+
+    t0 = time.monotonic()
+    for malo in ("no/existe/jamas.json", ""):
+        with pytest.raises(SystemExit) as e:
+            cargar_popularidad(malo)
+        assert "popularidad" in str(e.value).lower()
+    assert time.monotonic() - t0 < 1.0, "la validación no puede ser cara"
+
+    # Y un JSON válido que no es un reporte tampoco pasa.
+    import tempfile
+
+    for contenido in ('{"otra": "cosa"}', "[]", "esto no es json"):
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False,
+                                         encoding="utf-8") as f:
+            f.write(contenido)
+            ruta = f.name
+        with pytest.raises(SystemExit):
+            cargar_popularidad(ruta)
+    assert json  # noqa: B015 - el import se usa arriba vía cargar_popularidad
+
+
+def test_el_informe_con_popularidad_buena_sigue_funcionando(tmp_path):
+    """La validación nueva no puede romper el camino bueno."""
+    import json
+
+    from melate.informe import cargar_popularidad
+
+    bueno = tmp_path / "pop.json"
+    bueno.write_text(json.dumps({"ventana": [1, 2], "juegos": {}}), encoding="utf-8")
+    assert cargar_popularidad(str(bueno))["ventana"] == [1, 2]
+
+
 def test_salida_robusta_no_revienta_con_una_pagina_de_codigos_estrecha():
     """La versión rápida del test de codificación: comprueba el mecanismo, no el programa entero.
 

@@ -42,8 +42,8 @@ Lee estos cuatro, en orden. Cuentan la historia completa:
   primero.
 
 ```powershell
-.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 132 pruebas, ~5 s
-.venv\Scripts\python.exe -m pytest tests -q                              # 161 pruebas, ~133 s
+.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 135 pruebas, ~5 s
+.venv\Scripts\python.exe -m pytest tests -q                              # 164 pruebas, ~130 s
 ```
 
 > Estas dos cifras se vuelven a medir al cerrar cada fase. Ya envejecieron **dos** veces: en la

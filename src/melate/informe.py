@@ -55,7 +55,36 @@ def _salida_robusta():
             pass
 
 
-def _valor_esperado_medido(juegos, popularidad):
+def cargar_popularidad(ruta):
+    """Lee el reporte de `melate.popularity`, y falla **antes** de que empiece el cómputo.
+
+    Esto se llama al principio de `construir()`, no al final donde se usa, y la razón es un fallo
+    real: una ruta mal escrita en `--popularidad` levantaba `FileNotFoundError` **después** de los
+    dos minutos del backtest, tirando toda la corrida por una errata.
+
+    Es exactamente la forma del fallo que este proyecto ya arregló una vez — el `UnicodeEncodeError`
+    que mataba el informe a mitad, después de gastar el cómputo
+    (`Reproducibilidad/Modificar/2026-10-03_01-30_s2-la-suite-ya-no-depende-del-shell.md`). Que
+    reapareciera en otro sitio dice que la lección era más general que su arreglo: **todo lo que
+    pueda fallar por la entrada se valida antes de gastar un segundo de CPU.**
+    """
+    p = pathlib.Path(ruta)
+    if not p.is_file():
+        raise SystemExit(
+            f"No existe el reporte de popularidad: {ruta}\n"
+            "Se comprueba ahora, antes del cómputo, para no perder dos minutos por una errata.\n"
+            "Genéralo con:  python -m melate.popularity --desde <n> --hasta <n> --datos <carpeta>")
+    try:
+        with open(p, encoding="utf-8") as f:
+            pop = json.load(f)
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        raise SystemExit(f"{ruta} no es un JSON legible: {e}") from e
+    if not isinstance(pop, dict) or "juegos" not in pop:
+        raise SystemExit(f"{ruta} no parece un reporte de melate.popularity: le falta 'juegos'")
+    return pop
+
+
+def _valor_esperado_medido(juegos, pop):
     """El valor esperado con los premios menores MEDIDOS, no con la constante escrita a mano.
 
     `ev.valor_esperado` usa por defecto `{"Melate": 4.38, "Revancha": 2.10, "Revanchita": 0.0}`,
@@ -63,16 +92,15 @@ def _valor_esperado_medido(juegos, popularidad):
     a `valor_esperado(juegos)` sin argumento y cualquier cambio rompería la paridad, que es
     bloqueante. Lo medido entra aquí, en una clave aparte y declarada.
 
-    `popularidad` es la ruta del reporte de `melate.popularity`. Sin ella, esta clave dice que no
-    hay medición y por qué — que es mejor que no estar, porque así se ve que falta.
+    `pop` es el reporte YA CARGADO por `cargar_popularidad`, no una ruta: la lectura ocurre al
+    principio de la corrida. Sin él, esta clave dice que no hay medición y por qué — que es mejor
+    que no estar, porque así se ve que falta.
     """
-    if not popularidad:
+    if not pop:
         return {"disponible": False,
                 "motivo": "sin --popularidad: el EV de arriba usa la constante escrita a mano, "
                           "que viene de las tablas 4271/4272 y caduca. "
                           "Mídela con `python -m melate.popularity`."}
-    with open(popularidad, encoding="utf-8") as f:
-        pop = json.load(f)
 
     # La mediana, no la media: el estimador por bolsa es estable pero un sorteo con una categoría
     # de pocos ganadores todavía puede tirar de la media.
@@ -105,6 +133,8 @@ def _valor_esperado_medido(juegos, popularidad):
 def construir(carpeta=None, sims=2000, popularidad=None):
     """El reporte completo, como dict. Separado de main() para que los tests no pasen por argparse."""
     _salida_robusta()
+    # Lo primero, antes del RNG y del cómputo: si la entrada es mala, que se sepa ya.
+    pop = cargar_popularidad(popularidad) if popularidad else None
     rng = np.random.default_rng(SEMILLA_AUDITORIA)
 
     crudos = {j: cargar(j, carpeta) for j in JUEGOS}
@@ -154,7 +184,7 @@ def construir(carpeta=None, sims=2000, popularidad=None):
         print(f"  {j:10s} sorteo {v['proximo_sorteo']}: bolsa {v['bolsa_bruta'] / 1e6:.1f} M -> EV ${v['EV']:.2f} de ${v['precio']} "
               f"({v['rendimiento']:+.0%}); equilibrio ≈ {v['bolsa_de_equilibrio'] / 1e6:.0f} M")
 
-    reporte["valor_esperado_medido"] = _valor_esperado_medido(juegos, popularidad)
+    reporte["valor_esperado_medido"] = _valor_esperado_medido(juegos, pop)
     vm = reporte["valor_esperado_medido"]
     if vm.get("disponible"):
         print("== Valor esperado con los premios menores MEDIDOS (ventana "
