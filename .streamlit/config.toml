@@ -1,0 +1,31 @@
+# Máquina Melate: la app es LOCAL. Lo recomendado es abrirla con `python -m melate.app`, que fuerza
+# estas mismas opciones por línea de órdenes —mandan sobre cualquier config.toml y sobre las
+# variables STREAMLIT_*— se lance desde donde se lance; un test exige que los dos digan lo mismo.
+# Este fichero es para quien use `streamlit run` desde la raíz del repositorio, la única carpeta
+# desde la que se lee; por eso app/streamlit_app.py comprueba además la dirección y la telemetría y
+# se niega a enseñar nada si no son estas. El porqué de cada línea está en la bitácora de la Fase 4
+# (Documentos_Contexto/Fases/2026-10-04_app-local/).
+
+[server]
+# Sin esto, Streamlit 1.65 escucha en "::" con IPV6_V6ONLY=0: todas las interfaces, IPv4 e IPv6.
+address = "127.0.0.1"
+port = 8501
+# Sin ventana del navegador ni la pregunta del correo electrónico la primera vez.
+headless = true
+# El WebSocket, que es por donde viajan los datos de la app, solo acepta estas cabeceras Host.
+# Protege de una página ajena que intente llegar a 127.0.0.1 con un nombre de dominio propio.
+allowedHosts = ["127.0.0.1", "localhost"]
+# Las dos protecciones de origen. Ya vienen encendidas; se fijan para que un config.toml global no
+# pueda apagarlas: sin enableCORS, Streamlit acepta el WebSocket desde cualquier origen.
+enableCORS = true
+enableXsrfProtection = true
+runOnSave = false
+
+[browser]
+# Por defecto Streamlit envía estadísticas de uso a un tercero. Aquí no sale nada.
+gatherUsageStats = false
+serverAddress = "127.0.0.1"
+
+[client]
+# Sin el botón de desplegar en la nube ni las opciones de desarrollador del menú.
+toolbarMode = "viewer"

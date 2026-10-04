@@ -90,6 +90,12 @@ Revancha  4173-4272: 0 discrepancias
 
 La tercera, con la caché ya poblada, hace **0 peticiones de red** y lo imprime.
 
+> **Nota del 2026-10-04 (Fase 4).** Dos cosas de este bloque ya no son así. `test_popularidad.py`
+> tiene hoy 37 pruebas. Y la segunda orden **no iba contra el sitio real**: su test leía el sorteo
+> 4272 de la caché permanente y hacía 0 peticiones. Ahora sí va, con una caché de usar y tirar, por
+> decisión del usuario:
+> `Conexiones/Modificar/2026-10-04_16-35_s4-el-test-del-sitio-pide-la-pagina-de-verdad.md`.
+
 ## Cómo revertir
 
 Borrar `src/melate/popularity.py`, `tests/test_popularidad.py`, la línea `scrapling[fetchers]`

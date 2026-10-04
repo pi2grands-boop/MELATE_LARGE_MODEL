@@ -412,6 +412,21 @@ def bolsa_repartida(cats):
     return sum(c["ganadores"] * c["premio"] for c in cats if c["aciertos"] < K)
 
 
+def premios_publicados(cats):
+    """¿Trae la tabla el importe de cada categoría menor que tuvo ganadores?
+
+    A veces el sitio publica los ganadores y no los importes. En la ventana 3973-4272, los sorteos
+    4107, 4111 y 4119 traen ganadores en todas las categorías y todos los premios a `$0.00`. Una
+    categoría con ganadores siempre paga algo, así que ese cero no es un premio: es un dato que
+    falta. Sin esta comprobación, esos sorteos entraban con unos premios menores de 0 y tiraban de
+    la media hacia abajo sin que nada avisara.
+
+    Los ganadores de esas tablas sí son buenos, y las ventas y el efecto calendario solo usan
+    ganadores: por eso la muestra se conserva y solo sus premios quedan fuera.
+    """
+    return all(c["premio"] > 0 for c in cats if c["aciertos"] < K and c["ganadores"] > 0)
+
+
 def menores_brutos_directo(cats):
     """Premio esperado de las categorías menores, por la vía directa: suma de p_c x premio_c.
 
@@ -506,14 +521,16 @@ def analizar(juego, sorteos, descargador=None, adicionales=None):
             fallos.append({"sorteo": int(s), "error": f"{type(e).__name__}: {e}"})
             continue
         v = ventas(juego, cats)
+        con_premios = premios_publicados(cats)
         muestras.append({
             "sorteo": int(s),
             "ventas": v["ventas"],
             "ventas_con_adicional": v["con_adicional"],
             "razon_adicional": razon_adicional(juego, cats),
-            "bolsa_repartida": bolsa_repartida(cats),
-            "menores_directo": menores_brutos_directo(cats),
-            "menores_por_bolsa": menores_brutos_por_bolsa(cats, v["ventas"]),
+            "premios_publicados": con_premios,
+            "bolsa_repartida": bolsa_repartida(cats) if con_premios else None,
+            "menores_directo": menores_brutos_directo(cats) if con_premios else None,
+            "menores_por_bolsa": menores_brutos_por_bolsa(cats, v["ventas"]) if con_premios else None,
             "adicional": adicionales.get(int(s)),
         })
 
@@ -523,6 +540,7 @@ def analizar(juego, sorteos, descargador=None, adicionales=None):
         "sorteos_usados": len(muestras),
         "ventana": [muestras[0]["sorteo"], muestras[-1]["sorteo"]] if muestras else None,
         "fallos": fallos,
+        "sorteos_sin_premios": [m["sorteo"] for m in muestras if not m["premios_publicados"]],
         "ventas": _resumir([m["ventas"] for m in muestras]),
         "menores_brutos_directo": _resumir([m["menores_directo"] for m in muestras]),
         "menores_brutos_por_bolsa": _resumir([m["menores_por_bolsa"] for m in muestras]),
@@ -630,6 +648,9 @@ def main(argv=None):
             reporte["juegos"][j] = r
             v, mb = r["ventas"], r["menores_brutos_por_bolsa"]
             print(f"\n== {j}: {r['sorteos_usados']} sorteos, {len(r['fallos'])} fallos")
+            if r["sorteos_sin_premios"]:
+                print(f"   {len(r['sorteos_sin_premios'])} sin premios publicados (sus ganadores sí "
+                      f"cuentan; sus premios menores, no): {r['sorteos_sin_premios']}")
             if v:
                 print(f"   ventas          mediana {v['mediana']:>12,.0f}  cv {v['cv']:.3f}")
             if mb:

@@ -1,7 +1,8 @@
-# Máquina Melate — dependencias de la Fase 1
+# Máquina Melate — dependencias
 #
-# Restricciones, no versiones exactas. El fijado exacto vive en
-# entorno/pip-freeze-2026-10-02.txt, que es lo que reproduce la línea base.
+# Restricciones, no versiones exactas, salvo las tres que hablan con el exterior o con el
+# navegador (scrapling, streamlit, duckdb), que van fijadas. El fijado exacto de todo vive en
+# entorno/pip-freeze-<fecha>.txt; el de 2026-10-02 es el que reproduce la línea base.
 # Instalar con:  python -m pip install -r requirements.txt
 #
 # Ninguna de estas compila: todas tienen wheel para cp313-win_amd64 o son
@@ -39,3 +40,20 @@ pytest>=8,<10
 # falta `playwright install`, que no se ejecuta). Queda anotado como lo que es:
 # un coste de la libreria elegida, no un accidente.
 scrapling[fetchers]==0.4.15
+
+# --- Fase 4: la app local y su base ---
+#
+# Fijadas exactas. streamlit levanta un servidor web; su dirección de escucha, su telemetría y su
+# comprobación de origen se revisaron leyendo el código de ESTA versión (1.65 ya no usa Tornado
+# sino Starlette y uvicorn), y una actualización obliga a revisarlas otra vez: ver
+# Documentos_Contexto/Fases/2026-10-04_app-local/. Trae 21 dependencias, todas con wheel.
+# El lanzador (src/melate/app.py) sustituye además una función interna suya,
+# net_util.get_external_ip; tests/test_lanzador.py falla a la vista si una versión nueva la
+# renombra o la importa de otra forma.
+#
+# streamlit admite pandas<4: instalar SIEMPRE con este fichero, que mantiene pandas<3 (arriba).
+# Un `pip install --upgrade streamlit` suelto podría subir pandas a la 3 y romper el oráculo.
+#
+# duckdb guarda melate.duckdb, que no se publica y se reconstruye con `python -m melate.almacen`.
+streamlit==1.65.0
+duckdb==1.5.6

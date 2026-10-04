@@ -219,6 +219,25 @@ def _evaluar_una(estrategia, df, indices, hiper, reentrenar_cada=100, semilla=SE
     }
 
 
+def _datos(juegos, crudos=None):
+    """Sobre qué datos se juzgó: hash, origen, bytes y último sorteo de cada juego. Regla 6.
+
+    El veredicto no lo registraba, y es la pieza que juzga: con el holdout vacío no se notaba,
+    porque cualquier dato da 0 sorteos posteriores al sello; deja de ser inocuo con el primer sorteo
+    del holdout. El hash sale de los bytes que se cargaron (`attrs`, igual que en el informe), no de
+    una segunda lectura. Si se pasan `juegos` ya filtrados sin `attrs`, el hash queda en None y se ve.
+    """
+    out = {}
+    for juego, d in juegos.items():
+        a = (crudos[juego] if crudos else d).attrs
+        out[juego] = {
+            "sha256": a.get("sha256"), "origen": a.get("fuente"), "bytes": a.get("bytes"),
+            "ultimo_concurso": int(d.CONCURSO.max()) if len(d) else None,
+            "ultima_fecha": str(d.FECHA.max().date()) if len(d) else None,
+        }
+    return out
+
+
 def evaluar(spec, juegos=None, carpeta=None):
     """Corre **solo** lo que el preregistro declara, sobre **solo** su holdout.
 
@@ -226,8 +245,10 @@ def evaluar(spec, juegos=None, carpeta=None):
     """
     if not isinstance(spec, dict) or CLAVE_HASH not in spec:
         raise ValueError("evaluar() exige un preregistro verificado (usa cargar_preregistro)")
+    crudos = None
     if juegos is None:
-        juegos = {j: era_56(j, cargar(j, carpeta)) for j in JUEGOS}
+        crudos = {j: cargar(j, carpeta) for j in JUEGOS}
+        juegos = {j: era_56(j, d) for j, d in crudos.items()}
 
     hold = holdout(spec, juegos)
     principal = spec.get("juego_principal") or spec["juegos"][0]
@@ -291,6 +312,7 @@ def evaluar(spec, juegos=None, carpeta=None):
         "resultados": resultados,
         "por_juego": por_juego,
         "veredicto": veredicto,
+        "datos": _datos(juegos, crudos),
         "corrida_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
         "versiones": versiones(),
     }
@@ -304,6 +326,10 @@ def _imprimir(r):
     print(f"   sellado   {p['sello_utc']}")
     print(f"   sello     {p[CLAVE_HASH][:16]}... (verificado)")
     print(f"   hipotesis {p['estrategia']} en {p['juego_principal']}")
+    print("== Datos sobre los que se juzga")
+    for juego, d in r["datos"].items():
+        sha = (d["sha256"] or "sin hash")[:16]
+        print(f"   {juego:11s} hasta el {d['ultimo_concurso']} ({d['ultima_fecha']})  sha256 {sha}...")
     print("== Holdout (sorteos posteriores al sello)")
     for juego, h in r["holdout"].items():
         rango = f"{h['primer_concurso']}-{h['ultimo_concurso']}" if h["sorteos"] else "-"

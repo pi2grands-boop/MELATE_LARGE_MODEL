@@ -13,7 +13,11 @@ en `REGLAS-DOCUMENTACION.md` §0 y en `Seguridad/Decisiones/`.
    pieza de la que depende todo: hay dos programas y dan lo mismo.
 3. `Mapa/Modificar/2026-10-03_01-30_s2-entra-el-laboratorio.md` — la frontera entre **explorar** y
    **juzgar**. Las cifras del informe no bastan para afirmar nada; solo el laboratorio puede.
-4. `Fases/2026-10-03_protocolo/99_CIERRE.md` — dónde está el proyecto hoy y qué queda pendiente.
+4. `Fases/2026-10-04_app-local/99_CIERRE.md` — dónde está el proyecto hoy y qué queda pendiente.
+   Si hay una fase abierta, su alcance (`Fases/<fecha>_<nombre>/00_ALCANCE.md`) dice qué está
+   cambiando ahora mismo.
+5. Y para mirar en vez de leer: `.venv\Scripts\python.exe -m melate.app` abre la app local en
+   `http://127.0.0.1:8501`. Enseña lo que ya está en `reportes/` y `prereg/`; no calcula nada.
 
 ## Si tienes 15 minutos y quieres entender por qué este proyecto es desconfiado
 
@@ -42,15 +46,21 @@ Lee estos cuatro, en orden. Cuentan la historia completa:
   primero.
 
 ```powershell
-.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 135 pruebas, ~5 s
-.venv\Scripts\python.exe -m pytest tests -q                              # 164 pruebas, ~130 s
+.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 213 pruebas, ~13 s
+.venv\Scripts\python.exe -m pytest tests -q                              # 242 pruebas, ~150 s
+.venv\Scripts\python.exe scripts\mutar.py                                # 46 de 46, ~2-3 min
 ```
 
-> Estas dos cifras se vuelven a medir al cerrar cada fase. Ya envejecieron **dos** veces: en la
+> Estas cifras se vuelven a medir al cerrar cada fase. Ya envejecieron **dos** veces: en la
 > Fase 2, dos tests de subproceso sin marcar dejaron el bucle rápido en 30 s mientras este mapa
 > decía 5 (`Rendimiento/Arreglos_Bugs/2026-10-03_01-59_la-suite-rapida-no-era-rapida.md`); en la
 > Fase 3 un voraz cuadrático lo puso en 26 s, y se arregló el algoritmo en vez de marcar los tests
-> como lentos (`Rendimiento/Arreglos_Bugs/2026-10-03_05-15_s3-el-voraz-cuadratico.md`).
+> como lentos (`Rendimiento/Arreglos_Bugs/2026-10-03_05-15_s3-el-voraz-cuadratico.md`). En la Fase 4
+> pasó de ~5 a ~13 s por probar la app, sin marcar nada como lento, y el usuario lo aceptó
+> (`Rendimiento/Modificar/2026-10-04_16-35_s4-el-bucle-rapido-con-la-app.md`).
+>
+> `scripts/mutar.py` rompe una cosa a la vez en una copia del repositorio y exige que algún test se
+> entere. Lo nuevo que se proteja con un test entra también en su lista.
 
 **Y si lo que quieres es saber si una estrategia funciona:** no mires el informe. Sella un
 preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué, y
@@ -73,11 +83,13 @@ preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué, y
 | ¿Qué forma tienen los datos y el reporte? | Estructura_Datos |
 | ¿Dónde se guardan los datos? ¿Por qué un snapshot? | Almacenamiento |
 | ¿De dónde salen los datos? ¿Por qué el espejo no vale para cargar? | Conexiones |
-| ¿Cómo se enlazan las pantallas de la app? | Interconexion *(vacía: la app es de la Fase 4)* |
+| ¿Quién sale a la red, y cuándo? | Conexiones |
+| ¿Cómo se enlazan las pantallas de la app? | Interconexion |
 | ¿Qué cambia en la superficie de ataque? ¿Qué se publica? | Seguridad |
 | ¿Qué juega la gente? ¿Cuánto paga de verdad un boleto? | Conexiones · Estructura_Datos |
 | ¿Por qué una cartera no mejora mis probabilidades? | Mapa · `src/melate/portfolio.py` |
-| ¿Qué sirve el servidor? | Red *(vacía: todo es local)* |
+| ¿Qué sirve la app, y a quién? ¿Por qué solo a esta máquina? | Red |
+| ¿Qué hay en `melate.duckdb` y por qué no se publica? | Estructura_Datos · Almacenamiento |
 | ¿Se puede volver a obtener este número exacto? | Reproducibilidad |
 | ¿Me puedo creer este resultado? ¿Qué hace falta para afirmar algo? | Protocolo_Estadistico |
 | ¿Qué es un preregistro y por qué no se puede editar? | Protocolo_Estadistico · Almacenamiento |
@@ -96,7 +108,7 @@ actualiza al cerrar cada una, y es la referencia: no hay ningún plan fuera del 
 | **2 · Protocolo** | ✅ cerrada 2026-10-03 | `prereg/*.json` sellado, `lab.py`, las 5 condiciones de la regla 5, y los pendientes de la Fase 1 ejecutados |
 | — *auditoría* | ✅ 2026-10-03 | Revisión retrospectiva de las fases 1 y 2: siete defectos con las 92 pruebas en verde |
 | **3 · EV, popularidad y cartera** | ✅ cerrada 2026-10-03 | `popularity.py` con Scrapling sobre las tablas de ganadores y el dictamen escrito **antes** del código; `portfolio.py` con presupuesto fijo; el `menores_brutos` medido entra por clave nueva sin tocar el oráculo |
-| **4 · App local** | ⬜ **siguiente** | `app/streamlit_app.py` y `melate.duckdb`, los dos en esta máquina: `streamlit run` escuchando solo en `localhost`, nunca en `0.0.0.0`. Textos en español y "sin ventaja demostrada" visible en cada pantalla |
+| **4 · App local** | ✅ cerrada 2026-10-04 | `app/streamlit_app.py` y `melate.duckdb`, los dos en esta máquina: la app escucha solo en `127.0.0.1`, nunca en `0.0.0.0`, y la abre un lanzador propio, `python -m melate.app`. Textos en español, "sin ventaja demostrada" en cada pantalla y el veredicto solo del laboratorio |
 
 Lo que **no** está en ninguna fase y es deliberado: migrar a pandas 3 (rompe `df.attrs`, que el
 oráculo usa), optimizar el backtest (es el 85 % del coste y crece de forma cuadrática, pero son 62 s
@@ -117,18 +129,25 @@ al cerrarse, emiten a las áreas base **solo el estado final**. El proceso se qu
 - `Fases/2026-10-03_popularidad/` — **cerrada el 2026-10-03.** La primera fase que toca un sitio de
   terceros, con su dictamen escrito antes del código. `popularity.py`, `portfolio.py`, y el
   hallazgo de que el `menores_brutos` escrito a mano gobernaba el 65 % del EV de Melate.
+- `Fases/2026-10-04_app-local/` — **cerrada el 2026-10-04.** La app local, `melate.duckdb` y un
+  lanzador que la ata a esta máquina aunque el entorno diga otra cosa. La primera fase con una
+  pantalla, hecha para que no pueda presentar una cifra exploratoria como veredicto. Empieza por su
+  `Fases/2026-10-04_app-local/99_CIERRE.md`.
 
 ## Estado ahora mismo
 
 - **Bugs abiertos:** ninguno.
-- **Fases abiertas:** ninguna. La siguiente es la Fase 4 (la app local en Streamlit), y **no empieza
-  sin que el usuario la apruebe** (`CLAUDE.md`).
+- **Fases abiertas:** ninguna. La Fase 4 se cerró el 2026-10-04 con la aprobación del usuario, y la
+  siguiente no empieza sin ella (`CLAUDE.md`).
 - **El veredicto del proyecto, hoy:** `sin ventaja demostrada`, 0 de 5 condiciones, porque el holdout
-  del preregistro está vacío. Es la respuesta correcta y seguirá siéndolo durante años.
-- **Pendiente de verificar en vivo** — los cinco puntos de
-  `Fases/2026-10-03_protocolo/99_CIERRE.md`. Los dos primeros no son falta de esfuerzo, son el
-  diseño funcionando: no habrá una evaluación preregistrada de verdad hasta que pasen sorteos, y la
-  condición 5 necesita del orden de once años de datos.
+  del preregistro está vacío. Es la respuesta correcta y seguirá siéndolo durante años. El primer
+  sorteo posterior al sello es el 4274: cuando el CSV oficial lo incluya, el laboratorio sin
+  `--datos` dará el primer veredicto con holdout, y seguirá sin poder afirmar nada con un sorteo.
+- **Pendiente de verificar en vivo** — los siete puntos de
+  `Fases/2026-10-04_app-local/99_CIERRE.md`. Dos no son falta de esfuerzo, son el diseño
+  funcionando: no habrá una evaluación preregistrada de verdad hasta que pasen sorteos, y la
+  condición 5 necesita del orden de once años de datos. La mutación a mano de la auditoría posterior
+  es ya `scripts/mutar.py`, y la forma de la tabla de melate-e.com la vigila de verdad su test `red`.
 - **Decisiones cerradas que atan el proyecto:**
   - `baseline_auditoria.py` es el oráculo y no se modifica.
   - El espejo es solo validación cruzada, nunca carga.
@@ -136,10 +155,21 @@ al cerrarse, emiten a las áreas base **solo el estado final**. El proceso se qu
     todo lo que hable de la urna; fuera, todo lo que hable de los jugadores** — por eso la
     popularidad no la agranda
     (`Protocolo_Estadistico/Decisiones/2026-10-03_05-10_s3-la-popularidad-no-entra-en-la-familia.md`).
+  - Las nueve pruebas de log-loss **no** entran en la familia: no son pruebas sobre la urna, y
+    meterlas aflojaría la corrección
+    (`Protocolo_Estadistico/Decisiones/2026-10-04_10-45_s4-el-log-loss-no-entra-en-la-familia.md`).
   - Con el sitio de terceros: 1 solicitud/segundo, caché permanente, identificación honesta, y si
     bloquean **se para y se pregunta**
     (`Fases/2026-10-03_popularidad/Decisiones/2026-10-03_02-40_s3-dictamen-terminos-melate-e.md`).
+    Una única excepción, decidida por el usuario: la suite completa pide una página real para
+    vigilar la forma del sitio
+    (`Conexiones/Modificar/2026-10-04_16-35_s4-el-test-del-sitio-pide-la-pagina-de-verdad.md`).
   - Un preregistro no se sobrescribe, no se sella en el pasado, y alterarlo lo invalida.
+  - **La app es local:** solo `127.0.0.1`, sin telemetría y sin preguntarle a nadie la IP pública; la
+    abre `python -m melate.app` (`Red/Añadir/2026-10-04_16-35_s4-que-sirve-la-app-y-a-quien.md`).
+  - **La app enseña y no calcula:** no recalcula, no descarga ni escribe, y su cabecera sale solo de
+    un veredicto del laboratorio con un sello que verifica. `melate.duckdb` no se publica
+    (`Almacenamiento/Decisiones/2026-10-04_00-40_s4-que-entra-en-melate-duckdb.md`).
   - La bitácora se publica; nada personal sale de la máquina, y las rutas son siempre relativas.
   - `pandas < 3` mientras el oráculo use `df.attrs`.
 
@@ -166,3 +196,6 @@ $md | Where-Object { $_.Directory.Name -eq 'Bugs' -and
 
 Y los enlaces `Relacionado:` rotos, que es el que más importa: la bitácora es un grafo y un enlace
 muerto lo parte. El script está en `scripts/verificar-bitacora.ps1`.
+
+Y los tests, mutados: `scripts/mutar.py` tiene que detectar todas sus mutaciones (46 de 46 al cerrar
+la Fase 4). Una mutación que no se detecta es un test que no vigila nada.

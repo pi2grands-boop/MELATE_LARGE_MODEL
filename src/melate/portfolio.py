@@ -290,6 +290,11 @@ def valorar(cartera_, bolsa, menores_brutos, impuesto=0.07):
     s_medio = (1 - math.exp(-lam_medio)) / lam_medio if lam_medio else 1.0
     base = cartera_["boletos"] * (bolsa * (1 - impuesto) * s_medio / C + menores_brutos * (1 - impuesto))
     return {
+        # Con qué se valoró. Sin esto el reporte daba un valor esperado sin decir de qué bolsa
+        # salía, y la app tenía que confesar que no lo sabía.
+        "bolsa": bolsa,
+        "menores_brutos": menores_brutos,
+        "impuesto": impuesto,
         "coste": coste,
         "valor_esperado": round(total, 2),
         "rendimiento": round(total / coste - 1, 4) if coste else None,
@@ -364,7 +369,9 @@ def main(argv=None):
     if a.bolsa:
         car["valoracion"] = valorar(car, a.bolsa, menores)
         v = car["valoracion"]
-        print(f"\n  coste ${v['coste']:.0f} · valor esperado ${v['valor_esperado']:.2f} "
+        print(f"\n  valorada con una bolsa de {v['bolsa'] / 1e6:.1f} M y unos premios menores de "
+              f"{v['menores_brutos']:.4f} por boleto, impuesto {v['impuesto']:.0%}")
+        print(f"  coste ${v['coste']:.0f} · valor esperado ${v['valor_esperado']:.2f} "
               f"({v['rendimiento']:+.1%})")
         print(f"  lo que aporta evitar compartir: ${v['ganancia_por_evitar_compartir']:.2f} "
               f"en toda la cartera ({v['ganancia_como_porcentaje_del_precio']:+.2%} del precio)")

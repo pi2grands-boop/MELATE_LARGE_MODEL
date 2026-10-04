@@ -151,13 +151,35 @@ Lo que no se negocia:
   refactor; si se toca, el proyecto pierde su única referencia y no se recupera.
 - **Dos scripts bloqueantes**, y los dos traen su propia comprobación porque una herramienta de
   verificación que nadie ha verificado no es una garantía, es una opinión:
-  - `scripts/colador.ps1 -Autoprueba` → antes de cada push. Si imprime algo, no se sube.
+  - `scripts/colador.ps1 -Autoprueba` → antes de cada push. Si imprime algo, no se sube. También
+    caza una base de datos metida a la fuerza en el índice de git, que es un binario que no sabe leer.
   - `scripts/verificar-bitacora.ps1` → antes de cerrar una fase. Tiene que dar 0 hallazgos.
 - **Al cerrar una fase no basta con que los tests pasen.** Hay que volver a medir cada número que se
   publique y dar dos valores distintos a cada parámetro del que se diga que gobierna algo. La
   auditoría de las fases 1 y 2 encontró siete defectos con las 92 pruebas en verde, todos en el hueco
   de lo que nadie pensó comprobar. Procedimiento en
   `Documentos_Contexto/Protocolo_Estadistico/Bugs/2026-10-03_01-59_auditoria-retrospectiva-fases-1-y-2.md`.
+- **Y se mutan los tests: `scripts/mutar.py`.** Rompe una cosa a la vez en una copia del repositorio
+  —nunca en el árbol de trabajo— y exige que algún test se entere. Al cerrar una fase tienen que
+  detectarse todas: una mutación que no se detecta es un test que no vigila nada. Lo nuevo que se
+  proteja con un test entra también en su lista.
 - **Y la pregunta del cierre no es "¿qué áreas toqué?" sino "¿qué documento del índice permanente
   acabo de dejar desactualizado?"**. Son conjuntos distintos. Un documento del índice que miente es
   peor que uno que falta: el que falta se busca en otro sitio, el que miente se cree.
+
+### La app local (Fase 4)
+
+`python -m melate.app` la abre. Es el lanzador: pone al día `melate.duckdb` —la construye
+`python -m melate.almacen` desde `reportes/` y `prereg/`— y arranca Streamlit con la red forzada por
+línea de órdenes, se lance desde donde se lance. Tres reglas que no se negocian, cada una con su test:
+
+- **Solo esta máquina.** Escucha en `127.0.0.1`, nunca en `0.0.0.0`, sin telemetría y sin
+  preguntarle a nadie la IP pública. Lo fuerza el lanzador; lo dice `.streamlit/config.toml` para
+  quien use `streamlit run` desde la raíz (un test exige que los dos digan lo mismo); y una guarda
+  dentro de la app se niega a enseñar nada si no es así. El lanzador sustituye una función interna
+  de Streamlit 1.65: actualizar Streamlit obliga a revisar su red (`requirements.txt`).
+- **No recalcula, no descarga y no escribe.** Lee `melate.duckdb` en solo lectura. Si algo tarda dos
+  minutos en un backend, no va en una pantalla: la app enseña la orden. `melate.duckdb` no se publica.
+- **El informe explora; el laboratorio juzga.** El veredicto de la cabecera, en todas las pantallas,
+  sale solo de `melate.lab` y de un preregistro cuyo sello verifica. Ninguna cifra exploratoria se
+  presenta como veredicto, y una q ≤ 0.05 de la exploración es una candidata a preregistrar.

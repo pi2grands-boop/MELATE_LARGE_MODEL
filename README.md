@@ -120,7 +120,24 @@ python -m venv .venv
 # Una cartera con presupuesto fijo. NO mejora tus probabilidades de ganar.
 .venv/Scripts/python -m melate.portfolio --juego Melate --presupuesto 300 \
     --bolsa 76200000 --popularidad reportes/popularidad.json
+
+# La app local. El lanzador pone al día la base —que solo reordena lo que ya está en reportes/
+# y prereg/, sin red— y arranca la app atada a 127.0.0.1, se lance desde donde se lance.
+.venv/Scripts/python -m melate.app                             # http://127.0.0.1:8501
+.venv/Scripts/python -m melate.almacen      # con la app abierta: reconstruye la base
 ```
+
+**La app enseña; no calcula.** Cinco pantallas —veredicto, exploración, valor esperado,
+jugadores y procedencia— sobre `melate.duckdb`, y en todas, arriba, el veredicto del laboratorio:
+hoy, *sin ventaja demostrada*. Ese veredicto solo puede salir de `melate.lab` con un preregistro
+cuyo sello verifica; las p y las q del informe viven en la pantalla de exploración, con un aviso
+delante, y nunca se llaman veredicto. La app escucha solo en `127.0.0.1` y sin telemetría. Su
+lanzador lo fuerza por línea de órdenes, que manda sobre cualquier configuración, e impide además
+que Streamlit le pregunte la IP pública de la máquina a un tercero.
+`streamlit run app/streamlit_app.py` también vale, pero solo **desde la raíz del repositorio**,
+donde está `.streamlit/config.toml`; lanzada de cualquier otra forma, la app se niega a enseñar nada.
+`melate.duckdb` no se publica: es un índice que el lanzador reconstruye solo cuando falta o se queda
+viejo.
 
 Todo esto está probado solo en Windows: los comandos usan `.venv/Scripts/` y los dos scripts de
 verificación (`scripts/colador.ps1` y `scripts/verificar-bitacora.ps1`) son PowerShell.
@@ -128,8 +145,9 @@ verificación (`scripts/colador.ps1` y `scripts/verificar-bitacora.ps1`) son Pow
 Los tests:
 
 ```bash
-.venv/Scripts/python -m pytest tests -m "not lento and not red" -q   # 135 pruebas, ~5 s
-.venv/Scripts/python -m pytest tests -q                              # 164 pruebas, ~130 s
+.venv/Scripts/python -m pytest tests -m "not lento and not red" -q   # 213 pruebas, ~13 s
+.venv/Scripts/python -m pytest tests -q                              # 242 pruebas, ~150 s
+.venv/Scripts/python scripts/mutar.py      # rompe 46 cosas en una copia; cada una, cazada
 ```
 
 ## Estructura
@@ -148,11 +166,17 @@ src/melate/
   portfolio.py            carteras con presupuesto fijo. No mejora tus probabilidades
   informe.py              `python -m melate.informe` — explora
   lab.py                  `python -m melate.lab` — juzga. Sin preregistro no evalúa
+  almacen.py              `python -m melate.almacen` — construye melate.duckdb. No recalcula
+  app.py                  `python -m melate.app` — el lanzador: la base al día y la app solo en 127.0.0.1
+app/streamlit_app.py      la app local: lee melate.duckdb en solo lectura
+.streamlit/config.toml    lo mismo que fuerza el lanzador, para `streamlit run` desde la raíz
+melate.duckdb             la base de la app. NO se publica: se reconstruye de reportes/ y prereg/
 data/raw/<fecha>/         snapshots congelados, con su SHA-256 y su procedencia
 data/cache/               páginas descargadas. NO se publica: son de un tercero
 prereg/                   hipótesis preregistradas, selladas e inmutables
 tests/                    reglas de datos, línea base, paridad, no-fuga temporal, protocolo,
-                          popularidad y cartera
+                          popularidad, cartera, la base y la app
+scripts/mutar.py          rompe una cosa a la vez en una copia y exige que algún test lo note
 Documentos_Contexto/      la bitácora: por qué cada cosa es como es
 ```
 

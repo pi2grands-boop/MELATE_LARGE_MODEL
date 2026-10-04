@@ -178,6 +178,11 @@ esto toca el oráculo ni la paridad.
    queda en el repositorio. Si alguien debilita un test, nada lo detectará hasta la próxima
    auditoría manual. Convertirlo en una herramienta del proyecto es trabajo de otra fase.
 
+> **Nota del 2026-10-04 (Fase 4).** El punto 3 está resuelto: `scripts/mutar.py` muta una copia del
+> repositorio, nunca el árbol de trabajo, y al cerrar la Fase 4 detecta 46 de 46 mutaciones, las
+> nueve de aquí entre ellas (`Fases/2026-10-04_app-local/99_CIERRE.md`). Y las cifras de «Cómo
+> verificar» son las del cierre de la Fase 3; las vigentes, en `Documentos_Contexto/_MAPA.md`.
+
 Relacionado: `Protocolo_Estadistico/Bugs/2026-10-03_01-59_auditoria-retrospectiva-fases-1-y-2.md`,
 `Fases/2026-10-03_popularidad/99_CIERRE.md`,
 `Fases/2026-10-03_popularidad/Bugs/2026-10-03_04-10_s3-review-popularidad-y-cartera.md`,

@@ -94,6 +94,10 @@ cambian ni pueden cambiarlo: **ninguno habla de la urna.**
 .venv\Scripts\python.exe -m pytest tests -q -m "not lento and not red"   # 135, ~5 s
 ```
 
+> **Nota del 2026-10-04 (Fase 4):** son las cifras del cierre de la Fase 3. Las vigentes están
+> siempre en `Documentos_Contexto/_MAPA.md`; al cerrar la Fase 4, 242 pruebas en ~150 s y 213 en
+> ~13 s (`Rendimiento/Modificar/2026-10-04_16-35_s4-el-bucle-rapido-con-la-app.md`).
+
 ## Cómo revertir
 
 Borrar `src/melate/popularity.py`, `src/melate/portfolio.py`, sus dos ficheros de test, la clave

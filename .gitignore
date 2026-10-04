@@ -16,6 +16,21 @@ __pycache__/
 # Documentos_Contexto/Fases/2026-10-03_popularidad/Decisiones/
 data/cache/
 
+# La base local de la app (Fase 4). NO se publica: es un índice derivable entero de reportes/ y
+# prereg/ en menos de un segundo, un binario que el colador no puede leer, y cambia de bytes en cada
+# reconstrucción. Se construye con `python -m melate.almacen`. Ver la decisión en
+# Documentos_Contexto/Almacenamiento/Decisiones/
+*.duckdb
+*.duckdb.wal
+*.duckdb.construyendo
+*.duckdb.construyendo.wal
+
+# Streamlit lee sus secretos de un .streamlit/secrets.toml en la carpeta desde la que se lanza y
+# también en la del script (app/.streamlit/). Este proyecto no tiene ninguno
+# (REGLAS-DOCUMENTACION.md §0); la línea está para que, si alguien crea uno, no se publique por
+# accidente.
+**/.streamlit/secrets.toml
+
 # Lo que NO se ignora, a propósito:
 #   data/raw/<fecha>/   los snapshots congelados (435 KB) son lo que hace que el hash
 #                       del protocolo signifique algo y que las cifras se puedan reproducir

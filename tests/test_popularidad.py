@@ -346,6 +346,29 @@ def test_el_estimador_por_bolsa_ignora_el_premio_mayor():
     assert pop.bolsa_repartida(cats) == pytest.approx(pop.bolsa_repartida(con_mayor))
 
 
+def test_una_tabla_sin_premios_no_cuenta_como_premios_a_cero(tmp_path):
+    """Los sorteos 4107, 4111 y 4119 traen ganadores y todos los premios a $0.00.
+
+    Dos valores: la tabla real tiene premios; la misma con los importes borrados, no. Y en el
+    agregado la muestra se conserva —sus ganadores dan ventas y razón del adicional— mientras sus
+    premios menores quedan fuera del resumen, que es lo que pasaba a ser un 0 en silencio.
+    """
+    import re
+
+    sin = re.sub(r"\$[\d,]+\.\d\d", "$0.00", PAGINA)
+    assert pop.premios_publicados(pop.parsear(PAGINA, "Melate", 4272))
+    assert not pop.premios_publicados(pop.parsear(sin, "Melate", 4107))
+
+    d = pop.Descargador(cache=tmp_path, pausa=0, sesion=SesionFalsa(cuerpo=sin))
+    r = pop.analizar("Melate", [4107], descargador=d, adicionales={4107: 3})
+    m = r["muestras"][0]
+    assert m["ventas"] and m["razon_adicional"], "los ganadores siguen contando"
+    assert m["menores_por_bolsa"] is None and m["menores_directo"] is None
+    assert r["sorteos_sin_premios"] == [4107]
+    assert r["menores_brutos_por_bolsa"] is None, "una media de ningún premio no es 0"
+    assert r["ventas"]["n"] == 1
+
+
 def test_el_resumen_no_inventa_una_media_de_nada():
     assert pop._resumir([]) is None
     assert pop._resumir([None, None]) is None
@@ -388,13 +411,20 @@ def test_el_corte_del_calendario_gobierna_de_verdad():
 
 
 @pytest.mark.red
-def test_el_sitio_sigue_teniendo_la_forma_que_esperamos():
+def test_el_sitio_sigue_teniendo_la_forma_que_esperamos(tmp_path):
     """El único test que de verdad comprueba el contrato con el tercero.
 
     Si el sitio cambia la tabla, todo lo demás de este fichero sigue en verde sobre un fixture que
     ya no se parece a la realidad. Este es el que se entera.
+
+    Por eso pide la página **de verdad**, con una caché vacía de usar y tirar. Con la permanente
+    (`data/cache/melate-e`), que guarda el 4272 desde la Fase 3, leía la copia y nunca el sitio: habría
+    seguido en verde con el sitio cambiado. Es la única excepción a «una página descargada no se
+    vuelve a pedir nunca» del dictamen: una petición en cada pasada de la suite completa, con la misma
+    identificación y el mismo ritmo. La decidió el usuario (C8 de la Fase 4).
     """
-    with pop.Descargador() as d:
+    with pop.Descargador(cache=tmp_path) as d:
         cats = d.tabla("Melate", 4272)
+    assert d.peticiones == 1, "la página tiene que venir del sitio, no de una caché"
     assert len(cats) == 9
     assert next(c for c in cats if c["aciertos"] == 2 and not c["adicional"])["ganadores"] == 115808

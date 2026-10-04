@@ -165,7 +165,7 @@ parámetro declarado que en realidad no se lee es un defecto que ningún test de
 |---|---|---|---|
 | Cociente calendario (Melate) | 0,7609 (n=100) | 0,7549 (n=300) | sí, 0,8 % |
 | Calibración (debe dar ~1) | 0,9919 | 0,9956 | sí |
-| `menores_brutos` Melate, por bolsa | 4,6013 | 4,6422 | sí, 0,9 % |
+| `menores_brutos` Melate, por bolsa | 4,6013 | 4,6465 *(corregido en la Fase 4: decía 4,6422, con tres sorteos sin premios publicados contados como 0)* | sí, 1,0 % |
 | Ventas Melate, mediana | 991.119 | 982.693 | sí, 0,9 % |
 
 Y Revancha con 100 y con 50 sorteos: 2,6042 y 2,6063 — 0,1 % de diferencia.

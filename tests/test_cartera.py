@@ -184,7 +184,7 @@ def test_separar_los_boletos_no_cambia_la_media():
 
 def test_el_valor_esperado_sigue_siendo_negativo(pesos):
     """Con las bolsas reales del sorteo 4273 y los menores medidos, los tres pierden."""
-    reales = {"Melate": (76_200_000.0, 4.6035), "Revancha": (111_700_000.0, 2.6156),
+    reales = {"Melate": (76_200_000.0, 4.6500), "Revancha": (111_700_000.0, 2.6156),
               "Revanchita": (155_800_000.0, 0.0)}
     for juego, (bolsa, menores) in reales.items():
         c = pf.cartera(juego, 300, pesos=pesos, candidatas=3000)
@@ -198,8 +198,16 @@ def test_la_ganancia_por_evitar_compartir_es_minuscula(pesos):
     Esta cota es lo que impide que el módulo se vuelva, sin querer, una promesa.
     """
     c = pf.cartera("Melate", 300, pesos=pesos, candidatas=5000)
-    v = pf.valorar(c, bolsa=76_200_000.0, menores_brutos=4.6035)
+    v = pf.valorar(c, bolsa=76_200_000.0, menores_brutos=4.6500)
     assert 0 < v["ganancia_como_porcentaje_del_precio"] < 0.003, v
+
+
+def test_la_valoracion_dice_con_que_se_hizo(pesos):
+    """Dos bolsas, dos registros: el reporte guarda la bolsa y los menores que recibió."""
+    c = pf.cartera("Melate", 150, pesos=pesos, candidatas=2000)
+    for bolsa, menores in ((76_200_000.0, 4.6013), (150_000_000.0, 4.6500)):
+        v = pf.valorar(c, bolsa=bolsa, menores_brutos=menores)
+        assert (v["bolsa"], v["menores_brutos"], v["impuesto"]) == (bolsa, menores, 0.07)
 
 
 def test_toda_valoracion_lleva_el_aviso(pesos):

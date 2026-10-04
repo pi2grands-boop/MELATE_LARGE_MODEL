@@ -297,6 +297,9 @@
   }
  ],
  "valoracion": {
+  "bolsa": 76200000.0,
+  "menores_brutos": 4.601312218123531,
+  "impuesto": 0.07,
   "coste": 300,
   "valor_esperado": 128.82,
   "rendimiento": -0.5706,
