@@ -1,0 +1,309 @@
+{
+ "juego": "Melate",
+ "presupuesto": 300.0,
+ "precio_boleto": 15,
+ "boletos": 20,
+ "coste": 300,
+ "sobrante": 0.0,
+ "numeros_cubiertos": 56,
+ "tope_popularidad": 1.0,
+ "candidatas_aptas": 7978,
+ "candidatas_descartadas": 12022,
+ "solape_maximo_real": 2,
+ "solape_medio": 0.695,
+ "popularidad_media": 0.6262,
+ "semilla": 20261003,
+ "ventas_supuestas": 991119.4792609925,
+ "detalle": [
+  {
+   "numeros": [
+    32,
+    37,
+    39,
+    41,
+    45,
+    54
+   ],
+   "popularidad": 0.382,
+   "patrones": [],
+   "factor_reparto": 0.994192,
+   "acertantes_esperados": 0.011662
+  },
+  {
+   "numeros": [
+    33,
+    38,
+    48,
+    51,
+    53,
+    56
+   ],
+   "popularidad": 0.382,
+   "patrones": [],
+   "factor_reparto": 0.994192,
+   "acertantes_esperados": 0.011662
+  },
+  {
+   "numeros": [
+    7,
+    34,
+    36,
+    47,
+    50,
+    52
+   ],
+   "popularidad": 0.5021,
+   "patrones": [],
+   "factor_reparto": 0.992376,
+   "acertantes_esperados": 0.015326
+  },
+  {
+   "numeros": [
+    6,
+    35,
+    42,
+    43,
+    46,
+    55
+   ],
+   "popularidad": 0.5021,
+   "patrones": [],
+   "factor_reparto": 0.992376,
+   "acertantes_esperados": 0.015326
+  },
+  {
+   "numeros": [
+    13,
+    24,
+    31,
+    40,
+    44,
+    49
+   ],
+   "popularidad": 0.8672,
+   "patrones": [],
+   "factor_reparto": 0.98688,
+   "acertantes_esperados": 0.026472
+  },
+  {
+   "numeros": [
+    5,
+    9,
+    27,
+    33,
+    35,
+    45
+   ],
+   "popularidad": 0.8672,
+   "patrones": [],
+   "factor_reparto": 0.98688,
+   "acertantes_esperados": 0.026472
+  },
+  {
+   "numeros": [
+    16,
+    22,
+    23,
+    42,
+    43,
+    50
+   ],
+   "popularidad": 0.8672,
+   "patrones": [],
+   "factor_reparto": 0.98688,
+   "acertantes_esperados": 0.026472
+  },
+  {
+   "numeros": [
+    18,
+    28,
+    29,
+    39,
+    40,
+    44
+   ],
+   "popularidad": 0.8672,
+   "patrones": [],
+   "factor_reparto": 0.98688,
+   "acertantes_esperados": 0.026472
+  },
+  {
+   "numeros": [
+    10,
+    15,
+    21,
+    38,
+    49,
+    55
+   ],
+   "popularidad": 0.8672,
+   "patrones": [],
+   "factor_reparto": 0.98688,
+   "acertantes_esperados": 0.026472
+  },
+  {
+   "numeros": [
+    14,
+    25,
+    30,
+    41,
+    48,
+    51
+   ],
+   "popularidad": 0.8672,
+   "patrones": [],
+   "factor_reparto": 0.98688,
+   "acertantes_esperados": 0.026472
+  },
+  {
+   "numeros": [
+    2,
+    11,
+    20,
+    47,
+    50,
+    55
+   ],
+   "popularidad": 0.8672,
+   "patrones": [],
+   "factor_reparto": 0.98688,
+   "acertantes_esperados": 0.026472
+  },
+  {
+   "numeros": [
+    3,
+    8,
+    19,
+    34,
+    35,
+    37
+   ],
+   "popularidad": 0.8672,
+   "patrones": [],
+   "factor_reparto": 0.98688,
+   "acertantes_esperados": 0.026472
+  },
+  {
+   "numeros": [
+    12,
+    17,
+    26,
+    40,
+    41,
+    52
+   ],
+   "popularidad": 0.8672,
+   "patrones": [],
+   "factor_reparto": 0.98688,
+   "acertantes_esperados": 0.026472
+  },
+  {
+   "numeros": [
+    1,
+    4,
+    37,
+    42,
+    54,
+    55
+   ],
+   "popularidad": 0.6598,
+   "patrones": [],
+   "factor_reparto": 0.989996,
+   "acertantes_esperados": 0.020142
+  },
+  {
+   "numeros": [
+    34,
+    36,
+    39,
+    43,
+    44,
+    56
+   ],
+   "popularidad": 0.382,
+   "patrones": [],
+   "factor_reparto": 0.994192,
+   "acertantes_esperados": 0.011662
+  },
+  {
+   "numeros": [
+    32,
+    40,
+    42,
+    46,
+    53,
+    54
+   ],
+   "popularidad": 0.382,
+   "patrones": [],
+   "factor_reparto": 0.994192,
+   "acertantes_esperados": 0.011662
+  },
+  {
+   "numeros": [
+    35,
+    38,
+    40,
+    43,
+    44,
+    48
+   ],
+   "popularidad": 0.382,
+   "patrones": [],
+   "factor_reparto": 0.994192,
+   "acertantes_esperados": 0.011662
+  },
+  {
+   "numeros": [
+    37,
+    40,
+    45,
+    47,
+    53,
+    55
+   ],
+   "popularidad": 0.382,
+   "patrones": [],
+   "factor_reparto": 0.994192,
+   "acertantes_esperados": 0.011662
+  },
+  {
+   "numeros": [
+    34,
+    42,
+    43,
+    47,
+    49,
+    53
+   ],
+   "popularidad": 0.382,
+   "patrones": [],
+   "factor_reparto": 0.994192,
+   "acertantes_esperados": 0.011662
+  },
+  {
+   "numeros": [
+    41,
+    46,
+    48,
+    49,
+    53,
+    55
+   ],
+   "popularidad": 0.382,
+   "patrones": [],
+   "factor_reparto": 0.994192,
+   "acertantes_esperados": 0.011662
+  }
+ ],
+ "valoracion": {
+  "coste": 300,
+  "valor_esperado": 128.82,
+  "rendimiento": -0.5706,
+  "valor_esperado_sin_mirar_popularidad": 128.58,
+  "ganancia_por_evitar_compartir": 0.2453,
+  "ganancia_por_boleto": 0.012264,
+  "ganancia_como_porcentaje_del_precio": 0.000818,
+  "aviso": "El valor esperado es NEGATIVO y esta cartera no lo arregla. Evitar combinaciones compartidas no cambia la probabilidad de acertar: solo con cuánta gente repartirías. Sin ventaja demostrada."
+ }
+}

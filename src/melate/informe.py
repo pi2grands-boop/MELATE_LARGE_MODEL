@@ -27,7 +27,7 @@ from .validate import era_56, validar, validar_era
 
 # Claves que el oráculo no tiene. tests/test_paridad.py las excluye de la comparación.
 NUEVAS_CLAVES = {
-    "raiz": ("reproducibilidad", "validacion_era_56", "protocolo_global"),
+    "raiz": ("reproducibilidad", "validacion_era_56", "protocolo_global", "valor_esperado_medido"),
     "hoja": ("q_BH_global",),
 }
 
@@ -55,7 +55,54 @@ def _salida_robusta():
             pass
 
 
-def construir(carpeta=None, sims=2000):
+def _valor_esperado_medido(juegos, popularidad):
+    """El valor esperado con los premios menores MEDIDOS, no con la constante escrita a mano.
+
+    `ev.valor_esperado` usa por defecto `{"Melate": 4.38, "Revancha": 2.10, "Revanchita": 0.0}`,
+    que viene de las tablas de los sorteos 4271/4272. **Ese defecto no se toca**: el oráculo llama
+    a `valor_esperado(juegos)` sin argumento y cualquier cambio rompería la paridad, que es
+    bloqueante. Lo medido entra aquí, en una clave aparte y declarada.
+
+    `popularidad` es la ruta del reporte de `melate.popularity`. Sin ella, esta clave dice que no
+    hay medición y por qué — que es mejor que no estar, porque así se ve que falta.
+    """
+    if not popularidad:
+        return {"disponible": False,
+                "motivo": "sin --popularidad: el EV de arriba usa la constante escrita a mano, "
+                          "que viene de las tablas 4271/4272 y caduca. "
+                          "Mídela con `python -m melate.popularity`."}
+    with open(popularidad, encoding="utf-8") as f:
+        pop = json.load(f)
+
+    # La mediana, no la media: el estimador por bolsa es estable pero un sorteo con una categoría
+    # de pocos ganadores todavía puede tirar de la media.
+    menores, procedencia_menores = {}, {}
+    for juego in JUEGOS:
+        r = (pop.get("juegos") or {}).get(juego)
+        if juego == "Revanchita":
+            # Estructural, no estimado: Revanchita solo paga 6 aciertos, así que no hay menores.
+            menores[juego] = 0.0
+            procedencia_menores[juego] = "0 por estructura del juego: solo paga 6 aciertos"
+        elif r and r.get("menores_brutos_por_bolsa"):
+            m = r["menores_brutos_por_bolsa"]
+            menores[juego] = m["mediana"]
+            procedencia_menores[juego] = (f"mediana de {m['n']} sorteos, estimador por bolsa, "
+                                          f"cv {m['cv']:.3f}")
+        else:
+            return {"disponible": False, "motivo": f"el reporte de popularidad no trae {juego}"}
+
+    out = valor_esperado(juegos, menores_brutos=menores)
+    out["menores_brutos_usados"] = menores
+    out["procedencia_menores"] = procedencia_menores
+    out["ventana"] = pop.get("ventana")
+    out["disponible"] = True
+    out["nota"] = ("Esta es la clave con los premios menores medidos. La de arriba, "
+                   "`valor_esperado_proximo`, conserva la constante del oráculo para que la "
+                   "paridad siga siendo comparable.")
+    return out
+
+
+def construir(carpeta=None, sims=2000, popularidad=None):
     """El reporte completo, como dict. Separado de main() para que los tests no pasen por argparse."""
     _salida_robusta()
     rng = np.random.default_rng(SEMILLA_AUDITORIA)
@@ -107,6 +154,17 @@ def construir(carpeta=None, sims=2000):
         print(f"  {j:10s} sorteo {v['proximo_sorteo']}: bolsa {v['bolsa_bruta'] / 1e6:.1f} M -> EV ${v['EV']:.2f} de ${v['precio']} "
               f"({v['rendimiento']:+.0%}); equilibrio ≈ {v['bolsa_de_equilibrio'] / 1e6:.0f} M")
 
+    reporte["valor_esperado_medido"] = _valor_esperado_medido(juegos, popularidad)
+    vm = reporte["valor_esperado_medido"]
+    if vm.get("disponible"):
+        print("== Valor esperado con los premios menores MEDIDOS (ventana "
+              f"{vm['ventana'][0]}-{vm['ventana'][1]})")
+        for j in JUEGOS:
+            v, base = vm[j], reporte["valor_esperado_proximo"][j]
+            print(f"  {j:10s} EV ${v['EV']:.2f} ({v['rendimiento']:+.1%})  "
+                  f"contra ${base['EV']:.2f} ({base['rendimiento']:+.1%}) con la constante "
+                  f"escrita a mano; menores {vm['menores_brutos_usados'][j]:.4f}")
+
     reporte["reproducibilidad"] = {
         "corrida_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
         "datos": procedencia(crudos),
@@ -126,9 +184,11 @@ def main(argv=None):
     ap.add_argument("--datos", help="carpeta con Melate.csv, Revancha.csv y Revanchita.csv (si no, descarga del oficial)")
     ap.add_argument("--sims", type=int, default=2000)
     ap.add_argument("--salida", default="reportes/informe.json")
+    ap.add_argument("--popularidad", help="reporte de `melate.popularity`, para el EV con los "
+                                          "premios menores medidos en vez de la constante")
     a = ap.parse_args(argv)
 
-    reporte = construir(a.datos, a.sims)
+    reporte = construir(a.datos, a.sims, a.popularidad)
     salida = pathlib.Path(a.salida)
     salida.parent.mkdir(parents=True, exist_ok=True)   # en un clon nuevo reportes/ no existe
     with open(salida, "w", encoding="utf-8") as f:

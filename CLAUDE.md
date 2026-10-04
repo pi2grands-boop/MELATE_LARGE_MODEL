@@ -41,7 +41,11 @@ Herramienta personal de análisis para Melate, Revancha y Revanchita. El diseño
 - Melate, combinaciones favorables por categoría: C(6,k) · C(1,a) · C(49, 6-k-a), con k naturales acertados y a = 1 si incluye el adicional.
 - Revancha: C(6,k) · C(50, 6-k). Revanchita solo paga 6 aciertos.
 - Línea base: 36/56 = 0.642857 aciertos por boleto (desviación 0.722357); log-loss 0.340500 nats por número; P(3 o más aciertos) = 1/79.06.
-- Ventas estimadas (tablas de ganadores 2021 y 2026): 1.06 a 1.18 millones de combinaciones de Melate por sorteo.
+- Ventas de Melate, **medidas** sobre 300 sorteos (ventana 3973–4272, descarga del 2026-10-03):
+  mediana 0.98 M de combinaciones por sorteo, rango 0.58 M a 1.59 M. Las ventas suben con la bolsa,
+  así que un rango estrecho no las describe: solo el 16 % de esos 300 sorteos cae entre 1.06 y 1.18 M,
+  que era la estimación anterior, sacada de las tablas de 2021 y 2026. Reproducir con
+  `python -m melate.popularity --desde 3973 --hasta 4272`.
 
 ## Protocolo de evaluación (no negociable)
 
@@ -95,6 +99,18 @@ Datos: `data/raw/2026-10-02/`, último concurso 4272. SHA-256:
 
 Semillas: 20261001 (auditoría Monte Carlo), 7 (desempates del backtest), `random_state=0` (gradient boosting).
 Entorno: Python 3.13.9 · numpy 2.5.3 · pandas 2.3.3 · scipy 1.18.1 · scikit-learn 1.9.1.
+
+> **Nota del 2026-10-03 (Fase 3), sobre el valor esperado.** Las tres cifras de EV de arriba usan el
+> `menores_brutos` escrito a mano en `baseline_auditoria.py:252`. La Fase 3 lo reprodujo y lo midió:
+> el 4.38 de Melate es exactamente la media de las tablas 4271 y 4272; el **2.10 de Revancha es solo
+> la tabla 4271**, porque la 4272 daba 4.41 (su categoría de 5 aciertos tuvo 3 ganadores y el premio
+> individual se disparó). Las dos constantes se calcularon con métodos distintos. Medido sobre 100
+> sorteos con el estimador estable: Melate 4.6013 y Revancha 2.6042, con lo que el EV real es
+> **Melate −57.2 % y Revancha −44.4 %** (Revanchita no cambia: solo paga 6 aciertos).
+> **Las cifras de arriba NO se tocan**: son las que reproduce el oráculo y la paridad es bloqueante.
+> Lo medido vive en la clave `valor_esperado_medido` del informe
+> (`python -m melate.informe --popularidad reportes/<fichero>.json`). Evidencia en
+> `Documentos_Contexto/Fases/2026-10-03_popularidad/Bugs/2026-10-03_04-10_s3-review-popularidad-y-cartera.md`.
 
 > **Corregido el 2026-10-02.** La versión anterior de esta sección daba 42.03 para la chi-cuadrada de Revancha y
 > 0.6861 (p = 0.011, q = 0.24) para la regresión logística. Ambas se habían calculado con el espejo de GitHub, que

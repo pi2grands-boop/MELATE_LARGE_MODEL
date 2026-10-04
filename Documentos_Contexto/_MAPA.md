@@ -42,13 +42,15 @@ Lee estos cuatro, en orden. Cuentan la historia completa:
   primero.
 
 ```powershell
-.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 72 pruebas, ~2.5 s
-.venv\Scripts\python.exe -m pytest tests -q                              # 100 pruebas, ~136 s
+.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 132 pruebas, ~5 s
+.venv\Scripts\python.exe -m pytest tests -q                              # 161 pruebas, ~133 s
 ```
 
-> Estas dos cifras se vuelven a medir al cerrar cada fase. Ya envejecieron una vez: dos tests de
-> subproceso sin marcar dejaron el bucle rápido en 30 s mientras este mapa decía 5
-> (`Rendimiento/Arreglos_Bugs/2026-10-03_01-59_la-suite-rapida-no-era-rapida.md`).
+> Estas dos cifras se vuelven a medir al cerrar cada fase. Ya envejecieron **dos** veces: en la
+> Fase 2, dos tests de subproceso sin marcar dejaron el bucle rápido en 30 s mientras este mapa
+> decía 5 (`Rendimiento/Arreglos_Bugs/2026-10-03_01-59_la-suite-rapida-no-era-rapida.md`); en la
+> Fase 3 un voraz cuadrático lo puso en 26 s, y se arregló el algoritmo en vez de marcar los tests
+> como lentos (`Rendimiento/Arreglos_Bugs/2026-10-03_05-15_s3-el-voraz-cuadratico.md`).
 
 **Y si lo que quieres es saber si una estrategia funciona:** no mires el informe. Sella un
 preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué, y
@@ -73,6 +75,8 @@ preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué, y
 | ¿De dónde salen los datos? ¿Por qué el espejo no vale para cargar? | Conexiones |
 | ¿Cómo se enlazan las pantallas de la app? | Interconexion *(vacía: la app es de la Fase 4)* |
 | ¿Qué cambia en la superficie de ataque? ¿Qué se publica? | Seguridad |
+| ¿Qué juega la gente? ¿Cuánto paga de verdad un boleto? | Conexiones · Estructura_Datos |
+| ¿Por qué una cartera no mejora mis probabilidades? | Mapa · `src/melate/portfolio.py` |
 | ¿Qué sirve el servidor? | Red *(vacía: todo es local)* |
 | ¿Se puede volver a obtener este número exacto? | Reproducibilidad |
 | ¿Me puedo creer este resultado? ¿Qué hace falta para afirmar algo? | Protocolo_Estadistico |
@@ -91,8 +95,8 @@ actualiza al cerrar cada una, y es la referencia: no hay ningún plan fuera del 
 | **1 · Arranque** | ✅ cerrada 2026-10-03 | Bitácora, entorno, snapshot congelado, reproducción de la línea base, paquete `src/melate/` con paridad contra el oráculo, primer push |
 | **2 · Protocolo** | ✅ cerrada 2026-10-03 | `prereg/*.json` sellado, `lab.py`, las 5 condiciones de la regla 5, y los pendientes de la Fase 1 ejecutados |
 | — *auditoría* | ✅ 2026-10-03 | Revisión retrospectiva de las fases 1 y 2: siete defectos con las 92 pruebas en verde |
-| **3 · EV, popularidad y cartera** | ⬜ **siguiente** | `popularity.py` con Scrapling sobre las tablas de ganadores, para sustituir el `menores_brutos` escrito a mano en `baseline_auditoria.py:252`; `portfolio.py` con presupuesto fijo. Primera fase que toca un sitio de terceros: el dictamen de términos va escrito **antes** del código que dependa de él |
-| **4 · App local** | ⬜ | `app/streamlit_app.py` y `melate.duckdb`, los dos en esta máquina: `streamlit run` escuchando solo en `localhost`, nunca en `0.0.0.0`. Textos en español y "sin ventaja demostrada" visible en cada pantalla |
+| **3 · EV, popularidad y cartera** | ✅ cerrada 2026-10-03 | `popularity.py` con Scrapling sobre las tablas de ganadores y el dictamen escrito **antes** del código; `portfolio.py` con presupuesto fijo; el `menores_brutos` medido entra por clave nueva sin tocar el oráculo |
+| **4 · App local** | ⬜ **siguiente** | `app/streamlit_app.py` y `melate.duckdb`, los dos en esta máquina: `streamlit run` escuchando solo en `localhost`, nunca en `0.0.0.0`. Textos en español y "sin ventaja demostrada" visible en cada pantalla |
 
 Lo que **no** está en ninguna fase y es deliberado: migrar a pandas 3 (rompe `df.attrs`, que el
 oráculo usa), optimizar el backtest (es el 85 % del coste y crece de forma cuadrática, pero son 62 s
@@ -110,12 +114,15 @@ al cerrarse, emiten a las áreas base **solo el estado final**. El proceso se qu
 - `Fases/2026-10-03_protocolo/` — **cerrada el 2026-10-03.** Los pendientes de la Fase 1 ejecutados
   (con un bug de 17 tests encontrado por el camino), `prereg/*.json` sellado, `lab.py` y las 5
   condiciones de la regla 5.
+- `Fases/2026-10-03_popularidad/` — **cerrada el 2026-10-03.** La primera fase que toca un sitio de
+  terceros, con su dictamen escrito antes del código. `popularity.py`, `portfolio.py`, y el
+  hallazgo de que el `menores_brutos` escrito a mano gobernaba el 65 % del EV de Melate.
 
 ## Estado ahora mismo
 
 - **Bugs abiertos:** ninguno.
-- **Fases abiertas:** ninguna. La siguiente es la Fase 3 (EV, popularidad con Scrapling y cartera),
-  y **no empieza sin que el usuario la apruebe** (`CLAUDE.md`).
+- **Fases abiertas:** ninguna. La siguiente es la Fase 4 (la app local en Streamlit), y **no empieza
+  sin que el usuario la apruebe** (`CLAUDE.md`).
 - **El veredicto del proyecto, hoy:** `sin ventaja demostrada`, 0 de 5 condiciones, porque el holdout
   del preregistro está vacío. Es la respuesta correcta y seguirá siéndolo durante años.
 - **Pendiente de verificar en vivo** — los cinco puntos de
@@ -125,7 +132,13 @@ al cerrarse, emiten a las áreas base **solo el estado final**. El proceso se qu
 - **Decisiones cerradas que atan el proyecto:**
   - `baseline_auditoria.py` es el oráculo y no se modifica.
   - El espejo es solo validación cruzada, nunca carga.
-  - Para declarar ventaja manda `q_BH_global`, la familia de 36 pruebas.
+  - Para declarar ventaja manda `q_BH_global`, la familia de 36 pruebas. **Dentro de esa familia va
+    todo lo que hable de la urna; fuera, todo lo que hable de los jugadores** — por eso la
+    popularidad no la agranda
+    (`Protocolo_Estadistico/Decisiones/2026-10-03_05-10_s3-la-popularidad-no-entra-en-la-familia.md`).
+  - Con el sitio de terceros: 1 solicitud/segundo, caché permanente, identificación honesta, y si
+    bloquean **se para y se pregunta**
+    (`Fases/2026-10-03_popularidad/Decisiones/2026-10-03_02-40_s3-dictamen-terminos-melate-e.md`).
   - Un preregistro no se sobrescribe, no se sella en el pasado, y alterarlo lo invalida.
   - La bitácora se publica; nada personal sale de la máquina, y las rutas son siempre relativas.
   - `pandas < 3` mientras el oráculo use `df.attrs`.

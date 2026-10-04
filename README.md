@@ -25,14 +25,28 @@ Revancha, con 0.6839, y su q = 0.35 está muy lejos del 0.05 que exige el protoc
 historia. Valor esperado por boleto, con el 7 % de impuesto y corrigiendo por el reparto de la bolsa
 entre varios acertantes:
 
-| Juego | Precio | Bolsa del 4273 | Valor esperado | Rendimiento | Bolsa de equilibrio |
-|---|---|---|---|---|---|
-| Melate | $15 | 76.2 M | $6.22 | **−59 %** | ≈ 389 M |
-| Revancha | $10 | 111.7 M | $5.09 | **−49 %** | ≈ 286 M |
-| Revanchita | $5 | 155.8 M | $4.38 | **−12 %** | ≈ 178 M |
+| Juego | Precio | Bolsa del 4273 | Valor esperado | Rendimiento | Con premios menores medidos | Bolsa de equilibrio |
+|---|---|---|---|---|---|---|
+| Melate | $15 | 76.2 M | $6.22 | **−59 %** | **−57.2 %** | ≈ 389 M |
+| Revancha | $10 | 111.7 M | $5.09 | **−49 %** | **−44.4 %** | ≈ 286 M |
+| Revanchita | $5 | 155.8 M | $4.38 | **−12 %** | −12.4 % | ≈ 178 M |
+
+La penúltima columna es de la Fase 3, y es la más honesta de las dos. La columna de rendimiento usa
+el premio esperado de las categorías menores que el oráculo lleva escrito a mano, sacado de dos
+tablas de ganadores; la siguiente lo usa **medido sobre 100 sorteos**. La diferencia en Revancha es
+de casi cinco puntos, y la razón es que ese dato no es un apéndice: **los premios menores son el
+65 % del valor esperado de un boleto de Melate**, no la bolsa. Las dos columnas conviven a propósito
+— la primera es la que reproduce el oráculo y la paridad es bloqueante.
 
 La última columna es la bolsa que haría que el boleto valiera lo que cuesta. Revanchita es el menos
 malo y ni así llega.
+
+**Y la gente no elige al azar.** Medido sobre 300 sorteos: los números mayores que 31 aparecen en un
+**24 % menos de boletos** que los que caben en un calendario (t de Welch = −18.7). Eso no cambia qué
+sale —el sorteo no sabe qué apostó nadie— pero sí **con cuánta gente repartirías si ganaras**. Es
+todo lo que puede hacer una cartera, y tiene un techo medido: **+0.27 % del precio en Melate**,
+contra un suelo de −14 % si eligieras una combinación muy jugada. Una asimetría de 54 a 1, que es
+por qué `melate.portfolio` está escrito como un seguro y no como una estrategia.
 
 ## Por qué deberías desconfiar de cualquier "ventaja"
 
@@ -90,6 +104,19 @@ python -m venv .venv
 
 # Sellar una hipotesis nueva (no sobrescribe, y no sella en el pasado)
 .venv/Scripts/python -m melate.lab --sellar borrador.json --salida prereg/<fecha>_<slug>.json
+
+# Que juega la gente: tablas de ganadores por categoria. La primera vez sale a la red,
+# a UNA solicitud por segundo; despues va de la cache y no vuelve a pedir nada.
+.venv/Scripts/python -m melate.popularity --desde 4173 --hasta 4272 \
+    --datos data/raw/2026-10-02 --salida reportes/popularidad.json
+
+# El informe con los premios menores medidos en vez de la constante
+.venv/Scripts/python -m melate.informe --datos data/raw/2026-10-02 \
+    --popularidad reportes/popularidad.json
+
+# Una cartera con presupuesto fijo. NO mejora tus probabilidades de ganar.
+.venv/Scripts/python -m melate.portfolio --juego Melate --presupuesto 300 \
+    --bolsa 76200000 --popularidad reportes/popularidad.json
 ```
 
 Todo esto está probado solo en Windows: los comandos usan `.venv/Scripts/` y los dos scripts de
@@ -98,8 +125,8 @@ verificación (`scripts/colador.ps1` y `scripts/verificar-bitacora.ps1`) son Pow
 Los tests:
 
 ```bash
-.venv/Scripts/python -m pytest tests -m "not lento and not red" -q   # 72 pruebas, ~2.5 s
-.venv/Scripts/python -m pytest tests -q                              # 100 pruebas, ~2.5 min
+.venv/Scripts/python -m pytest tests -m "not lento and not red" -q   # 132 pruebas, ~5 s
+.venv/Scripts/python -m pytest tests -q                              # 161 pruebas, ~2.5 min
 ```
 
 ## Estructura
@@ -114,11 +141,15 @@ src/melate/
   protocolo.py            Benjamini-Hochberg, las familias, y las 5 condiciones
   backtest.py             walk-forward de las 8 estrategias
   ev.py                   premios mayores y valor esperado
+  popularity.py           qué juega la gente, de las tablas de ganadores. 1 solicitud/segundo
+  portfolio.py            carteras con presupuesto fijo. No mejora tus probabilidades
   informe.py              `python -m melate.informe` — explora
   lab.py                  `python -m melate.lab` — juzga. Sin preregistro no evalúa
 data/raw/<fecha>/         snapshots congelados, con su SHA-256 y su procedencia
+data/cache/               páginas descargadas. NO se publica: son de un tercero
 prereg/                   hipótesis preregistradas, selladas e inmutables
-tests/                    reglas de datos, línea base, paridad, no-fuga temporal, protocolo
+tests/                    reglas de datos, línea base, paridad, no-fuga temporal, protocolo,
+                          popularidad y cartera
 Documentos_Contexto/      la bitácora: por qué cada cosa es como es
 ```
 
@@ -132,7 +163,7 @@ segundo es donde se trabaja.
 |---|---|
 | [CSV oficiales de Lotería Nacional](https://www.loterianacional.gob.mx/Documentos/Historicos/Melate.csv) | La única fuente de carga |
 | [Espejo en GitHub](https://github.com/pakinja/pakin) | **Solo validación cruzada**, nunca carga |
-| [resultados.melate-e.com](https://resultados.melate-e.com/) | Tablas de ganadores (pendiente) |
+| [resultados.melate-e.com](https://resultados.melate-e.com/) | Tablas de ganadores por categoría, y **tercera fuente** para validar los números |
 
 Los CSV oficiales llegan en orden descendente y traen errores conocidos que el código trata sin
 esconderlos: `BOLSA = 0` en los sorteos 2120, 2142 y 2234, y Revancha 3221 fuera de secuencia.
@@ -146,6 +177,17 @@ Solo lo detecta la comparación entre fuentes, que vive en `tests/test_reglas_da
 Es la clase de error que importa: dos de las cifras publicadas originalmente en este proyecto se
 habían calculado con ese dato malo, y una de ellas era precisamente el resultado más llamativo.
 Está documentado entero en `Documentos_Contexto/Fases/2026-10-02_arranque/Bugs/`.
+
+**La tercera fuente llegó en la Fase 3**, y de regalo: las páginas de melate-e.com publican también
+los números sorteados. Comparados con el CSV oficial en 200 sorteos, **0 discrepancias**. Es
+exactamente el tipo de comprobación que habría atrapado el error de Revancha 3827 el primer día.
+
+Con ese sitio, que es privado y pequeño, el trato se escribió **antes** del código que lo usa: una
+solicitud por segundo, caché permanente, `User-Agent` que nos identifica y enlaza este repositorio,
+sin suplantar ningún navegador, y si bloquean se para y se pregunta. Está en
+`Documentos_Contexto/Fases/2026-10-03_popularidad/Decisiones/`, y cada regla tiene su test. La
+diferencia entre una herramienta personal y un raspador no está en la tecnología —es el mismo GET—
+sino en el límite que se pone antes de empezar.
 
 ## Reproducibilidad
 

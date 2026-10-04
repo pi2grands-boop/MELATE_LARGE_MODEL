@@ -9,6 +9,13 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
+# Caché de las páginas de melate-e.com (Fase 3). NO se publica: son páginas de un
+# tercero y republicarlas no es nuestro papel. Lo que el repositorio publica son las
+# cifras derivadas. Es reconstruible con `python -m melate.popularity`, a 1 solicitud
+# por segundo. Ver el dictamen en
+# Documentos_Contexto/Fases/2026-10-03_popularidad/Decisiones/
+data/cache/
+
 # Lo que NO se ignora, a propósito:
 #   data/raw/<fecha>/   los snapshots congelados (435 KB) son lo que hace que el hash
 #                       del protocolo signifique algo y que las cifras se puedan reproducir

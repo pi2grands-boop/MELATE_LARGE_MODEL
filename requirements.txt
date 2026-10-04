@@ -22,3 +22,20 @@ scikit-learn>=1.5,<2
 
 requests>=2.32,<3
 pytest>=8,<10
+
+# --- Fase 3: las tablas de ganadores de melate-e.com ---
+#
+# Fijada exacta, no por rango: es la unica dependencia que habla con un sitio
+# de terceros, y un cambio de version puede cambiar las cabeceras que salen o
+# el comportamiento del parser sin avisar. El trato con ese sitio esta escrito
+# en Documentos_Contexto/Fases/2026-10-03_popularidad/Decisiones/ y se comprueba
+# con tests; una actualizacion de esta linea obliga a volver a correrlos.
+#
+# El extra [fetchers] arrastra playwright y patchright —dos pilas completas de
+# automatizacion de navegador— mas browserforge y apify-fingerprint-datapoints,
+# que existen para falsificar huellas. NADA de eso se usa: popularity.py solo
+# hace GET con Fetcher sobre HTML estatico, y StealthyFetcher y DynamicFetcher
+# estan prohibidos por el CLAUDE.md. Los navegadores no se descargan (haria
+# falta `playwright install`, que no se ejecuta). Queda anotado como lo que es:
+# un coste de la libreria elegida, no un accidente.
+scrapling[fetchers]==0.4.15
