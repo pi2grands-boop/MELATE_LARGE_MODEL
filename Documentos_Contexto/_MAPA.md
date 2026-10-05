@@ -13,11 +13,12 @@ en `REGLAS-DOCUMENTACION.md` §0 y en `Seguridad/Decisiones/`.
    pieza de la que depende todo: hay dos programas y dan lo mismo.
 3. `Mapa/Modificar/2026-10-03_01-30_s2-entra-el-laboratorio.md` — la frontera entre **explorar** y
    **juzgar**. Las cifras del informe no bastan para afirmar nada; solo el laboratorio puede.
-4. `Fases/2026-10-04_app-local/99_CIERRE.md` — dónde está el proyecto hoy y qué queda pendiente.
+4. `Fases/2026-10-04_ciclo-vivo/99_CIERRE.md` — dónde está el proyecto hoy y qué queda pendiente.
    Si hay una fase abierta, su alcance (`Fases/<fecha>_<nombre>/00_ALCANCE.md`) dice qué está
    cambiando ahora mismo.
 5. Y para mirar en vez de leer: `.venv\Scripts\python.exe -m melate.app` abre la app local en
-   `http://127.0.0.1:8501`. Enseña lo que ya está en `reportes/` y `prereg/`; no calcula nada.
+   `http://127.0.0.1:8501`. Enseña lo que ya está en `reportes/`, `prereg/` y `data/raw/`; no calcula
+   nada. Los sorteos nuevos los incorpora otra orden, `.venv\Scripts\python.exe -m melate.ciclo`.
 
 ## Si tienes 15 minutos y quieres entender por qué este proyecto es desconfiado
 
@@ -46,9 +47,9 @@ Lee estos cuatro, en orden. Cuentan la historia completa:
   primero.
 
 ```powershell
-.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 213 pruebas, ~13 s
-.venv\Scripts\python.exe -m pytest tests -q                              # 242 pruebas, ~150 s
-.venv\Scripts\python.exe scripts\mutar.py                                # 46 de 46, ~2-3 min
+.venv\Scripts\python.exe -m pytest tests -m "not lento and not red" -q   # 287 pruebas, ~30-40 s
+.venv\Scripts\python.exe -m pytest tests -q                              # 321 pruebas, ~3-4 min
+.venv\Scripts\python.exe scripts\mutar.py                                # 97 de 97, ~5-8 min
 ```
 
 > Estas cifras se vuelven a medir al cerrar cada fase. Ya envejecieron **dos** veces: en la
@@ -57,14 +58,18 @@ Lee estos cuatro, en orden. Cuentan la historia completa:
 > Fase 3 un voraz cuadrático lo puso en 26 s, y se arregló el algoritmo en vez de marcar los tests
 > como lentos (`Rendimiento/Arreglos_Bugs/2026-10-03_05-15_s3-el-voraz-cuadratico.md`). En la Fase 4
 > pasó de ~5 a ~13 s por probar la app, sin marcar nada como lento, y el usuario lo aceptó
-> (`Rendimiento/Modificar/2026-10-04_16-35_s4-el-bucle-rapido-con-la-app.md`).
+> (`Rendimiento/Modificar/2026-10-04_16-35_s4-el-bucle-rapido-con-la-app.md`). En la Fase 5, a
+> 25 s con el ciclo y a 37-39 s con los tests del procedimiento de cierre, medido en una mañana en
+> que la máquina iba un 20 % más lenta; el usuario lo aceptó, «mientras más mejor»
+> (`Rendimiento/Modificar/2026-10-05_10-32_s5-el-bucle-y-lo-que-cuesta-un-ciclo.md`).
 >
 > `scripts/mutar.py` rompe una cosa a la vez en una copia del repositorio y exige que algún test se
 > entere. Lo nuevo que se proteja con un test entra también en su lista.
 
 **Y si lo que quieres es saber si una estrategia funciona:** no mires el informe. Sella un
-preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué, y
-`python -m melate.lab --prereg prereg/<fichero>.json` es el único camino que puede afirmar algo.
+preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué; `melate.lab` es el único
+camino que puede afirmar algo, y `python -m melate.ciclo` lo corre sobre cada snapshot nuevo, con
+cada preregistro sellado.
 
 ## Si vas a subir algo
 
@@ -82,6 +87,8 @@ preregistro y espera. `Protocolo_Estadistico/Añadir/` explica por qué, y
 | ¿Dónde vive este fichero? ¿Por qué `src/`? | Estructura_Carpetas |
 | ¿Qué forma tienen los datos y el reporte? | Estructura_Datos |
 | ¿Dónde se guardan los datos? ¿Por qué un snapshot? | Almacenamiento |
+| ¿Cómo entra un sorteo nuevo, y qué pasa si un testigo no está de acuerdo? | Almacenamiento/Decisiones · Conexiones |
+| ¿Cuánto crece el repositorio con cada sorteo? | Almacenamiento |
 | ¿De dónde salen los datos? ¿Por qué el espejo no vale para cargar? | Conexiones |
 | ¿Quién sale a la red, y cuándo? | Conexiones |
 | ¿Cómo se enlazan las pantallas de la app? | Interconexion |
@@ -109,11 +116,14 @@ actualiza al cerrar cada una, y es la referencia: no hay ningún plan fuera del 
 | — *auditoría* | ✅ 2026-10-03 | Revisión retrospectiva de las fases 1 y 2: siete defectos con las 92 pruebas en verde |
 | **3 · EV, popularidad y cartera** | ✅ cerrada 2026-10-03 | `popularity.py` con Scrapling sobre las tablas de ganadores y el dictamen escrito **antes** del código; `portfolio.py` con presupuesto fijo; el `menores_brutos` medido entra por clave nueva sin tocar el oráculo |
 | **4 · App local** | ✅ cerrada 2026-10-04 | `app/streamlit_app.py` y `melate.duckdb`, los dos en esta máquina: la app escucha solo en `127.0.0.1`, nunca en `0.0.0.0`, y la abre un lanzador propio, `python -m melate.app`. Textos en español, "sin ventaja demostrada" en cada pantalla y el veredicto solo del laboratorio |
+| **5 · Ciclo vivo** | ✅ cerrada 2026-10-05 | `python -m melate.ciclo`: incorpora los sorteos nuevos en snapshots congelados, validados con el oficial y dos testigos; sobre ellos, la popularidad, el valor esperado del sorteo siguiente, el veredicto y la base de la app. El primer veredicto con holdout, el del 4274: *sin ventaja demostrada*. La condición 5 exige un holdout capaz (C1). Cierre: `Fases/2026-10-04_ciclo-vivo/99_CIERRE.md` |
 
 Lo que **no** está en ninguna fase y es deliberado: migrar a pandas 3 (rompe `df.attrs`, que el
-oráculo usa), optimizar el backtest (es el 85 % del coste y crece de forma cuadrática, pero son 62 s
-hoy y ~110 s en cinco años), y añadir estrategias nuevas (agranda la familia de Benjamini-Hochberg:
-es una decisión con consecuencias estadísticas y lleva su documento).
+oráculo usa), optimizar el backtest (es el 85 % del coste y crece de forma cuadrática; el informe
+entero tarda entre 30 y 73 s según cómo esté la máquina), añadir estrategias nuevas (agranda la
+familia de Benjamini-Hochberg: es una decisión con consecuencias estadísticas y lleva su documento),
+programar el ciclo (pediría páginas a un tercero sin nadie delante) y volver a pedir una página de
+melate-e.com que llegó incompleta (no ha pasado; si pasa, se pregunta).
 
 ## Fases
 
@@ -133,21 +143,31 @@ al cerrarse, emiten a las áreas base **solo el estado final**. El proceso se qu
   lanzador que la ata a esta máquina aunque el entorno diga otra cosa. La primera fase con una
   pantalla, hecha para que no pueda presentar una cifra exploratoria como veredicto. Empieza por su
   `Fases/2026-10-04_app-local/99_CIERRE.md`.
+- `Fases/2026-10-04_ciclo-vivo/` — **cerrada el 2026-10-05**, con la aprobación del usuario. Los
+  sorteos que van llegando, sin romper la reproducibilidad: el ciclo,
+  la condición 5 que exige un holdout capaz, la app y la base enlazadas con los snapshots, y el primer
+  veredicto con holdout. Empieza por su `Fases/2026-10-04_ciclo-vivo/99_CIERRE.md`; la historia, por
+  su inventario y sus tres reviews.
 
 ## Estado ahora mismo
 
 - **Bugs abiertos:** ninguno.
-- **Fases abiertas:** ninguna. La Fase 4 se cerró el 2026-10-04 con la aprobación del usuario, y la
-  siguiente no empieza sin ella (`CLAUDE.md`).
-- **El veredicto del proyecto, hoy:** `sin ventaja demostrada`, 0 de 5 condiciones, porque el holdout
-  del preregistro está vacío. Es la respuesta correcta y seguirá siéndolo durante años. El primer
-  sorteo posterior al sello es el 4274: cuando el CSV oficial lo incluya, el laboratorio sin
-  `--datos` dará el primer veredicto con holdout, y seguirá sin poder afirmar nada con un sorteo.
-- **Pendiente de verificar en vivo** — los siete puntos de
-  `Fases/2026-10-04_app-local/99_CIERRE.md`. Dos no son falta de esfuerzo, son el diseño
-  funcionando: no habrá una evaluación preregistrada de verdad hasta que pasen sorteos, y la
-  condición 5 necesita del orden de once años de datos. La mutación a mano de la auditoría posterior
-  es ya `scripts/mutar.py`, y la forma de la tabla de melate-e.com la vigila de verdad su test `red`.
+- **Fases abiertas:** ninguna. La 5, el ciclo vivo, se cerró el 2026-10-05 con la aprobación del
+  usuario (`Fases/2026-10-04_ciclo-vivo/99_CIERRE.md`). La siguiente no empieza sin que él la apruebe.
+- **El veredicto del proyecto, hoy:** `sin ventaja demostrada`, 2 de 5 condiciones, con un holdout de
+  **1 sorteo —el 4274— de los 1 778 que necesita la condición 5**
+  (`Protocolo_Estadistico/Añadir/2026-10-05_10-26_s5-el-primer-veredicto-con-holdout.md`). Es la
+  respuesta correcta y lo seguirá siendo por construcción hasta el sorteo 1 778 del holdout, unos once
+  años a tres por semana: desde el 2026-10-04, antes del sorteo del 4274, la condición 5 exige un
+  holdout capaz de ver el efecto declarado
+  (`Protocolo_Estadistico/Decisiones/2026-10-04_18-58_s5-la-condicion-5-exige-un-holdout-capaz.md`).
+  Antes, un solo sorteo podía dar «VENTAJA DEMOSTRADA», una vez de cada 303 bajo el azar.
+- **Pendiente de verificar en vivo** — la lista de `Fases/2026-10-04_ciclo-vivo/99_CIERRE.md`. El
+  primer veredicto con holdout ya se vio en un navegador, y el usuario recorrió la app él mismo; lo que
+  queda no depende de esfuerzo: probar fuera de Windows, la cuenta de GitHub, un bloqueo real de
+  melate-e.com y un testigo que discrepe de verdad.
+- **Pendiente de decidir:** el texto que propuso el cierre de la Fase 5 para el `CLAUDE.md`, sin
+  aplicar.
 - **Decisiones cerradas que atan el proyecto:**
   - `baseline_auditoria.py` es el oráculo y no se modifica.
   - El espejo es solo validación cruzada, nunca carga.
@@ -165,6 +185,14 @@ al cerrarse, emiten a las áreas base **solo el estado final**. El proceso se qu
     vigilar la forma del sitio
     (`Conexiones/Modificar/2026-10-04_16-35_s4-el-test-del-sitio-pide-la-pagina-de-verdad.md`).
   - Un preregistro no se sobrescribe, no se sella en el pasado, y alterarlo lo invalida.
+  - **La condición 5 exige un holdout capaz de ver el efecto que declaró el sello**: con el sellado,
+    1 778 sorteos
+    (`Protocolo_Estadistico/Decisiones/2026-10-04_18-58_s5-la-condicion-5-exige-un-holdout-capaz.md`).
+  - **Los sorteos nuevos entran solo por `python -m melate.ciclo`**, en un snapshot nuevo, congelado e
+    inmutable, que nunca se escribe encima de otro; y **un veredicto sobre datos que no están
+    congelados no cuenta**. Un testigo que discrepa para el ciclo; uno que falta hace esperar, y seguir
+    sin él es explícito y queda escrito. Revanchita se valida con dos fuentes
+    (`Almacenamiento/Decisiones/2026-10-04_20-10_s5-el-ciclo-vivo.md`).
   - **La app es local:** solo `127.0.0.1`, sin telemetría y sin preguntarle a nadie la IP pública; la
     abre `python -m melate.app` (`Red/Añadir/2026-10-04_16-35_s4-que-sirve-la-app-y-a-quien.md`).
   - **La app enseña y no calcula:** no recalcula, no descarga ni escribe, y su cabecera sale solo de
@@ -197,5 +225,5 @@ $md | Where-Object { $_.Directory.Name -eq 'Bugs' -and
 Y los enlaces `Relacionado:` rotos, que es el que más importa: la bitácora es un grafo y un enlace
 muerto lo parte. El script está en `scripts/verificar-bitacora.ps1`.
 
-Y los tests, mutados: `scripts/mutar.py` tiene que detectar todas sus mutaciones (46 de 46 al cerrar
-la Fase 4). Una mutación que no se detecta es un test que no vigila nada.
+Y los tests, mutados: `scripts/mutar.py` tiene que detectar todas sus mutaciones (97 de 97 al cerrar
+la Fase 5). Una mutación que no se detecta es un test que no vigila nada.
