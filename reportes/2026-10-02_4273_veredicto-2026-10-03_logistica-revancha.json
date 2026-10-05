@@ -1,0 +1,150 @@
+{
+ "preregistro": {
+  "id": "2026-10-03_logistica-revancha",
+  "sello_utc": "2026-10-03T06:45:00+00:00",
+  "sello_sha256": "36edc964461c0152468f69e48c196fde88319fd9b5ccd9be5d90ec69b00240f4",
+  "estrategia": "Regresión logística",
+  "juego_principal": "Revancha"
+ },
+ "holdout": {
+  "Melate": {
+   "sorteos": 0,
+   "primer_concurso": null,
+   "ultimo_concurso": null
+  },
+  "Revancha": {
+   "sorteos": 0,
+   "primer_concurso": null,
+   "ultimo_concurso": null
+  },
+  "Revanchita": {
+   "sorteos": 0,
+   "primer_concurso": null,
+   "ultimo_concurso": null
+  }
+ },
+ "resultados": {
+  "sorteos_holdout": 0,
+  "delta": null,
+  "variantes": [
+   {
+    "hiperparametros": {
+     "max_iter": 200
+    },
+    "delta": null
+   },
+   {
+    "hiperparametros": {
+     "max_iter": 1000
+    },
+    "delta": null
+   },
+   {
+    "hiperparametros": {
+     "C": 0.1,
+     "max_iter": 500
+    },
+    "delta": null
+   },
+   {
+    "hiperparametros": {
+     "C": 10.0,
+     "max_iter": 500
+    },
+    "delta": null
+   }
+  ],
+  "reentrenar_cada": 100,
+  "semilla": 7,
+  "holdout_necesario": 1778,
+  "q_BH_global": null,
+  "familia_declarada": 36,
+  "pruebas_corridas": 0
+ },
+ "por_juego": {
+  "Melate": {
+   "sorteos_holdout": 0,
+   "delta": null
+  },
+  "Revancha": {
+   "sorteos_holdout": 0,
+   "delta": null
+  },
+  "Revanchita": {
+   "sorteos_holdout": 0,
+   "delta": null
+  }
+ },
+ "veredicto": {
+  "veredicto": "sin ventaja demostrada",
+  "ventaja": false,
+  "condiciones": [
+   {
+    "condicion": "holdout futuro positivo",
+    "cumple": false,
+    "motivo": "holdout vacío: 0 sorteos posteriores al sello. Todavía no hay nada que evaluar"
+   },
+   {
+    "condicion": "q <= 0.05",
+    "cumple": false,
+    "motivo": "sin q de la familia global: no se puede juzgar"
+   },
+   {
+    "condicion": "estable al mover hiperparámetros",
+    "cumple": false,
+    "motivo": "sin efecto base contra el que comparar"
+   },
+   {
+    "condicion": "mismo signo en los tres juegos",
+    "cumple": false,
+    "motivo": "sin delta para Melate, Revancha, Revanchita: los tres hacen falta"
+   },
+   {
+    "condicion": "efecto >= mínimo detectable",
+    "cumple": false,
+    "motivo": "falta el efecto o el mínimo detectable"
+   }
+  ],
+  "cumplidas": 0,
+  "de": 5,
+  "por_que_no": [
+   "holdout vacío: 0 sorteos posteriores al sello. Todavía no hay nada que evaluar",
+   "sin q de la familia global: no se puede juzgar",
+   "sin efecto base contra el que comparar",
+   "sin delta para Melate, Revancha, Revanchita: los tres hacen falta",
+   "falta el efecto o el mínimo detectable"
+  ],
+  "linea_base_azar": 0.642857
+ },
+ "datos": {
+  "Melate": {
+   "sha256": "5dbb2ab8838f1a5ec034fbcbbe377ca1674978a4d990012cab264d88b24bc4a5",
+   "origen": "data\\raw\\2026-10-02_4273\\Melate.csv",
+   "bytes": 206724,
+   "ultimo_concurso": 4273,
+   "ultima_fecha": "2026-10-02"
+  },
+  "Revancha": {
+   "sha256": "7f34ff9332524d177792f1f7d2a5af1115756d4a8c1b909fdf7a34c23f0545ab",
+   "origen": "data\\raw\\2026-10-02_4273\\Revancha.csv",
+   "bytes": 150330,
+   "ultimo_concurso": 4273,
+   "ultima_fecha": "2026-10-02"
+  },
+  "Revanchita": {
+   "sha256": "fba4afe5f233bd796b1ebae0b0d583d6515cb52a6a37992729668df289050e17",
+   "origen": "data\\raw\\2026-10-02_4273\\Revanchita.csv",
+   "bytes": 88283,
+   "ultimo_concurso": 4273,
+   "ultima_fecha": "2026-10-02"
+  }
+ },
+ "corrida_utc": "2026-10-05T02:08:57+00:00",
+ "versiones": {
+  "python": "3.13.9",
+  "numpy": "2.5.3",
+  "pandas": "2.3.3",
+  "scipy": "1.18.1",
+  "scikit-learn": "1.9.1"
+ }
+}

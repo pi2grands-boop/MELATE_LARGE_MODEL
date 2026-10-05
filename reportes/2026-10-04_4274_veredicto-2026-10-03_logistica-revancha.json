@@ -1,0 +1,187 @@
+{
+ "preregistro": {
+  "id": "2026-10-03_logistica-revancha",
+  "sello_utc": "2026-10-03T06:45:00+00:00",
+  "sello_sha256": "36edc964461c0152468f69e48c196fde88319fd9b5ccd9be5d90ec69b00240f4",
+  "estrategia": "Regresión logística",
+  "juego_principal": "Revancha"
+ },
+ "holdout": {
+  "Melate": {
+   "sorteos": 1,
+   "primer_concurso": 4274,
+   "ultimo_concurso": 4274
+  },
+  "Revancha": {
+   "sorteos": 1,
+   "primer_concurso": 4274,
+   "ultimo_concurso": 4274
+  },
+  "Revanchita": {
+   "sorteos": 1,
+   "primer_concurso": 4274,
+   "ultimo_concurso": 4274
+  }
+ },
+ "resultados": {
+  "sorteos_holdout": 1,
+  "media": 1.0,
+  "delta": 0.357143,
+  "z": 0.4944,
+  "p": 0.621014,
+  "efecto_minimo_detectable": 2.023745,
+  "variantes": [
+   {
+    "hiperparametros": {
+     "max_iter": 200
+    },
+    "sorteos_holdout": 1,
+    "media": 1.0,
+    "delta": 0.357143,
+    "z": 0.4944,
+    "p": 0.621014,
+    "efecto_minimo_detectable": 2.023745
+   },
+   {
+    "hiperparametros": {
+     "max_iter": 1000
+    },
+    "sorteos_holdout": 1,
+    "media": 1.0,
+    "delta": 0.357143,
+    "z": 0.4944,
+    "p": 0.621014,
+    "efecto_minimo_detectable": 2.023745
+   },
+   {
+    "hiperparametros": {
+     "C": 0.1,
+     "max_iter": 500
+    },
+    "sorteos_holdout": 1,
+    "media": 1.0,
+    "delta": 0.357143,
+    "z": 0.4944,
+    "p": 0.621014,
+    "efecto_minimo_detectable": 2.023745
+   },
+   {
+    "hiperparametros": {
+     "C": 10.0,
+     "max_iter": 500
+    },
+    "sorteos_holdout": 1,
+    "media": 1.0,
+    "delta": 0.357143,
+    "z": 0.4944,
+    "p": 0.621014,
+    "efecto_minimo_detectable": 2.023745
+   }
+  ],
+  "reentrenar_cada": 100,
+  "semilla": 7,
+  "holdout_necesario": 1778,
+  "q_BH_global": 1.0,
+  "familia_declarada": 36,
+  "pruebas_corridas": 3
+ },
+ "por_juego": {
+  "Melate": {
+   "sorteos_holdout": 1,
+   "media": 0.0,
+   "delta": -0.642857,
+   "z": -0.8899,
+   "p": 0.373496,
+   "efecto_minimo_detectable": 2.023745,
+   "q_BH_global": 1.0
+  },
+  "Revancha": {
+   "sorteos_holdout": 1,
+   "media": 1.0,
+   "delta": 0.357143,
+   "z": 0.4944,
+   "p": 0.621014,
+   "efecto_minimo_detectable": 2.023745,
+   "q_BH_global": 1.0
+  },
+  "Revanchita": {
+   "sorteos_holdout": 1,
+   "media": 0.0,
+   "delta": -0.642857,
+   "z": -0.8899,
+   "p": 0.373496,
+   "efecto_minimo_detectable": 2.023745,
+   "q_BH_global": 1.0
+  }
+ },
+ "veredicto": {
+  "veredicto": "sin ventaja demostrada",
+  "ventaja": false,
+  "condiciones": [
+   {
+    "condicion": "holdout futuro positivo",
+    "cumple": true,
+    "motivo": "delta +0.3571 aciertos sobre el azar en 1 sorteo de holdout"
+   },
+   {
+    "condicion": "q <= 0.05",
+    "cumple": false,
+    "motivo": "q_BH_global = 1.0000 contra el umbral 0.05"
+   },
+   {
+    "condicion": "estable al mover hiperparámetros",
+    "cumple": true,
+    "motivo": "4 variantes; mismo signo: True; desvío máximo 0% del efecto base (tolerancia 50%)"
+   },
+   {
+    "condicion": "mismo signo en los tres juegos",
+    "cumple": false,
+    "motivo": "Melate -0.6429, Revancha +0.3571, Revanchita -0.6429"
+   },
+   {
+    "condicion": "efecto >= mínimo detectable",
+    "cumple": false,
+    "motivo": "el mínimo detectable con 1 sorteo de holdout es 2.023745, mayor que el 0.048 declarado en el sello: hacen falta 1778 sorteos (faltan 1777), y hasta entonces ningún delta cuenta (delta medido +0.3571)"
+   }
+  ],
+  "cumplidas": 2,
+  "de": 5,
+  "por_que_no": [
+   "q_BH_global = 1.0000 contra el umbral 0.05",
+   "Melate -0.6429, Revancha +0.3571, Revanchita -0.6429",
+   "el mínimo detectable con 1 sorteo de holdout es 2.023745, mayor que el 0.048 declarado en el sello: hacen falta 1778 sorteos (faltan 1777), y hasta entonces ningún delta cuenta (delta medido +0.3571)"
+  ],
+  "linea_base_azar": 0.642857
+ },
+ "datos": {
+  "Melate": {
+   "sha256": "c8495fa2fcb166cf2bcbb104d5d2b3ecb3f2fcf6290a2d664333588596d301c3",
+   "origen": "data\\raw\\2026-10-04_4274\\Melate.csv",
+   "bytes": 206774,
+   "ultimo_concurso": 4274,
+   "ultima_fecha": "2026-10-04"
+  },
+  "Revancha": {
+   "sha256": "3bbb79119df6472d4c746d800b6efcc985d494fd070863d5146837024b07c6b1",
+   "origen": "data\\raw\\2026-10-04_4274\\Revancha.csv",
+   "bytes": 150376,
+   "ultimo_concurso": 4274,
+   "ultima_fecha": "2026-10-04"
+  },
+  "Revanchita": {
+   "sha256": "3fee8866b9e20eb56a4143fc300ad98d76032bde70e9f506cea009369615b1b6",
+   "origen": "data\\raw\\2026-10-04_4274\\Revanchita.csv",
+   "bytes": 88330,
+   "ultimo_concurso": 4274,
+   "ultima_fecha": "2026-10-04"
+  }
+ },
+ "corrida_utc": "2026-10-05T14:22:59+00:00",
+ "versiones": {
+  "python": "3.13.9",
+  "numpy": "2.5.3",
+  "pandas": "2.3.3",
+  "scipy": "1.18.1",
+  "scikit-learn": "1.9.1"
+ }
+}
