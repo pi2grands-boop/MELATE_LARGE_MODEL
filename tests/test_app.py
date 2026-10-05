@@ -14,7 +14,7 @@ import tomllib
 
 import pytest
 
-from conftest import FECHA_MALICIOSA
+from conftest import FECHA_MALICIOSA, NO_CONGELADO, SNAPSHOT_FALSO
 from melate.protocolo import SIN_VENTAJA
 
 APP = "app/streamlit_app.py"
@@ -90,6 +90,7 @@ def textos(at):
         partes += [str(e.value) for e in getattr(at, tipo)]
     partes += [str(m.label) + " " + str(m.value) for m in at.metric]
     partes += [df.value.to_string() for df in at.dataframe]
+    partes += [t.value.to_string() for t in at.table]
     return "\n".join(partes)
 
 
@@ -185,6 +186,62 @@ def test_el_camino_afirmativo_llega_a_la_cabecera(raiz, base_con_ventaja, monkey
     cabecera = at.info[0].value
     assert "VENTAJA DEMOSTRADA" in cabecera
     assert FECHA_MALICIOSA not in cabecera and r"\!\[x\]\(http" in cabecera
+    # Y en la tabla de condiciones, que pasa cada celda por Markdown: el motivo llega escapado.
+    ir(at, "veredicto")
+    motivo = at.table[0].value.loc[5, "Motivo"]
+    assert FECHA_MALICIOSA not in motivo and r"\!\[x\]\(http" in motivo, motivo
+
+
+# ---------------------------------------------------------------- el holdout, como lo que es (Fase 5)
+def test_un_holdout_de_un_sorteo_se_ve_como_lo_que_es(raiz, base_un_sorteo, monkeypatch, red):
+    """Lo que la app enseñará con el 4274. Un sorteo es un sorteo; lleva al lado los 1 778 que
+    necesita la condición 5; y el Δ lleva al lado el mínimo que ese holdout puede distinguir del
+    azar. Con dos aciertos, el Δ de Revancha es +1,3571: sin eso al lado, la tabla haría parecer mucho
+    lo que no distingue nada."""
+    at = correr(raiz, base_un_sorteo, monkeypatch, "veredicto")
+    cabecera = at.info[0].value
+    assert SIN_VENTAJA in cabecera
+    # El separador de miles no parte la línea: con uno normal, «1» y «778» salían en dos líneas.
+    assert "holdout de 1 sorteo de los 1\u00a0778 que necesita la condición 5" in cabecera, cabecera
+    assert f"snapshot `{SNAPSHOT_FALSO}`" in cabecera, "y de qué snapshot sale"
+    assert [m.value for m in at.metric] == ["2 de 5", "1 sorteo"]
+    texto = textos(at)
+    assert "1 sorteos" not in texto, "«1 sorteos», en ninguna parte: ni la app ni los motivos"
+    # Las condiciones van en una tabla que parte las frases en líneas: en una rejilla, el motivo de
+    # la condición 5 perdía justo lo que dice cuántos sorteos faltan.
+    (condiciones,) = at.table
+    motivo = condiciones.value.loc[5, "Motivo"].replace("\\", "")     # como se lee: sin los escapes
+    assert "hacen falta 1778 sorteos (faltan 1777)" in motivo, motivo
+    deltas = next(d.value for d in at.dataframe if "Aciertos por boleto" in d.value.columns)
+    revancha = deltas.set_index("Juego").loc["Revancha"]
+    assert (revancha["Aciertos por boleto"], revancha["Δ aciertos sobre el azar"]) == ("2.0000", "1.3571")
+    leyenda = " ".join(c.value for c in at.caption)
+    assert "distinguir del azar es de 2.0237 aciertos" in leyenda, leyenda
+    assert "no puede cumplirse antes de 1\u00a0778 sorteos de holdout" in leyenda, leyenda
+    # El mismo veredicto sobre datos que no están congelados: se ve, y se ve por qué no cuenta.
+    assert NO_CONGELADO in texto and "no son un snapshot congelado" in texto
+
+
+def test_la_orden_de_un_veredicto_nuevo_es_el_ciclo(raiz, base_real, monkeypatch, red, modulo):
+    """H3 de la Fase 5: la app mandaba juzgar con el laboratorio sin `--datos`, sobre una descarga que
+    no se guarda. Ahora enseña el ciclo, y cómo reproducir el veredicto vigente sobre su snapshot."""
+    at = correr(raiz, base_real, monkeypatch, "veredicto")
+    ordenes = [c.value for c in at.code]
+    assert modulo.ORDEN_CICLO in ordenes
+    assert any("--datos data\\raw\\2026-10-02" in o and "melate.lab" in o for o in ordenes), ordenes
+    texto = textos(at)
+    assert "Sin `--datos`" not in texto and "--salida reportes" not in texto
+
+
+def test_cada_informe_dice_de_que_snapshot_sale(raiz, base_real, monkeypatch, red):
+    at = correr(raiz, base_real, monkeypatch, "exploracion")
+    assert "snapshot `2026-10-02`" in " ".join(c.value for c in at.caption)
+    ir(at, "procedencia")
+    assert "Snapshots congelados" in [s.value for s in at.subheader]
+    texto = " ".join(m.value for m in at.markdown)
+    assert "`data/raw/`" in texto and "al día con `reportes/`, `prereg/` y `data/raw/`" in texto
+    # Si vale y por qué no, delante: al final de la tabla quedaban fuera del borde.
+    assert list(at.dataframe[0].value.columns[:4]) == ["Fichero", "Tipo", "¿Vale?", "Por qué no"]
 
 
 def test_reconstruir_la_base_cambia_lo_que_ensena(raiz, base_real, base_con_ventaja, tmp_path,
@@ -325,6 +382,14 @@ def test_los_datos_del_veredicto_no_esconden_juegos_desiguales(modulo):
     assert "el sorteo 4274" in igual
     assert "4273 a 4274" in distinto and "no todos los juegos" in distinto
     assert "no registra" in modulo.datos_del_veredicto({"datos_registrados": False})
+
+
+def test_un_sorteo_es_un_sorteo(modulo):
+    assert modulo.sorteos(1) == "1 sorteo" and modulo.sorteos(0) == "0 sorteos"
+    assert modulo.sorteos(1778) == "1\u00a0778 sorteos" and modulo.sorteos(None) == "— sorteos"
+    assert modulo.necesita({"holdout_necesario": 1778}) == " de los 1\u00a0778 que necesita la condición 5"
+    assert " " not in modulo.entero(1586604), "ningún espacio que parta un número en dos líneas"
+    assert modulo.necesita({}) == "" and modulo.necesita({"holdout_necesario": None}) == ""
 
 
 def test_escapar_neutraliza_el_markdown(modulo):

@@ -10,11 +10,14 @@ Tres reglas, cada una con su test:
    ningún estadístico. Lo único que se calcula son comprobaciones de integridad: el SHA-256 de cada
    fichero, el sello de cada preregistro (con la función del propio laboratorio) y el enlace de cada
    veredicto con el suyo.
-2. **Un veredicto solo vale si su sello es el de un preregistro que verifica**, y si es coherente
-   consigo mismo. Si no, entra marcado como no válido y con su motivo: se ve que está y por qué no
-   cuenta.
+2. **Un veredicto solo vale si su sello es el de un preregistro que verifica**, si es coherente
+   consigo mismo y **si juzgó sobre un snapshot congelado del repositorio** (C3 de la Fase 5): los
+   SHA-256 de sus datos tienen que estar en el `SHA256.txt` de una misma carpeta de `data/raw/`. Si
+   no, entra marcado como no válido y con su motivo: se ve que está y por qué no cuenta.
 3. **Lo que explora no se llama veredicto.** El resumen de `protocolo_global` del informe entra como
    `resumen_exploratorio`. Una columna `veredicto` solo existe en la tabla de lo que juzga.
+
+De `data/raw/` lee solo los `SHA256.txt`, nunca los CSV: le basta saber qué bytes están congelados.
 
 La lectura (`leer`, `frescura`, `veredicto_vigente`) no importa nada del cómputo ni de la red: la
 app la usa, y la app no recalcula ni descarga. El laboratorio se importa solo al construir.
@@ -30,7 +33,9 @@ import time
 from .constantes import JUEGOS
 from .protocolo import SIN_VENTAJA
 
-VERSION_ESQUEMA = 1
+# 2: la Fase 5 enlaza cada veredicto e informe con su snapshot. Con otra versión, el lanzador la
+# reconstruye y la app se niega a usarla.
+VERSION_ESQUEMA = 2
 SALIDA = "melate.duckdb"
 
 # El texto afirmativo de `protocolo.declara_ventaja`. No se importa porque allí va escrito en línea;
@@ -46,7 +51,8 @@ VENTAJA = "VENTAJA DEMOSTRADA"
 CATALOGO = [
     ("construccion", "procedencia", "datos", "Cuándo, con qué versión y desde qué carpetas se construyó esta base"),
     ("fuentes", "procedencia", "datos", "Cada fichero leído: ruta relativa, tipo, SHA-256 y si vale"),
-    ("datos_informe", "procedencia", "datos", "Sobre qué datos se corrió cada informe: hash, origen y último sorteo"),
+    ("datos_informe", "procedencia", "datos", "Sobre qué datos se corrió cada informe: hash, origen, último sorteo y snapshot"),
+    ("snapshots", "procedencia", "datos", "Los snapshots congelados de data/raw: carpeta, fichero y SHA-256, de su SHA256.txt"),
     ("catalogo", "procedencia", "datos", "Esta tabla: qué es cada tabla y si juzga, explora o mide"),
     ("preregistros", "juzga", "urna", "Las hipótesis selladas, y si su sello verifica"),
     ("veredictos", "juzga", "urna", "Las salidas de melate.lab, enlazadas con su preregistro"),
@@ -66,13 +72,14 @@ _T, _I, _B, _F, _L = "VARCHAR", "INTEGER", "BOOLEAN", "DOUBLE", "BIGINT"
 
 ESQUEMA = {
     "construccion": [("version_esquema", _I), ("construido_utc", _T), ("melate", _T), ("duckdb", _T),
-                     ("dir_reportes", _T), ("dir_prereg", _T), ("ficheros", _I)],
+                     ("dir_reportes", _T), ("dir_prereg", _T), ("ficheros", _I), ("dir_raw", _T)],
     "fuentes": [("ruta", _T), ("tipo", _T), ("sha256", _T), ("bytes", _L), ("fecha_utc", _T),
                 ("valido", _B), ("motivo", _T)],
     "datos_informe": [("ruta", _T), ("juego", _T), ("vista", _T), ("sha256", _T), ("origen", _T),
                       ("bytes", _L), ("filas", _I), ("primero", _I), ("ultimo", _I),
                       ("ultima_fecha", _T), ("concursos_faltantes", _I), ("duplicados", _I),
-                      ("fuera_de_rango", _I), ("bolsa_invalida", _T)],
+                      ("fuera_de_rango", _I), ("bolsa_invalida", _T), ("snapshot", _T)],
+    "snapshots": [("carpeta", _T), ("fichero", _T), ("juego", _T), ("sha256", _T)],
     "catalogo": [("tabla", _T), ("naturaleza", _T), ("mira_a", _T), ("que_es", _T)],
     "preregistros": [("ruta", _T), ("id", _T), ("titulo", _T), ("hipotesis", _T),
                      ("juego_principal", _T), ("estrategia", _T), ("sello_utc", _T),
@@ -91,7 +98,9 @@ ESQUEMA = {
                    ("datos_registrados", _B), ("ultimo_concurso_datos", _I),
                    ("ultimo_concurso_datos_min", _I),
                    ("ultima_fecha_datos", _T), ("sha256_melate", _T), ("sha256_revancha", _T),
-                   ("sha256_revanchita", _T), ("origen_datos", _T)],
+                   ("sha256_revanchita", _T), ("origen_datos", _T), ("snapshot", _T),
+                   ("holdout_necesario", _I), ("efecto_minimo_detectable", _F),
+                   ("media_melate", _F), ("media_revancha", _F), ("media_revanchita", _F)],
     "condiciones": [("ruta", _T), ("orden", _I), ("condicion", _T), ("cumple", _B), ("motivo", _T)],
     "informes": [("ruta", _T), ("tipo", _T), ("corrida_utc", _T), ("simulaciones", _I),
                  ("semilla_auditoria", _L), ("semilla_backtest", _L), ("semilla_hgb", _L),
@@ -99,7 +108,7 @@ ESQUEMA = {
                  ("umbral", _F), ("q_minima", _F), ("pruebas_bajo_umbral", _I),
                  ("bajo_umbral", _T), ("resumen_exploratorio", _T),
                  ("ev_medido_disponible", _B), ("ev_medido_motivo", _T), ("python", _T),
-                 ("numpy", _T), ("pandas", _T), ("scipy", _T), ("scikit_learn", _T)],
+                 ("numpy", _T), ("pandas", _T), ("scipy", _T), ("scikit_learn", _T), ("snapshot", _T)],
     "auditoria": [("ruta", _T), ("juego", _T), ("estadistico", _T), ("obs", _F), ("media_sim", _F),
                   ("p", _F), ("q_familia", _F), ("q_global", _F)],
     "backtest": [("ruta", _T), ("juego", _T), ("orden", _I), ("estrategia", _T),
@@ -191,14 +200,76 @@ def clasificar(doc):
     return "desconocido"
 
 
+# ---------------------------------------------------------------- los snapshots congelados
+def _leer_snapshots(raw, base, filas):
+    """Qué bytes están congelados en `data/raw/`, y dónde: `{sha256: (carpeta, juego)}`.
+
+    Lee solo los `SHA256.txt`. Cada uno entra en `fuentes` como `snapshot`, para que la frescura vea
+    un snapshot nuevo; uno que no se entiende entra como no válido y no congela nada. Las carpetas que
+    empiezan por punto son las temporales del ciclo, a medio escribir, y no se leen.
+    """
+    snapshot_de = {}
+    for f in sorted(raw.glob("*/SHA256.txt")):
+        carpeta = f.parent.name
+        if carpeta.startswith("."):
+            continue
+        crudo = f.read_bytes()
+        valido, motivo, lineas = True, None, []
+        try:
+            for linea in crudo.decode("utf-8").splitlines():
+                if not linea.strip():
+                    continue
+                sha, fichero = linea.split()
+                juego = fichero[:-4] if fichero.endswith(".csv") else None
+                if len(sha) != 64 or juego not in JUEGOS:
+                    raise ValueError(f"línea que no se entiende: {linea!r}")
+                lineas.append((sha.lower(), fichero, juego))
+        except (UnicodeDecodeError, ValueError) as e:
+            valido, motivo, lineas = False, f"SHA256.txt que no se entiende: {e}", []
+        for sha, fichero, juego in lineas:
+            filas["snapshots"].append((carpeta, fichero, juego, sha))
+            snapshot_de.setdefault(sha, (carpeta, juego))
+        filas["fuentes"].append((_relativa(f, base), "snapshot", hashlib.sha256(crudo).hexdigest(),
+                                 len(crudo), None, valido, motivo))
+    return snapshot_de
+
+
+def _carpeta(sha, juego, snapshot_de):
+    """La carpeta de `data/raw/` que congela estos bytes como el fichero de ese juego, o None."""
+    hallado = snapshot_de.get(sha)
+    return hallado[0] if hallado and hallado[1] == juego else None
+
+
+def _snapshot_de_los_datos(datos, snapshot_de):
+    """El snapshot del que salen unos datos, o por qué no hay uno: `(carpeta, None)` o `(None, motivo)`.
+
+    El laboratorio y el informe cargan los tres juegos de una misma carpeta, así que los tres hashes
+    tienen que estar en el `SHA256.txt` de la misma.
+    """
+    if not datos:
+        return None, "no registra sobre qué datos juzgó: no se puede saber si fueron un snapshot congelado"
+    carpetas = set()
+    for juego, d in sorted(datos.items()):
+        carpeta = _carpeta((d or {}).get("sha256"), juego, snapshot_de)
+        if carpeta is None:
+            return None, (f"los datos de {juego} no son un snapshot congelado de data/raw/: una "
+                          "descarga en vivo, o unos datos que no se guardaron")
+        carpetas.add(carpeta)
+    if len(carpetas) > 1:
+        return None, f"sus juegos vienen de snapshots distintos ({', '.join(sorted(carpetas))})"
+    return carpetas.pop(), None
+
+
 # ---------------------------------------------------------------- de cada reporte, sus filas
-def _filas_informe(ruta, doc, tipo, filas):
+def _filas_informe(ruta, doc, tipo, filas, snapshot_de):
     rep = doc.get("reproducibilidad") or {}
     sem = rep.get("semillas") or {}
     ver = rep.get("versiones") or {}
     pg = doc.get("protocolo_global") or {}
     bajo = pg.get("sobreviven_a_q_0.05")
     vm = doc.get("valor_esperado_medido") or {}
+    datos = rep.get("datos") or {}
+    snapshot, _ = _snapshot_de_los_datos(datos, snapshot_de)
     filas["informes"].append((
         ruta, tipo, rep.get("corrida_utc"), _ent(rep.get("simulaciones")),
         _ent(sem.get("auditoria")), _ent(sem.get("backtest")), _ent(sem.get("hgb")),
@@ -208,12 +279,11 @@ def _filas_informe(ruta, doc, tipo, filas):
         pg.get("veredicto"),
         bool(vm.get("disponible")) if vm else None, vm.get("motivo"),
         ver.get("python"), ver.get("numpy"), ver.get("pandas"), ver.get("scipy"),
-        ver.get("scikit-learn"),
+        ver.get("scikit-learn"), snapshot,
     ))
 
     vista = "era_56" if "validacion_era_56" in doc else "cruda"
     val = doc.get("validacion_era_56") or doc.get("validacion") or {}
-    datos = rep.get("datos") or {}
     for juego in JUEGOS:
         v, d = _juego(val, juego), _juego(datos, juego)
         if not v and not d:
@@ -226,6 +296,7 @@ def _filas_informe(ruta, doc, tipo, filas):
             _ent(v.get("duplicados")), _ent(v.get("fuera_de_rango")),
             None if v.get("bolsa_cero_o_invalida") is None
             else ", ".join(str(c) for c in v["bolsa_cero_o_invalida"]),
+            _carpeta(d.get("sha256"), juego, snapshot_de),
         ))
 
     for juego, a in (doc.get("auditoria") or {}).items():
@@ -293,14 +364,15 @@ def _utc(iso):
     return d.astimezone(datetime.timezone.utc).isoformat(timespec="seconds")
 
 
-def _filas_veredicto(ruta, doc, prereg_por_sello, filas):
+def _filas_veredicto(ruta, doc, prereg_por_sello, filas, snapshot_de):
     pre = doc.get("preregistro") or {}
     res = doc.get("resultados") or {}
     ver = doc.get("veredicto") or {}
     hold = doc.get("holdout") or {}
     por_juego = doc.get("por_juego") or {}
     datos = doc.get("datos") or {}
-    valido, motivo = _validar_veredicto(doc, prereg_por_sello)
+    snapshot, sin_snapshot = _snapshot_de_los_datos(datos, snapshot_de)
+    valido, motivo = _validar_veredicto(doc, prereg_por_sello, sin_snapshot)
     ultimos = [d.get("ultimo_concurso") for d in datos.values() if d.get("ultimo_concurso")]
     fechas = [d.get("ultima_fecha") for d in datos.values() if d.get("ultima_fecha")]
     origenes = sorted({str(d.get("origen")) for d in datos.values() if d.get("origen")})
@@ -315,7 +387,9 @@ def _filas_veredicto(ruta, doc, prereg_por_sello, filas):
         bool(datos), _ent(max(ultimos)) if ultimos else None,
         _ent(min(ultimos)) if ultimos else None, max(fechas) if fechas else None,
         *(_juego(datos, j).get("sha256") for j in JUEGOS),
-        " · ".join(origenes) or None,
+        " · ".join(origenes) or None, snapshot, _ent(res.get("holdout_necesario")),
+        _num(res.get("efecto_minimo_detectable")),
+        *(_num(_juego(por_juego, j).get("media")) for j in JUEGOS),
     ))
     for orden, c in enumerate(ver.get("condiciones") or [], 1):
         filas["condiciones"].append((ruta, orden, c.get("condicion"), bool(c.get("cumple")),
@@ -323,13 +397,15 @@ def _filas_veredicto(ruta, doc, prereg_por_sello, filas):
     return valido, motivo
 
 
-def _validar_veredicto(doc, prereg_por_sello):
-    """¿Cuenta este veredicto? Solo si apunta a un preregistro que verifica y es coherente.
+def _validar_veredicto(doc, prereg_por_sello, sin_snapshot):
+    """¿Cuenta este veredicto? Solo si apunta a un preregistro que verifica, es coherente y juzgó
+    sobre un snapshot congelado.
 
     Lo que esto NO puede comprobar, y se dice: que el veredicto lo produjera de verdad el
     laboratorio. Eso exigiría recalcularlo, y para eso está `python -m melate.lab`. Lo que sí
     comprueba es lo que se puede comprobar sin cómputo: el enlace con un sello válido, que tenga
-    fecha de corrida, y que el texto, la marca de ventaja y las cinco condiciones digan lo mismo.
+    fecha de corrida, que el texto, la marca de ventaja y las cinco condiciones digan lo mismo, y
+    que sus datos estén congelados en `data/raw/` (`sin_snapshot` es el motivo si no lo están).
     """
     if _utc(doc.get("corrida_utc")) is None:
         return False, "sin fecha de corrida: no se puede saber cuándo se emitió"
@@ -353,6 +429,9 @@ def _validar_veredicto(doc, prereg_por_sello):
         return False, "incoherente: el texto del veredicto no corresponde a sus condiciones"
     if ver.get("cumplidas") != cumplen:
         return False, "incoherente: 'cumplidas' no cuenta las condiciones que cumple"
+    # C3 de la Fase 5: «nunca sobre una descarga en vivo que no quede guardada», como regla.
+    if sin_snapshot:
+        return False, sin_snapshot
     return True, None
 
 
@@ -431,11 +510,13 @@ def _filas_cartera(ruta, doc, filas):
 
 
 # ---------------------------------------------------------------- construir
-def construir(reportes="reportes", prereg="prereg", salida=SALIDA, ahora=None):
-    """Lee `reportes/*.json` y `prereg/*.json` y escribe la base. Devuelve un resumen.
+def construir(reportes="reportes", prereg="prereg", salida=SALIDA, ahora=None, raw=None):
+    """Lee `reportes/*.json`, `prereg/*.json` y los `SHA256.txt` de `raw` y escribe la base.
+    Devuelve un resumen.
 
-    Las rutas que guarda son relativas a la carpeta de `salida`: la base indexa el árbol en el que
-    vive, y la app comprueba su frescura contra ese mismo árbol.
+    `raw`, si no se da, es el `data/raw/` del mismo árbol que `reportes/`: los snapshots viven al
+    lado de los reportes que salen de ellos. Las rutas que guarda son relativas a la carpeta de
+    `salida`: la base indexa el árbol en el que vive, y la app comprueba su frescura contra él.
     """
     import duckdb
 
@@ -443,9 +524,10 @@ def construir(reportes="reportes", prereg="prereg", salida=SALIDA, ahora=None):
 
     salida = pathlib.Path(salida)
     reportes, prereg = pathlib.Path(reportes), pathlib.Path(prereg)
+    raw = pathlib.Path(raw) if raw else reportes.parent / "data" / "raw"
     # Lo primero, antes de escribir nada: lanzada desde otra carpeta, la orden construiría una base
     # vacía en silencio. Es la lección de `informe.cargar_popularidad`: la entrada mala, al principio.
-    for nombre, carpeta in (("reportes", reportes), ("preregistros", prereg)):
+    for nombre, carpeta in (("reportes", reportes), ("preregistros", prereg), ("snapshots", raw)):
         if not carpeta.is_dir():
             raise SystemExit(f"No existe la carpeta de {nombre} '{carpeta}'. "
                              "¿Estás en la raíz del repositorio?")
@@ -454,7 +536,11 @@ def construir(reportes="reportes", prereg="prereg", salida=SALIDA, ahora=None):
     filas = {t: [] for t in ESQUEMA}
     resumen = {"tipos": {}, "preregistros": [], "veredictos": []}
 
-    # Primero los preregistros: los veredictos se validan contra ellos.
+    # Antes que nada, qué está congelado: los veredictos y los informes se enlazan con ello.
+    snapshot_de = _leer_snapshots(raw, base, filas)
+    resumen["snapshots"] = sorted({c for c, *_ in filas["snapshots"]})
+
+    # Después los preregistros: los veredictos se validan contra ellos.
     prereg_por_sello = {}
     for carpeta, es_prereg in ((prereg, True), (reportes, False)):
         for f in sorted(carpeta.glob("*.json")):
@@ -480,11 +566,11 @@ def construir(reportes="reportes", prereg="prereg", salida=SALIDA, ahora=None):
                     fecha, valido, motivo = _utc(doc.get("sello_utc")), p["verificado"], p["motivo"]
                     resumen["preregistros"].append(p)
                 elif tipo == "veredicto":
-                    valido, motivo = _filas_veredicto(ruta, doc, prereg_por_sello, lote)
+                    valido, motivo = _filas_veredicto(ruta, doc, prereg_por_sello, lote, snapshot_de)
                     fecha = _utc(doc.get("corrida_utc"))
                     resumen["veredictos"].append((ruta, valido, motivo))
                 elif tipo in ("informe", "informe_oraculo"):
-                    _filas_informe(ruta, doc, tipo, lote)
+                    _filas_informe(ruta, doc, tipo, lote, snapshot_de)
                     fecha = _utc((doc.get("reproducibilidad") or {}).get("corrida_utc"))
                 elif tipo == "popularidad":
                     _filas_popularidad(ruta, doc, lote)
@@ -515,7 +601,7 @@ def construir(reportes="reportes", prereg="prereg", salida=SALIDA, ahora=None):
     ahora = ahora or datetime.datetime.now(datetime.timezone.utc)
     filas["construccion"] = [(VERSION_ESQUEMA, ahora.isoformat(timespec="seconds"), __version__,
                               duckdb.__version__, _dentro(reportes), _dentro(prereg),
-                              len(filas["fuentes"]))]
+                              len(filas["fuentes"]), _dentro(raw))]
 
     # Se escribe aparte y se sustituye de una vez: una app abierta nunca ve una base a medias.
     tmp = salida.with_name(salida.name + ".construyendo")
@@ -597,20 +683,24 @@ def problema_de_esquema(tablas):
 
 
 def frescura(ruta_base, tablas):
-    """¿Ha cambiado algo en `reportes/` o `prereg/` desde que se construyó la base?
+    """¿Ha cambiado algo en `reportes/`, `prereg/` o los snapshots desde que se construyó la base?
 
     Compara el SHA-256 de cada fichero en disco con el que se guardó al construir. No interpreta
-    nada: hashea unos cientos de KB. Lo que devuelve son listas de rutas relativas.
+    nada: hashea unos cientos de KB. Lo que devuelve son listas de rutas relativas. Un snapshot nuevo
+    cuenta como un cambio: puede hacer válido un veredicto que no lo era.
     """
     base = pathlib.Path(ruta_base).resolve().parent
     c = tablas["construccion"].iloc[0]
     registradas = dict(zip(tablas["fuentes"]["ruta"], tablas["fuentes"]["sha256"]))
-    carpetas = [d for d in (c["dir_reportes"], c["dir_prereg"]) if isinstance(d, str) and d]
-    if len(carpetas) < 2:
+    vigiladas = ((c["dir_reportes"], "*.json"), (c["dir_prereg"], "*.json"),
+                 (c["dir_raw"], "*/SHA256.txt"))
+    if not all(isinstance(d, str) and d for d, _ in vigiladas):
         return {"comprobable": False, "al_dia": None, "nuevos": [], "cambiados": [], "borrados": []}
     en_disco = {}
-    for d in carpetas:
-        for f in sorted((base / d).glob("*.json")):
+    for d, patron in vigiladas:
+        for f in sorted((base / d).glob(patron)):
+            if f.parent.name.startswith("."):
+                continue                  # una carpeta temporal del ciclo, a medio escribir
             en_disco[_relativa(f, base)] = _sha256(f)
     nuevos = sorted(set(en_disco) - set(registradas))
     borrados = sorted(set(registradas) - set(en_disco))
@@ -651,12 +741,14 @@ def main(argv=None):
                "construye solo si falta o está desactualizada.")
     ap.add_argument("--reportes", default="reportes", help="carpeta de los reportes JSON")
     ap.add_argument("--prereg", default="prereg", help="carpeta de los preregistros sellados")
+    ap.add_argument("--raw", help="carpeta de los snapshots (por defecto, data/raw junto a --reportes)")
     ap.add_argument("--salida", default=SALIDA, help=f"dónde escribir la base (por defecto {SALIDA})")
     a = ap.parse_args(argv)
 
     t0 = time.perf_counter()
-    r = construir(a.reportes, a.prereg, a.salida)
+    r = construir(a.reportes, a.prereg, a.salida, raw=a.raw)
     print(f"{r['salida']} construida en {time.perf_counter() - t0:.2f} s, con {r['ficheros']} ficheros:")
+    print(f"  snapshots congelados: {', '.join(r['snapshots']) or 'ninguno'}")
     for tipo, n in sorted(r["tipos"].items()):
         print(f"  {n:3d}  {tipo}")
     for p in r["preregistros"]:

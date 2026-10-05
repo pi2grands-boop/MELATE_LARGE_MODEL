@@ -10,12 +10,13 @@ Dos mitades, y la segunda es la que de verdad importa:
 """
 import datetime
 import json
+import math
 
 import numpy as np
 import pytest
 
 from melate import lab, protocolo
-from melate.constantes import JUEGOS, MEDIA_AZAR
+from melate.constantes import JUEGOS, MEDIA_AZAR, VAR_AZAR
 
 
 # ---------------------------------------------------------------- utilidades de prueba
@@ -323,6 +324,150 @@ def test_declara_ventaja_propaga_el_efecto_declarado():
     assert v["cumplidas"] == 4
 
 
+# ---------------------------------------------------------------- C1 de la Fase 5: un holdout capaz
+#
+# La condición 5 comparaba el delta con max(detectable(n), declarado). Con un sorteo el detectable es
+# 2,0237 y un sorteo con tres aciertos da 2,3571: pasaba. El laboratorio real declaraba VENTAJA
+# DEMOSTRADA con un holdout de un sorteo en los sorteos 2928, 3419, 3953 y 4205, y bajo el azar le
+# pasaba una vez de cada 303. Ver Documentos_Contexto/Protocolo_Estadistico/Decisiones/
+# 2026-10-04_18-58_s5-la-condicion-5-exige-un-holdout-capaz.md.
+
+# Lo que `lab.evaluar` devolvió para el sorteo 4205 con un holdout de un sorteo: 3 aciertos en
+# Revancha y 1 en Melate y en Revanchita, y las cuatro variantes eligiendo los mismos números.
+UN_SORTEO = {"sorteos_holdout": 1, "delta": 2.357143, "q_BH_global": 0.039676,
+             "efecto_minimo_detectable": 2.023745, "variantes": [{"delta": 2.357143}] * 4}
+UN_SORTEO_POR_JUEGO = {"Melate": {"delta": 0.357143}, "Revancha": {"delta": 2.357143},
+                       "Revanchita": {"delta": 0.357143}}
+
+SORTEOS_QUE_DECLARABAN = [(2928, "2015-12-26"), (3419, "2020-12-29"), (3953, "2024-09-14"),
+                          (4205, "2026-04-25")]
+
+
+detectable = lab.detectable
+
+
+@pytest.mark.parametrize("declarado,necesario", [(0.048, 1778), (0.10, 410), (0.20, 103)])
+def test_el_laboratorio_publica_cuantos_sorteos_hacen_falta(declarado, necesario):
+    """`holdout_necesario` es la frontera de la condición 5, y va en el veredicto para que la app
+    la enseñe sin calcularla. Es el primer n cuyo detectable, con el redondeo del veredicto, no pasa
+    del declarado; y el detectable es el mismo que usa `_evaluar_una`."""
+    assert lab.holdout_necesario(declarado) == necesario
+    assert detectable(necesario) <= declarado < detectable(necesario - 1)
+    assert detectable(1) == round((1.959964 + 0.841621) * math.sqrt(VAR_AZAR), 6) == 2.023745
+    assert lab.holdout_necesario(None) is None and lab.holdout_necesario(0) is None
+
+
+def test_la_condicion_1_dice_un_sorteo_en_singular():
+    """El primer holdout es de un sorteo, y su motivo lo enseña la app."""
+    uno = protocolo.condicion_holdout_positivo({"sorteos_holdout": 1, "delta": 1.357143})["motivo"]
+    dos = protocolo.condicion_holdout_positivo({"sorteos_holdout": 2, "delta": 0.5})["motivo"]
+    assert "en 1 sorteo de holdout" in uno and "en 2 sorteos de holdout" in dos
+
+
+def test_el_laboratorio_dice_un_sorteo_tambien_en_la_terminal(capsys):
+    """B15: desde C3 el motivo y la app decían «1 sorteo», y la salida de terminal de `melate.lab`
+    seguía diciendo «1 sorteos». Es lo primero que lee quien reproduce el veredicto a mano."""
+    holdout = {"Melate": {"sorteos": 1, "primer_concurso": 4274, "ultimo_concurso": 4274},
+               "Revancha": {"sorteos": 2, "primer_concurso": 4274, "ultimo_concurso": 4275},
+               "Revanchita": {"sorteos": 0, "primer_concurso": None, "ultimo_concurso": None}}
+    preregistro = {"id": "x", "sello_utc": "2026-10-03T06:45:00+00:00", lab.CLAVE_HASH: "0" * 64,
+                   "estrategia": "Regresión logística", "juego_principal": "Revancha"}
+    lab._imprimir({"preregistro": preregistro, "datos": {}, "holdout": holdout,
+                   "veredicto": protocolo.declara_ventaja({}, {})})
+    salida = capsys.readouterr().out
+    assert "1 sorteo  4274-4274" in salida and "1 sorteos" not in salida, salida
+    assert "2 sorteos  4274-4275" in salida and "0 sorteos  -" in salida, salida
+
+
+def test_un_sorteo_de_holdout_no_basta_para_declarar_ventaja():
+    """El caso que declaraba ventaja con la regla anterior, 5 de 5, se queda en 4 de 5.
+
+    Falla la condición 5, y su motivo dice cuánto falta: con el 0,048 declarado en el sello, el
+    holdout tiene que llegar a 1778 sorteos antes de que ningún delta pueda contar.
+    """
+    v = protocolo.declara_ventaja(UN_SORTEO, UN_SORTEO_POR_JUEGO, efecto_minimo_declarado=0.048)
+    assert v["ventaja"] is False and v["veredicto"] == protocolo.SIN_VENTAJA
+    assert v["cumplidas"] == 4
+    c5 = v["condiciones"][4]
+    assert not c5["cumple"]
+    assert "1778" in c5["motivo"] and "faltan 1777" in c5["motivo"], c5["motivo"]
+    # Un sorteo es un sorteo: el motivo lo enseña la app, y «1 sorteos» fue lo primero que se vio.
+    assert "con 1 sorteo de holdout" in c5["motivo"], c5["motivo"]
+
+
+def test_el_motivo_sin_tamano_de_holdout_no_promete_un_plazo():
+    """Sin `sorteos_holdout` no se puede decir cuántos faltan, y el motivo no lo finge."""
+    c = protocolo.condicion_efecto_minimo({"delta": 0.1, "efecto_minimo_detectable": 0.2}, 0.048)
+    assert not c["cumple"]
+    assert "hacen falta" not in c["motivo"] and "mientras lo sea" in c["motivo"], c["motivo"]
+
+
+def test_sin_efecto_declarado_la_condicion_5_queda_como_estaba():
+    """La regla nueva endurece lo que el sello declaró, nada más. Sin efecto declarado manda el
+    detectable, y un sorteo con tres aciertos lo supera: es el riesgo que la decisión deja escrito
+    para un preregistro que no declare efecto. Hoy no hay ninguno."""
+    assert protocolo.condicion_efecto_minimo(UN_SORTEO)["cumple"]
+
+
+@pytest.mark.parametrize("declarado,minimo", [(0.048, 1778), (0.10, 410)])
+def test_el_efecto_declarado_gobierna_el_holdout_minimo(declarado, minimo):
+    """Dos valores del parámetro, dos fronteras: un sorteo antes, la condición no puede cumplirse
+    por grande que sea el delta; en la frontera, sí."""
+    def c5(n):
+        res = {"sorteos_holdout": n, "delta": 0.5, "efecto_minimo_detectable": detectable(n)}
+        return protocolo.condicion_efecto_minimo(res, declarado)
+
+    antes, justo = c5(minimo - 1), c5(minimo)
+    assert not antes["cumple"], antes["motivo"]
+    assert f"hacen falta {minimo} sorteos (faltan 1)" in antes["motivo"], antes["motivo"]
+    # En la frontera el detectable y el declarado se escriben igual con cuatro decimales: el motivo
+    # los lleva enteros para no decir «0.0480, mayor que el 0.0480».
+    assert f"{detectable(minimo - 1):.6f}".rstrip("0") in antes["motivo"], antes["motivo"]
+    assert justo["cumple"], justo["motivo"]
+
+
+def test_con_el_efecto_declarado_el_camino_afirmativo_sigue_existiendo():
+    """La contraprueba de los anteriores: C1 no puede dejar al laboratorio sin poder decir «sí».
+
+    Con un holdout capaz —1800 sorteos, detectable por debajo del 0,048 declarado— y un efecto que
+    lo supera en todo, las cinco condiciones se cumplen. Si esto fallara, la regla nueva no
+    endurecería el protocolo: lo habría roto.
+    """
+    res = {"sorteos_holdout": 1800, "delta": 0.06, "q_BH_global": 0.01,
+           "efecto_minimo_detectable": detectable(1800),
+           "variantes": [{"delta": 0.058}, {"delta": 0.062}, {"delta": 0.059}]}
+    por_juego = {j: {"delta": 0.055} for j in JUEGOS}
+    v = protocolo.declara_ventaja(res, por_juego, efecto_minimo_declarado=0.048)
+    assert v["ventaja"] is True and v["cumplidas"] == 5, v["por_que_no"]
+
+
+@pytest.mark.lento
+@pytest.mark.parametrize("sorteo,sello", SORTEOS_QUE_DECLARABAN)
+def test_el_laboratorio_real_ya_no_declara_con_un_sorteo(raiz, datos, sorteo, sello):
+    """Los cuatro sorteos históricos con los que el laboratorio real declaraba VENTAJA DEMOSTRADA.
+
+    Una copia del preregistro real, sellada a mano el día antes de cada sorteo —como el resto de
+    este fichero, porque `sellar` se niega a fechar en el pasado—, y los datos recortados hasta ese
+    sorteo: un holdout de exactamente un sorteo por juego.
+    """
+    real = lab.cargar_preregistro(raiz / "prereg" / "2026-10-03_logistica-revancha.json")
+    spec = {k: v for k, v in real.items() if k != lab.CLAVE_HASH}
+    spec.update(id=f"un-sorteo-{sorteo}", sello_utc=f"{sello}T12:00:00+00:00")
+    spec[lab.CLAVE_HASH] = lab.hash_preregistro(spec)
+    recortado = {j: d[d.CONCURSO <= sorteo].reset_index(drop=True) for j, d in datos["era"].items()}
+    r = lab.evaluar(spec, recortado)
+
+    assert all(h["sorteos"] == 1 for h in r["holdout"].values())
+    # Tres aciertos en Revancha: el caso que antes pasaba la condición 5.
+    assert r["por_juego"]["Revancha"]["delta"] == pytest.approx(3 - MEDIA_AZAR, abs=1e-6)
+    v = r["veredicto"]
+    assert v["veredicto"] == protocolo.SIN_VENTAJA and v["cumplidas"] == 4
+    assert [c["cumple"] for c in v["condiciones"]] == [True, True, True, True, False]
+    assert "faltan 1777" in v["condiciones"][4]["motivo"]
+    assert "en 1 sorteo de holdout" in v["condiciones"][0]["motivo"]
+    assert r["resultados"]["holdout_necesario"] == 1778
+
+
 # ---------------------------------------------------------------- el veredicto completo
 def test_por_defecto_no_hay_ventaja():
     v = protocolo.declara_ventaja({}, {})
@@ -384,6 +529,8 @@ def test_evaluar_con_holdout_vacio_da_sin_ventaja(raiz, datos):
     assert "vacío" in r["veredicto"]["condiciones"][0]["motivo"]
     assert all(h["sorteos"] == 0 for h in r["holdout"].values())
     assert r["preregistro"][lab.CLAVE_HASH] == spec[lab.CLAVE_HASH]
+    # La frontera de la condición 5 viaja en el veredicto: la app la enseña sin calcularla.
+    assert r["resultados"]["holdout_necesario"] == 1778
 
 
 @pytest.mark.lento

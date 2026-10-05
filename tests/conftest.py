@@ -4,6 +4,7 @@ Las corridas completas (2000 simulaciones + 3 backtests) tardan medio minuto o m
 que se generan **una vez por sesión** y se reparten entre los tests que las necesitan. Los tests
 que solo leen los CSV no pasan por aquí y son instantáneos.
 """
+import hashlib
 import json
 import os
 import shutil
@@ -85,14 +86,38 @@ def paquete(tmp_path_factory, snapshot, raiz):
 
 
 # ---------------------------------------------------------------- la base de la app (Fase 4)
-def copiar_arbol(destino):
-    """Una copia de `reportes/` y `prereg/` en `destino`, con la estructura del repositorio.
+# Lo que había al cerrar la Fase 4, todo sobre el snapshot del 2026-10-02. Las bases de los tests se
+# construyen con esto y no con `reportes/` entero: el ciclo de la Fase 5 añade reportes y snapshots con
+# cada sorteo, y un test que dijera «el vigente es tal» sobre `reportes/` entero dejaría de ser verdad
+# con el primer sorteo nuevo, sin que nada estuviera roto. Lo que hay en el repositorio hoy, sea lo que
+# sea, lo vigila `test_almacen.py::test_todo_lo_que_hay_en_el_repositorio_se_reconoce`.
+REPORTES_FASE_4 = ("2026-10-02_oraculo.json", "2026-10-02_paquete.json", "2026-10-03_cartera.json",
+                   "2026-10-03_informe-con-popularidad.json", "2026-10-03_popularidad.json",
+                   "2026-10-03_veredicto.json", "2026-10-03_vivo.json",
+                   "2026-10-04_popularidad-melate-300-sorteos.json", "2026-10-04_veredicto.json")
+SNAPSHOTS_FASE_4 = ("2026-10-02",)
+
+
+def copiar_arbol(destino, todo=False):
+    """Una copia de los reportes, `prereg/` y los `SHA256.txt` de los snapshots en `destino`, con la
+    estructura del repositorio: los de la Fase 4, o con `todo`, lo que haya hoy.
 
     Los tests de la base y de la app trabajan siempre sobre una copia: nunca escriben en la
-    `melate.duckdb` de la raíz, que es la que está usando la app.
+    `melate.duckdb` de la raíz, que es la que está usando la app. De los snapshots basta el
+    `SHA256.txt`: es lo único que lee la base para saber qué está congelado (C3 de la Fase 5).
     """
-    shutil.copytree(RAIZ / "reportes", destino / "reportes")
+    reportes = (sorted(p.name for p in (RAIZ / "reportes").glob("*.json")) if todo
+                else REPORTES_FASE_4)
+    snapshots = (sorted(p.parent.name for p in (RAIZ / "data" / "raw").glob("*/SHA256.txt")
+                        if not p.parent.name.startswith(".")) if todo else SNAPSHOTS_FASE_4)
+    (destino / "reportes").mkdir(parents=True)
+    for nombre in reportes:
+        shutil.copy2(RAIZ / "reportes" / nombre, destino / "reportes" / nombre)
     shutil.copytree(RAIZ / "prereg", destino / "prereg")
+    for carpeta in snapshots:
+        (destino / "data" / "raw" / carpeta).mkdir(parents=True)
+        shutil.copy2(RAIZ / "data" / "raw" / carpeta / "SHA256.txt",
+                     destino / "data" / "raw" / carpeta / "SHA256.txt")
     return destino
 
 
@@ -149,8 +174,15 @@ def informe_con_q_bajo(arbol, nombre="2026-10-05_informe-q-bajo.json"):
 
 @pytest.fixture(scope="session")
 def base_real(tmp_path_factory):
-    """`melate.duckdb` construida con los reportes y el preregistro del repositorio, tal cual."""
+    """`melate.duckdb` construida con los reportes y el preregistro del repositorio tal como estaban
+    al cerrar la Fase 4: reales, y fijos."""
     return construir_arbol(copiar_arbol(tmp_path_factory.mktemp("base_real")))
+
+
+@pytest.fixture(scope="session")
+def base_del_repositorio(tmp_path_factory):
+    """`melate.duckdb` construida con todo lo que hay hoy en el repositorio, crezca lo que crezca."""
+    return construir_arbol(copiar_arbol(tmp_path_factory.mktemp("base_del_repositorio"), todo=True))
 
 
 # Las bases adversarias se construyen una vez por sesión y las comparten los tests de la base y de
@@ -205,7 +237,61 @@ def base_con_ventaja(tmp_path_factory):
     v = leer_json(arbol / "reportes" / nombre)
     for d in v["datos"].values():
         d["ultima_fecha"] = FECHA_MALICIOSA
+    # Y en un motivo: la tabla de condiciones pasa cada celda por Markdown (Fase 5).
+    v["veredicto"]["condiciones"][4]["motivo"] = FECHA_MALICIOSA
     escribir_json(arbol / "reportes" / nombre, v)
+    return construir_arbol(arbol)
+
+
+UN_SORTEO = "2026-10-05_veredicto-un-sorteo.json"
+NO_CONGELADO = "2026-10-05_veredicto-no-congelado.json"
+SNAPSHOT_FALSO = "2026-10-04_4274"
+
+
+def veredicto_de_un_sorteo(arbol):
+    """El primer veredicto con holdout tal como lo escribiría `melate.lab`, sin esperar al 4274.
+
+    Un sorteo de holdout en cada juego —2 aciertos en Revancha, 1 en Melate, 0 en Revanchita—, las
+    condiciones calculadas con el `declara_ventaja` real, y los datos de un snapshot que no existe en
+    el repositorio pero sí en el árbol del test: `data/raw/2026-10-04_4274/` con su `SHA256.txt`.
+    """
+    from melate import lab, protocolo
+    from melate.constantes import JUEGOS, MEDIA_AZAR
+
+    v = leer_json(arbol / "reportes" / VEREDICTO_REAL)
+    aciertos = {"Melate": 1, "Revancha": 2, "Revanchita": 0}
+    hashes = {j: hashlib.sha256(f"{SNAPSHOT_FALSO}/{j}".encode()).hexdigest() for j in JUEGOS}
+    emd = lab.detectable(1)
+    por_juego = {j: {"sorteos_holdout": 1, "media": float(a), "delta": round(a - MEDIA_AZAR, 6),
+                     "z": round((a - MEDIA_AZAR) / (emd / lab.Z_DETECTABLE), 4), "p": 0.5,
+                     "efecto_minimo_detectable": emd, "q_BH_global": 1.0}
+                 for j, a in aciertos.items()}
+    res = dict(por_juego["Revancha"], variantes=[{"hiperparametros": {}, "delta": por_juego["Revancha"]["delta"]}] * 4,
+               reentrenar_cada=100, semilla=7, familia_declarada=36, pruebas_corridas=3,
+               holdout_necesario=lab.holdout_necesario(0.048))
+    v["holdout"] = {j: {"sorteos": 1, "primer_concurso": 4274, "ultimo_concurso": 4274} for j in JUEGOS}
+    v["por_juego"], v["resultados"] = por_juego, res
+    v["veredicto"] = protocolo.declara_ventaja(res, por_juego, efecto_minimo_declarado=0.048)
+    v["datos"] = {j: {"sha256": hashes[j], "origen": f"data\\raw\\{SNAPSHOT_FALSO}\\{j}.csv",
+                      "bytes": 1, "ultimo_concurso": 4274, "ultima_fecha": "2026-10-04"} for j in JUEGOS}
+    v["corrida_utc"] = "2026-10-05T13:00:00+00:00"
+    carpeta = arbol / "data" / "raw" / SNAPSHOT_FALSO
+    carpeta.mkdir(parents=True, exist_ok=True)
+    (carpeta / "SHA256.txt").write_text("".join(f"{hashes[j]}  {j}.csv\n" for j in JUEGOS),
+                                        encoding="utf-8")
+    escribir_json(arbol / "reportes" / UN_SORTEO, v)
+    return v
+
+
+@pytest.fixture(scope="session")
+def base_un_sorteo(tmp_path_factory):
+    """Lo que la app enseñará con el 4274: un holdout de un sorteo, sobre un snapshot del ciclo. Y
+    al lado, el mismo veredicto con unos datos que no están congelados en ninguna parte."""
+    arbol = copiar_arbol(tmp_path_factory.mktemp("base_un_sorteo"))
+    v = veredicto_de_un_sorteo(arbol)
+    v["datos"] = {j: dict(d, sha256="f" * 64) for j, d in v["datos"].items()}
+    v["corrida_utc"] = "2026-10-05T14:00:00+00:00"
+    escribir_json(arbol / "reportes" / NO_CONGELADO, v)
     return construir_arbol(arbol)
 
 

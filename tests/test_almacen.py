@@ -13,7 +13,9 @@ import re
 
 import pytest
 
-from conftest import HUERFANO, MENOS_DATOS, PREREG_REAL, VEREDICTO_REAL, leer_json
+from conftest import (HUERFANO, MENOS_DATOS, NO_CONGELADO, PREREG_REAL, REPORTES_FASE_4,
+                      SNAPSHOT_FALSO, SNAPSHOTS_FASE_4, UN_SORTEO, VEREDICTO_REAL, construir_arbol,
+                      copiar_arbol, escribir_json, leer_json, veredicto_de_un_sorteo)
 from melate import almacen, protocolo
 from melate.constantes import JUEGOS
 
@@ -48,13 +50,40 @@ def test_la_columna_veredicto_solo_existe_en_lo_que_juzga():
 
 def test_cada_fichero_queda_en_fuentes_con_su_hash(tablas, raiz):
     f = tablas["fuentes"].set_index("ruta")
-    en_repo = sorted(p.relative_to(raiz).as_posix() for d in ("reportes", "prereg")
-                     for p in (raiz / d).glob("*.json"))
-    assert sorted(f.index) == en_repo
+    leidos = sorted([f"reportes/{n}" for n in REPORTES_FASE_4]
+                    + [p.relative_to(raiz).as_posix() for p in (raiz / "prereg").glob("*.json")]
+                    + [f"data/raw/{c}/SHA256.txt" for c in SNAPSHOTS_FASE_4])
+    assert sorted(f.index) == leidos
     for ruta, fila in f.iterrows():
         assert fila["sha256"] == hashlib.sha256((raiz / ruta).read_bytes()).hexdigest(), ruta
     assert "desconocido" not in set(f["tipo"]), "todos los reportes del repositorio se reconocen"
-    assert f["valido"].all()
+    # Todos valen menos uno, a propósito: el veredicto de la Fase 2 no registra sus datos (C3).
+    assert sorted(f.index[~f["valido"]]) == ["reportes/2026-10-03_veredicto.json"]
+
+
+def test_todo_lo_que_hay_en_el_repositorio_se_reconoce(base_del_repositorio, raiz):
+    """Lo que el ciclo vaya añadiendo, sea lo que sea: cada fichero de `reportes/`, `prereg/` y cada
+    snapshot está en la base con su hash, se reconoce, y vale, salvo el veredicto de la Fase 2.
+
+    No supone cuántos hay ni cuál es el vigente: eso cambia con cada sorteo. Supone lo que no puede
+    cambiar durante años, por la decisión C1: que el vigente diga «sin ventaja demostrada» y que
+    salga de un snapshot congelado.
+    """
+    t = almacen.leer(base_del_repositorio)
+    f = t["fuentes"].set_index("ruta")
+    en_repo = sorted([p.relative_to(raiz).as_posix() for d in ("reportes", "prereg")
+                      for p in (raiz / d).glob("*.json")]
+                     + [p.relative_to(raiz).as_posix()
+                        for p in (raiz / "data" / "raw").glob("*/SHA256.txt")
+                        if not p.parent.name.startswith(".")])
+    assert sorted(f.index) == en_repo
+    for ruta, fila in f.iterrows():
+        assert fila["sha256"] == hashlib.sha256((raiz / ruta).read_bytes()).hexdigest(), ruta
+    assert "desconocido" not in set(f["tipo"]) and "ilegible" not in set(f["tipo"])
+    assert sorted(f.index[~f["valido"]]) == ["reportes/2026-10-03_veredicto.json"]
+    vig = almacen.veredicto_vigente(t)
+    assert vig["veredicto"] == protocolo.SIN_VENTAJA and not vig["por_defecto"]
+    assert all(r["snapshot"] for r in vig["vigentes"])
 
 
 def test_el_contenido_es_el_de_los_reportes(tablas, raiz):
@@ -110,19 +139,92 @@ def test_el_preregistro_del_repositorio_verifica_en_la_base(tablas):
     assert p["tamano_familia"] == 36 and p["variantes"] == 4
 
 
-def test_los_veredictos_del_repositorio_valen_y_dicen_sin_ventaja(tablas):
-    assert tablas["veredictos"]["valido"].all()
+def test_el_veredicto_vigente_vale_y_dice_sin_ventaja(tablas):
+    v = tablas["veredictos"].set_index("ruta")
+    assert v.loc[f"reportes/{VEREDICTO_REAL}", "valido"]
     vig = almacen.veredicto_vigente(tablas)
     assert vig["veredicto"] == protocolo.SIN_VENTAJA and not vig["por_defecto"]
     r = vig["vigentes"][0]
-    assert r["ruta"] == f"reportes/{VEREDICTO_REAL}", "el vigente es el último por fecha de corrida"
+    assert r["ruta"] == f"reportes/{VEREDICTO_REAL}"
     assert r["datos_registrados"] and r["ultimo_concurso_datos"] == 4272
+    assert r["snapshot"] == "2026-10-02", "y dice de qué snapshot sale"
 
 
-def test_el_veredicto_viejo_queda_marcado_sin_datos(tablas):
-    """El de la Fase 2 es anterior al arreglo de H1: vale, pero no dice sobre qué datos juzgó."""
+def test_el_veredicto_viejo_no_vale_porque_no_dice_sobre_que_datos_juzgo(tablas):
+    """El de la Fase 2 es anterior al arreglo de H1: no registra sus datos, así que no se puede saber
+    si juzgó sobre un snapshot congelado. Desde C3 de la Fase 5 eso lo deja fuera; antes contaba si no
+    había otro, y nunca fue el vigente."""
     v = tablas["veredictos"].set_index("ruta").loc["reportes/2026-10-03_veredicto.json"]
-    assert v["valido"] and not v["datos_registrados"]
+    assert not v["valido"] and not v["datos_registrados"]
+    assert "no registra sobre qué datos juzgó" in v["motivo"]
+
+
+def test_un_veredicto_sobre_datos_no_congelados_no_cuenta(base_un_sorteo):
+    """C3 de la Fase 5: «nunca sobre una descarga en vivo que no quede guardada», como regla.
+
+    Dos veredictos idénticos salvo los hashes de sus datos: el que está congelado en `data/raw/` vale
+    y es el vigente aunque sea más viejo; el otro, el más reciente, no vale y dice por qué.
+    """
+    t = almacen.leer(base_un_sorteo)
+    v = t["veredictos"].set_index("ruta")
+    assert v.loc[f"reportes/{UN_SORTEO}", "valido"]
+    assert v.loc[f"reportes/{UN_SORTEO}", "snapshot"] == SNAPSHOT_FALSO
+    malo = v.loc[f"reportes/{NO_CONGELADO}"]
+    assert not malo["valido"] and malo["snapshot"] is None
+    assert "no son un snapshot congelado" in malo["motivo"]
+    vig = almacen.veredicto_vigente(t)
+    assert [r["ruta"] for r in vig["vigentes"]] == [f"reportes/{UN_SORTEO}"]
+
+
+def test_un_veredicto_con_juegos_de_snapshots_distintos_no_vale(tmp_path):
+    """El laboratorio carga los tres juegos de una misma carpeta. Unos datos con Melate de un snapshot
+    y Revancha y Revanchita de otro no los ha escrito el laboratorio: no valen, aunque cada hash esté
+    congelado en alguna parte."""
+    mixto = "2026-10-05_veredicto-mixto.json"
+    arbol = copiar_arbol(tmp_path)
+    v = veredicto_de_un_sorteo(arbol)
+    reales = dict(reversed(l.split()) for l in
+                  (arbol / "data" / "raw" / "2026-10-02" / "SHA256.txt").read_text().splitlines())
+    v["datos"]["Melate"]["sha256"] = reales["Melate.csv"]
+    escribir_json(arbol / "reportes" / mixto, v)
+    t = almacen.leer(construir_arbol(arbol))
+    vs = t["veredictos"].set_index("ruta")
+    assert vs.loc[f"reportes/{UN_SORTEO}", "valido"], "el de un solo snapshot, sí"
+    malo = vs.loc[f"reportes/{mixto}"]
+    assert not malo["valido"] and malo["snapshot"] is None
+    assert f"snapshots distintos (2026-10-02, {SNAPSHOT_FALSO})" in malo["motivo"], malo["motivo"]
+
+
+def test_la_base_lee_los_snapshots_de_la_carpeta_que_se_le_da(tablas, tmp_path):
+    """Dos valores de `--raw`: por defecto, `data/raw` junto a `reportes/` (la base compartida se
+    construye así); dada, la dada —vacía aquí, así que el veredicto real se queda sin un snapshot que
+    lo respalde—. Y una carpeta que no existe no construye nada."""
+    assert set(tablas["snapshots"].carpeta) == {"2026-10-02"}
+    arbol = copiar_arbol(tmp_path / "arbol")
+    (tmp_path / "vacia").mkdir()
+    r = almacen.main(["--reportes", str(arbol / "reportes"), "--prereg", str(arbol / "prereg"),
+                      "--raw", str(tmp_path / "vacia"), "--salida", str(arbol / "otra.duckdb")])
+    dada = almacen.leer(r["salida"])
+    assert dada["snapshots"].empty
+    v = dada["veredictos"].set_index("ruta").loc[f"reportes/{VEREDICTO_REAL}"]
+    assert not v["valido"] and "no son un snapshot congelado" in v["motivo"]
+    with pytest.raises(SystemExit, match="carpeta de snapshots"):
+        almacen.construir(arbol / "reportes", arbol / "prereg", arbol / "nada.duckdb",
+                          raw=tmp_path / "no-existe")
+    assert not (arbol / "nada.duckdb").exists()
+
+
+def test_cada_informe_dice_de_que_snapshot_sale(tablas):
+    """Por el hash, no por la ruta: el informe en vivo de la Fase 1 descargó los mismos bytes que el
+    snapshot del 2026-10-02, y es de ese snapshot. El del oráculo no registra hashes."""
+    inf = tablas["informes"].set_index("ruta")["snapshot"]
+    for ruta in ("2026-10-02_paquete", "2026-10-03_vivo", "2026-10-03_informe-con-popularidad"):
+        assert inf[f"reportes/{ruta}.json"] == "2026-10-02", ruta
+    assert inf["reportes/2026-10-02_oraculo.json"] is None
+    di = tablas["datos_informe"]
+    assert set(di.loc[di.ruta == "reportes/2026-10-03_vivo.json", "snapshot"]) == {"2026-10-02"}
+    s = tablas["snapshots"]
+    assert sorted(s.loc[s.carpeta == "2026-10-02", "juego"]) == sorted(JUEGOS)
 
 
 @pytest.fixture(scope="module")
@@ -309,6 +411,55 @@ def test_la_frescura_ve_cada_cambio(base_real, tablas):
         nuevo.unlink(missing_ok=True)
         objetivo.write_bytes(original)
     assert almacen.frescura(base_real, tablas)["al_dia"]
+
+
+def test_un_snapshot_nuevo_deja_la_base_desactualizada(base_real, tablas):
+    """Un snapshot nuevo puede hacer válido un veredicto que no lo era: la base tiene que saberse
+    vieja. Y la carpeta temporal en la que el ciclo escribe un snapshot antes de renombrarlo, que
+    empieza por punto, no cuenta: está a medio escribir."""
+    raw = base_real.parent / "data" / "raw"
+    nueva, temporal = raw / "2026-10-07_4276", raw / ".2026-10-07_4276.construyendo"
+    try:
+        for c in (nueva, temporal):
+            c.mkdir()
+            (c / "SHA256.txt").write_text(f"{'a' * 64}  Melate.csv\n", encoding="utf-8")
+        f = almacen.frescura(base_real, tablas)
+        assert f["nuevos"] == ["data/raw/2026-10-07_4276/SHA256.txt"] and not f["al_dia"]
+    finally:
+        for c in (nueva, temporal):
+            (c / "SHA256.txt").unlink(missing_ok=True)
+            c.rmdir() if c.exists() else None
+    assert almacen.frescura(base_real, tablas)["al_dia"]
+
+
+@pytest.mark.parametrize("linea", ["esto no es una lista de hashes", "abc123  Melate.csv",
+                                   f"{'a' * 64}  Loteria.csv"])
+def test_un_sha256_txt_que_no_se_entiende_no_congela_nada(tmp_path, linea):
+    """Un `SHA256.txt` roto entra en `fuentes` como no válido y no congela nada: ni una línea que no
+    son dos campos, ni un hash que no es un hash, ni un fichero que no es de ningún juego. Lo que pasa
+    después —ningún veredicto vale sin su snapshot— lo prueba el test de la carpeta a medio escribir."""
+    carpeta = tmp_path / "raw" / "2026-10-02"
+    carpeta.mkdir(parents=True)
+    (carpeta / "SHA256.txt").write_text(f"{'b' * 64}  Revancha.csv\n{linea}\n", encoding="utf-8")
+    filas = {t: [] for t in almacen.ESQUEMA}
+    assert almacen._leer_snapshots(tmp_path / "raw", tmp_path, filas) == {}
+    assert filas["snapshots"] == [], "ni siquiera la línea buena de un fichero roto"
+    (fila,) = filas["fuentes"]
+    assert fila[:2] == ("raw/2026-10-02/SHA256.txt", "snapshot")
+    assert fila[5] is False and "no se entiende" in fila[6]
+
+
+def test_una_carpeta_a_medio_escribir_no_congela_nada(tmp_path):
+    """El ciclo escribe cada snapshot en una carpeta que empieza por punto y la renombra al final.
+    Mientras tanto, lo que haya dentro no está congelado: si los hashes del snapshot real solo están
+    en una carpeta así, el veredicto que juzgó sobre ellos no vale."""
+    arbol = copiar_arbol(tmp_path)
+    raw = arbol / "data" / "raw"
+    (raw / "2026-10-02").rename(raw / ".2026-10-02.construyendo")
+    t = almacen.leer(construir_arbol(arbol))
+    assert t["snapshots"].empty
+    v = t["veredictos"].set_index("ruta").loc[f"reportes/{VEREDICTO_REAL}"]
+    assert not v["valido"] and "no son un snapshot congelado" in v["motivo"]
 
 
 def test_una_base_de_otro_esquema_se_rechaza(tablas):

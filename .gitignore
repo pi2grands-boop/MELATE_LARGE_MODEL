@@ -25,6 +25,15 @@ data/cache/
 *.duckdb.construyendo
 *.duckdb.construyendo.wal
 
+# El ciclo (Fase 5). Escribe cada snapshot en data/raw/.<nombre>.construyendo/ y lo renombra al
+# final, y cada reporte en un <fichero>.escribiendo: a medias, nunca se publican. Ante un hallazgo,
+# la descarga va a data/cuarentena/ para investigarla; no son datos que el proyecto use. Las páginas
+# incompletas de melate-e.com van a data/cache/, que ya está fuera. Ver
+# Documentos_Contexto/Almacenamiento/Decisiones/
+data/raw/.*
+data/cuarentena/
+*.escribiendo
+
 # Streamlit lee sus secretos de un .streamlit/secrets.toml en la carpeta desde la que se lanza y
 # también en la del script (app/.streamlit/). Este proyecto no tiene ninguno
 # (REGLAS-DOCUMENTACION.md §0); la línea está para que, si alguien crea uno, no se publique por

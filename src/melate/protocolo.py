@@ -15,6 +15,8 @@ Se conservan las dos familias, porque son las que producen los `q` publicados en
 manda la global: es la que cumple la regla 3. La clave `q_BH` no se renombra porque el reporte del
 oráculo depende de ella.
 """
+import math
+
 import numpy as np
 
 from .constantes import JUEGOS, MEDIA_AZAR
@@ -114,6 +116,11 @@ def _cond(nombre, cumple, motivo):
     return {"condicion": nombre, "cumple": bool(cumple), "motivo": motivo}
 
 
+def _sorteos(n):
+    """«1 sorteo», «2 sorteos». Los motivos los enseña la app, y el primer holdout es de uno."""
+    return f"{n} sorteo" if n == 1 else f"{n} sorteos"
+
+
 def condicion_holdout_positivo(res):
     """1 · Holdout futuro positivo. Un holdout vacío NO es un empate: es que no se ha jugado nada."""
     n = res.get("sorteos_holdout", 0)
@@ -124,7 +131,7 @@ def condicion_holdout_positivo(res):
     if d is None:
         return _cond("holdout futuro positivo", False, f"{n} sorteos en el holdout, pero sin delta medido")
     return _cond("holdout futuro positivo", d > 0,
-                 f"delta {d:+.4f} aciertos sobre el azar en {n} sorteos de holdout")
+                 f"delta {d:+.4f} aciertos sobre el azar en {_sorteos(n)} de holdout")
 
 
 def condicion_q(res, umbral=UMBRAL_Q):
@@ -193,17 +200,51 @@ def condicion_efecto_minimo(res, declarado=None):
     sellado decía que haría falta. Se comprobó: delta 0.0100 contra un detectable de 0.0092 pasaba,
     con 0.048 declarado en el sello. Quien se compromete por adelantado a un umbral no puede
     beneficiarse después de que la muestra haya crecido.
+
+    **Y el holdout tiene que poder detectar el efecto declarado** (C1 de la Fase 5). El extremo
+    contrario estaba abierto: con un sorteo el detectable es 2,0237 aciertos, y un sorteo con tres
+    aciertos da un delta de 2,3571. El laboratorio real declaraba VENTAJA DEMOSTRADA con un holdout de
+    un sorteo en cuatro sorteos históricos, y bajo el azar le pasaba una vez de cada 303. Si el sello
+    declara un efecto, mientras el detectable sea mayor que él ningún delta cuenta: con el 0,048 del
+    preregistro, hasta el sorteo 1778 del holdout. Ver Documentos_Contexto/Protocolo_Estadistico/
+    Decisiones/2026-10-04_18-58_s5-la-condicion-5-exige-un-holdout-capaz.md.
     """
     calculado = res.get("efecto_minimo_detectable")
     d = res.get("delta")
     if d is None or (calculado is None and declarado is None):
         return _cond("efecto >= mínimo detectable", False, "falta el efecto o el mínimo detectable")
+    if calculado is not None and declarado and calculado > declarado:
+        return _cond("efecto >= mínimo detectable", False,
+                     _holdout_incapaz(res.get("sorteos_holdout"), calculado, declarado, d))
     umbral = max(x for x in (calculado, declarado) if x is not None)
     cual = "detectable" if umbral == calculado else "declarado en el sello"
     detalle = f"delta {d:+.4f} contra {umbral:.4f} ({cual}"
     if calculado is not None and declarado is not None:
         detalle += f"; detectable {calculado:.4f}, declarado {declarado:.4f}"
     return _cond("efecto >= mínimo detectable", d >= umbral, detalle + ")")
+
+
+def _holdout_incapaz(n, calculado, declarado, d):
+    """El motivo de la condición 5 mientras el holdout no puede ver el efecto declarado.
+
+    Cuántos sorteos faltan se deduce del propio detectable, que baja como 1/raíz(n): sin repetir aquí
+    la fórmula del laboratorio, que es la que manda. La cuenta solo sirve para el mensaje; lo que
+    decide es la comparación de arriba, sobre el valor que el laboratorio publica.
+
+    Las dos cifras van con todos sus decimales: en la frontera, 0.048008 y 0.048 se escriben igual con
+    cuatro, y el motivo diría «0.0480, mayor que el 0.0480».
+    """
+    def cifra(x):
+        return f"{x:.6f}".rstrip("0").rstrip(".")
+
+    if not n:
+        return (f"el mínimo detectable es {cifra(calculado)}, mayor que el {cifra(declarado)} "
+                f"declarado en el sello, y mientras lo sea ningún delta cuenta (delta medido {d:+.4f})")
+    hacen_falta = max(math.ceil((calculado * math.sqrt(n) / declarado) ** 2), n + 1)
+    return (f"el mínimo detectable con {_sorteos(n)} de holdout es "
+            f"{cifra(calculado)}, mayor que el {cifra(declarado)} declarado en el sello: hacen falta "
+            f"{hacen_falta} sorteos (faltan {hacen_falta - n}), y hasta entonces ningún delta cuenta "
+            f"(delta medido {d:+.4f})")
 
 
 def declara_ventaja(resultados, por_juego=None, umbral=UMBRAL_Q, tolerancia=0.5,

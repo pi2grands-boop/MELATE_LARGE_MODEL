@@ -39,6 +39,7 @@ PANTALLAS = {
 }
 
 ORDEN_LANZADOR = ".venv\\Scripts\\python.exe -m melate.app"
+ORDEN_CICLO = ".venv\\Scripts\\python.exe -m melate.ciclo"
 ORDEN_REPRODUCIR = (
     ".venv\\Scripts\\python.exe -m melate.almacen   # sin cerrar la app\n"
     f"{ORDEN_LANZADOR}          # o al abrirla: el lanzador la pone al día"
@@ -125,7 +126,24 @@ def pct(x, decimales=1):
 
 
 def entero(x):
-    return "—" if nulo(x) else f"{int(x):,}".replace(",", " ")
+    """Los miles con un espacio que no parte la línea: con uno normal, la cabecera escribía «de los 1»
+    al final de una línea y «778» al principio de la siguiente. Lo vio una captura, no un test."""
+    return "—" if nulo(x) else f"{int(x):,}".replace(",", "\u00a0")
+
+
+def sorteos(n):
+    """«1 sorteo», «2 sorteos». El primer holdout es de un sorteo, y «1 sorteos» habría sido lo
+    primero que se viera de él."""
+    if nulo(n):
+        return "— sorteos"
+    return f"{entero(n)} sorteo" if int(n) == 1 else f"{entero(n)} sorteos"
+
+
+def necesita(r):
+    """«de los 1 778 que necesita la condición 5», si el veredicto lo publica. Lo escribe el
+    laboratorio desde la decisión C1 de la Fase 5; la app no lo calcula."""
+    nec = r.get("holdout_necesario")
+    return "" if nulo(nec) else f" de los {entero(nec)} que necesita la condición 5"
 
 
 # ---------------------------------------------------------------- lectura
@@ -156,7 +174,8 @@ def datos_del_veredicto(r):
     hasta, desde = r["ultimo_concurso_datos"], r["ultimo_concurso_datos_min"]
     sorteo = (f"el sorteo {hasta}" if hasta == desde
               else f"los sorteos {desde} a {hasta} (no todos los juegos llegan al mismo)")
-    return f"datos hasta {sorteo} ({escapar(r['ultima_fecha_datos'])})"
+    snapshot = "" if nulo(r.get("snapshot")) else f", snapshot {codigo(r['snapshot'])}"
+    return f"datos hasta {sorteo} ({escapar(r['ultima_fecha_datos'])}){snapshot}"
 
 
 def cabecera(vigente):
@@ -168,7 +187,7 @@ def cabecera(vigente):
         partes = []
         for r in vigente["vigentes"]:
             partes.append(f"{escapar(r['prereg_id'])}: {r['cumplidas']} de {r['de']} condiciones, "
-                          f"holdout de {r['sorteos_holdout']} sorteos, corrida del "
+                          f"holdout de {sorteos(r['sorteos_holdout'])}{necesita(r)}, corrida del "
                           f"{escapar(fecha(r['corrida_utc']))}, {datos_del_veredicto(r)}")
         cuerpo = (f"**{escapar(vigente['veredicto'])}** · veredicto de `melate.lab` sobre "
                   + "; ".join(partes) + ".")
@@ -183,8 +202,8 @@ def aviso_de_frescura(fres):
         partes = [f"{len(v)} {nombre}" for nombre, v in
                   (("nuevos", fres["nuevos"]), ("cambiados", fres["cambiados"]),
                    ("borrados", fres["borrados"])) if v]
-        st.warning("**La base no está al día.** Desde que se construyó hay en `reportes/` o `prereg/` "
-                   f"ficheros {', '.join(partes)}. Lo que ves es lo que había entonces: "
+        st.warning("**La base no está al día.** Desde que se construyó hay en `reportes/`, `prereg/` o "
+                   f"`data/raw/` ficheros {', '.join(partes)}. Lo que ves es lo que había entonces: "
                    "reconstrúyela con `python -m melate.almacen`.")
 
 
@@ -219,23 +238,45 @@ def pantalla_veredicto(t, vigente):
             st.markdown(f"### {escapar(r['veredicto'])}")
             c1, c2 = st.columns(2)
             c1.metric("Condiciones que cumple", f"{r['cumplidas']} de {r['de']}")
-            c2.metric(f"Holdout en {escapar(r['juego_principal'])}", f"{r['sorteos_holdout']} sorteos")
+            c2.metric(f"Holdout en {escapar(r['juego_principal'])}", sorteos(r["sorteos_holdout"]))
+            if necesita(r):
+                c2.caption(necesita(r).strip())
             sha = (f", SHA-256 de Revancha {escapar(str(r['sha256_revancha'])[:16])}…"
                    if r["datos_registrados"] else "")
             st.caption(f"Corrida del {escapar(fecha(r['corrida_utc']))} · {datos_del_veredicto(r)}"
                        f"{sha} · {codigo(r['ruta'])}")
             cond = con[con["ruta"] == r["ruta"]].sort_values("orden").copy()
             cond["cumple"] = cond["cumple"].map({True: "sí", False: "NO"})
-            ver(tabla(cond, {"orden": "#", "condicion": "Condición", "cumple": "¿Cumple?",
-                             "motivo": "Motivo"}))
+            # Una tabla estática y no un `st.dataframe`: los motivos son frases, y la rejilla las corta
+            # en una línea. Con el primer holdout, el de la condición 5 perdía justo «hacen falta 1778
+            # sorteos (faltan 1777)». Lo vio una captura.
+            # Y escapada: `st.table` pasa cada celda por Markdown —se vio en el DOM: «<=» salía «≤»—,
+            # así que un `![x](url)` en un motivo haría que el navegador fuera a buscar fuera.
+            for columna in ("condicion", "motivo"):
+                cond[columna] = cond[columna].map(escapar)
+            st.table(tabla(cond, {"orden": "#", "condicion": "Condición", "cumple": "¿Cumple?",
+                                  "motivo": "Motivo"}).set_index("#"))
             hold = pd.DataFrame({
                 "Juego": ["Melate", "Revancha", "Revanchita"],
                 "Sorteos posteriores al sello": [r["holdout_melate"], r["holdout_revancha"],
                                                  r["holdout_revanchita"]],
+                "Aciertos por boleto": [num(r["media_melate"]), num(r["media_revancha"]),
+                                        num(r["media_revanchita"])],
                 "Δ aciertos sobre el azar": [num(r["delta_melate"]), num(r["delta_revancha"]),
                                              num(r["delta_revanchita"])],
             })
             ver(hold)
+            # Con un sorteo, dos aciertos son un Δ de +1,36: veintiocho veces el efecto declarado.
+            # Sin esto al lado, la tabla haría parecer mucho lo que no distingue nada del azar.
+            if r["sorteos_holdout"] and not nulo(r["efecto_minimo_detectable"]):
+                st.caption(
+                    f"Con {sorteos(r['sorteos_holdout'])} de holdout, el efecto mínimo que se puede "
+                    f"distinguir del azar es de {num(r['efecto_minimo_detectable'])} aciertos por "
+                    "boleto: un Δ por debajo es ruido."
+                    + ("" if nulo(r["holdout_necesario"]) else
+                       f" Y la condición 5 no puede cumplirse antes de "
+                       f"{sorteos(r['holdout_necesario'])} de holdout, los que hacen falta para ver "
+                       f"el efecto que declaró el sello ({num(p['efecto_minimo_declarado'], 3)})."))
             st.caption(f"Línea base del azar: {num(r['linea_base_azar'], 6)} aciertos por boleto. "
                        f"Familia declarada en el sello: {r['familia_declarada']} pruebas.")
         with st.expander("El preregistro, tal como se selló"):
@@ -247,12 +288,16 @@ def pantalla_veredicto(t, vigente):
                 f"**variantes de hiperparámetros** {p['variantes']} · **datos al sellar** hasta el "
                 f"sorteo {p['ultimo_concurso_al_sellar']}")
             st.markdown(f"**Notas.** {escapar(p['notas'])}")
-        st.markdown("Para un veredicto nuevo, desde la raíz del repositorio:")
-        st.code(f".venv\\Scripts\\python.exe -m melate.lab --prereg {p['ruta']} "
-                "--salida reportes\\<fecha>_veredicto.json\n.venv\\Scripts\\python.exe -m melate.almacen",
-                language="powershell", wrap_lines=True)
-        st.caption("Sin `--datos`, el laboratorio descarga los CSV del oficial: es la única forma de que "
-                   "entren sorteos posteriores al sello. La app no descarga nada por su cuenta.")
+        st.markdown("Para incorporar los sorteos nuevos y juzgar sobre ellos, desde la raíz del "
+                    "repositorio:")
+        st.code(ORDEN_CICLO, language="powershell")
+        st.caption("El ciclo congela los sorteos nuevos en un snapshot validado, `data/raw/<fecha>_<sorteo>/`, "
+                   "y emite el veredicto sobre él. Un veredicto sobre datos que no están congelados no "
+                   "cuenta. La app no descarga nada por su cuenta.")
+        if r is not None and not nulo(r.get("snapshot")):
+            st.markdown("Y para reproducir el veredicto de arriba sobre los mismos datos:")
+            st.code(f".venv\\Scripts\\python.exe -m melate.lab --prereg {p['ruta']} "
+                    f"--datos data\\raw\\{r['snapshot']}", language="powershell", wrap_lines=True)
         if len(suyos) > 1 or not suyos["valido"].all():
             with st.expander(f"Todos los veredictos de este preregistro ({len(suyos)})"):
                 h = suyos.copy()
@@ -260,8 +305,8 @@ def pantalla_veredicto(t, vigente):
                 h["valido"] = h["valido"].map({True: "sí", False: "NO"})
                 ver(tabla(h, {"corrida_utc": "Corrida", "veredicto": "Veredicto",
                               "cumplidas": "Cumple", "sorteos_holdout": "Holdout",
-                              "ultimo_concurso_datos": "Datos hasta", "valido": "¿Válido?",
-                              "motivo": "Por qué no", "ruta": "Fichero"}))
+                              "ultimo_concurso_datos": "Datos hasta", "snapshot": "Snapshot",
+                              "valido": "¿Válido?", "motivo": "Por qué no", "ruta": "Fichero"}))
     huerfanos = vds[~vds["prereg_id"].isin(pre["id"])]
     if not huerfanos.empty:
         st.error(f"{len(huerfanos)} veredicto(s) apuntan a un preregistro que no está en `prereg/` y "
@@ -292,7 +337,9 @@ def procedencia_del_informe(t, inf):
     partes = [f"{escapar(r['juego'])} hasta el {r['ultimo']} ({escapar(r['ultima_fecha'])})"
               for _, r in d.iterrows()]
     sims = "sin registro" if nulo(inf["simulaciones"]) else f"{int(inf['simulaciones'])} simulaciones"
-    st.caption(f"Datos: {', '.join(partes) or 'sin registro'} · {sims} · versiones: "
+    snapshot = ("ningún snapshot congelado lo respalda" if nulo(inf["snapshot"])
+                else f"snapshot {codigo(inf['snapshot'])}")
+    st.caption(f"Datos: {', '.join(partes) or 'sin registro'} · {snapshot} · {sims} · versiones: "
                f"scikit-learn {escapar(inf['scikit_learn'] or '—')}, numpy "
                f"{escapar(inf['numpy'] or '—')}, pandas {escapar(inf['pandas'] or '—')}")
 
@@ -517,10 +564,11 @@ def pantalla_jugadores(t):
 def pantalla_procedencia(t, ruta, fres):
     st.header("Procedencia")
     st.markdown(
-        "De dónde sale cada cifra de esta app. `melate.duckdb` es un **índice** de `reportes/` y "
-        "`prereg/`, que son la fuente de verdad y están en el repositorio. La base no se publica.")
+        "De dónde sale cada cifra de esta app. `melate.duckdb` es un **índice** de `reportes/`, "
+        "`prereg/` y los `SHA256.txt` de los snapshots de `data/raw/`, que son la fuente de verdad y "
+        "están en el repositorio. La base no se publica.")
     c = t["construccion"].iloc[0]
-    estado = ("al día con `reportes/` y `prereg/`" if fres["al_dia"]
+    estado = ("al día con `reportes/`, `prereg/` y `data/raw/`" if fres["al_dia"]
               else "**desactualizada**" if fres["comprobable"] else "sin poder comprobarse")
     st.markdown(f"Base {codigo(pathlib.Path(ruta).name)} construida el "
                 f"{escapar(fecha(c['construido_utc']))} con melate {escapar(c['melate'])} y duckdb "
@@ -535,15 +583,22 @@ def pantalla_procedencia(t, ruta, fres):
     f["sha256"] = f["sha256"].str[:16]
     f["fecha_utc"] = f["fecha_utc"].map(lambda x: fecha(x) if not nulo(x) else "—")
     f["valido"] = f["valido"].map({True: "sí", False: "NO"})
-    ver(tabla(f, {"ruta": "Fichero", "tipo": "Tipo", "fecha_utc": "Fecha que declara",
-                  "sha256": "SHA-256 (inicio)", "bytes": "Bytes", "valido": "¿Vale?",
-                  "motivo": "Por qué no"}))
+    # Si vale, y por qué no, delante: al final quedaban fuera del borde, y el motivo es lo único
+    # que explica un fichero que no vale (lo vio una captura).
+    ver(tabla(f, {"ruta": "Fichero", "tipo": "Tipo", "valido": "¿Vale?", "motivo": "Por qué no",
+                  "fecha_utc": "Fecha que declara", "sha256": "SHA-256 (inicio)", "bytes": "Bytes"}))
+    st.subheader("Snapshots congelados")
+    st.markdown("Cada uno es una carpeta de `data/raw/` con los tres CSV tal como los sirvió el oficial y "
+                "su `SHA256.txt`. Un veredicto solo vale si sus datos son uno de ellos.")
+    s = t["snapshots"].copy()
+    s["sha256"] = s["sha256"].str[:16]
+    ver(tabla(s, {"carpeta": "Snapshot", "fichero": "Fichero", "sha256": "SHA-256 (inicio)"}))
     st.subheader("Sobre qué datos se corrió cada informe")
     d = t["datos_informe"].copy()
     d["sha256"] = d["sha256"].str[:16]
     ver(tabla(d, {"ruta": "Informe", "juego": "Juego", "vista": "Vista",
                   "ultimo": "Último sorteo", "ultima_fecha": "Fecha", "filas": "Sorteos",
-                  "sha256": "SHA-256 (inicio)", "origen": "Origen",
+                  "snapshot": "Snapshot", "sha256": "SHA-256 (inicio)", "origen": "Origen",
                   "bolsa_invalida": "BOLSA inválida en"}))
     st.subheader("Qué es cada tabla de la base")
     ver(tabla(t["catalogo"], {"tabla": "Tabla", "naturaleza": "Naturaleza",

@@ -22,6 +22,7 @@ import argparse
 import datetime
 import hashlib
 import json
+import math
 import pathlib
 
 import numpy as np
@@ -149,6 +150,34 @@ def holdout(spec, juegos):
     return out
 
 
+# ---------------------------------------------------------------- el tamaño del holdout
+# Dos colas al 5 % y potencia del 80 %: el efecto que un holdout de n sorteos distingue del azar.
+Z_DETECTABLE = 1.959964 + 0.841621
+
+
+def detectable(n):
+    """El mínimo detectable con n sorteos de holdout, con el redondeo que publica el veredicto."""
+    return round(Z_DETECTABLE * float(np.sqrt(VAR_AZAR / n)), 6)
+
+
+def holdout_necesario(declarado):
+    """Cuántos sorteos de holdout hacen falta para que el detectable no pase del efecto declarado.
+
+    Es la frontera de la condición 5 desde la decisión C1 de la Fase 5: antes de ella, ningún delta
+    cuenta. Con el 0,048 del preregistro sellado, 1778. Se publica en el veredicto para que quien lo
+    enseñe —la app— no tenga que calcularlo. None si el preregistro no declara efecto.
+    """
+    if not declarado or declarado <= 0:
+        return None
+    # La cuenta exacta da el sitio; el redondeo del veredicto decide el sorteo. Se busca alrededor.
+    n = max(1, math.floor((Z_DETECTABLE * math.sqrt(VAR_AZAR) / declarado) ** 2) - 2)
+    while detectable(n) > declarado:
+        n += 1
+    while n > 1 and detectable(n - 1) <= declarado:
+        n -= 1
+    return n
+
+
 # ---------------------------------------------------------------- evaluación de lo declarado
 def _predecir(estrategia, F, atraso, X, t, modelo, rng):
     """La elección de 6 números de una estrategia en el sorteo t. Solo con datos anteriores a t."""
@@ -215,7 +244,7 @@ def _evaluar_una(estrategia, df, indices, hiper, reentrenar_cada=100, semilla=SE
         "delta": round(media - MEDIA_AZAR, 6),
         "z": round(z, 4),
         "p": round(float(2 * stats.norm.sf(abs(z))), 6),
-        "efecto_minimo_detectable": round((1.959964 + 0.841621) * se, 6),
+        "efecto_minimo_detectable": detectable(n),
     }
 
 
@@ -280,6 +309,7 @@ def evaluar(spec, juegos=None, carpeta=None):
     ]
     resultados["reentrenar_cada"] = cada
     resultados["semilla"] = semilla
+    resultados["holdout_necesario"] = holdout_necesario(spec.get("efecto_minimo_declarado"))
 
     # Benjamini-Hochberg sobre las pruebas del holdout, corrigiendo contra la familia que el
     # preregistro DECLARO, no contra las 3 que se acaban de correr. Usar m = 3 seria aflojar el
@@ -333,7 +363,7 @@ def _imprimir(r):
     print("== Holdout (sorteos posteriores al sello)")
     for juego, h in r["holdout"].items():
         rango = f"{h['primer_concurso']}-{h['ultimo_concurso']}" if h["sorteos"] else "-"
-        print(f"   {juego:11s} {h['sorteos']:4d} sorteos  {rango}")
+        print(f"   {juego:11s} {protocolo._sorteos(h['sorteos']):>12s}  {rango}")
     print(f"== Veredicto: {v['veredicto']}  ({v['cumplidas']} de {v['de']} condiciones)")
     for c in v["condiciones"]:
         marca = "si" if c["cumple"] else "NO"
